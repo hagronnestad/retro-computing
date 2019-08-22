@@ -87,7 +87,15 @@ namespace Cpu6502 {
             SR.SetZero(AR);
         }
 
-        public void ASL(byte operand) { }
+        public void ASL(ref byte operand) {
+            // https://www.masswerk.at/6502/6502_instruction_set.html#ASL
+            // TODO: Needs verification!
+
+            SR.Carry = (byte)(operand & 0b10000000) == 0b10000000;
+            operand <<= 1;
+            SR.SetNegative(operand);
+            SR.SetZero(operand);
+        }
 
         public void BIT(byte operand) {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BIT
@@ -112,7 +120,14 @@ namespace Cpu6502 {
             SR.SetZero(AR);
         }
 
-        public void LSR(byte operand) {
+        public void LSR(ref byte operand) {
+            // https://www.masswerk.at/6502/6502_instruction_set.html#LSR
+            // TODO: Needs verification!
+
+            SR.Carry = (byte)(operand & 0b00000001) == 0b00000001;
+            operand >>= 1;
+            SR.SetNegative(operand);
+            SR.SetZero(operand);
         }
 
         public void ORA(byte operand) {
