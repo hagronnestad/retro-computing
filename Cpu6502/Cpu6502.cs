@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Cpu6502 {
     public class Cpu6502 {
@@ -35,13 +35,13 @@ namespace Cpu6502 {
             SR.SetZero(operand);
             YR = operand;
         }
-        public void STA(out byte operand) {
+        public void STA(ref byte operand) {
             operand = AR;
         }
-        public void STX(out byte operand) {
+        public void STX(ref byte operand) {
             operand = XR;
         }
-        public void STY(out byte operand) {
+        public void STY(ref byte operand) {
             operand = YR;
         }
         public void TAX() {
