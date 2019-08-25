@@ -1,3 +1,4 @@
+using Extensions;
 using System;
 
 namespace Cpu6502 {
@@ -91,7 +92,7 @@ namespace Cpu6502 {
             // https://www.masswerk.at/6502/6502_instruction_set.html#ASL
             // TODO: Needs verification!
 
-            SR.Carry = (byte)(operand & 0b10000000) == 0b10000000;
+            SR.Carry = operand.IsBitSet(BitFlag.BIT_7);
             operand <<= 1;
             SR.SetNegative(operand);
             SR.SetZero(operand);
@@ -101,12 +102,11 @@ namespace Cpu6502 {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BIT
             // TODO: Needs verification!
 
-            var r = AR & operand;
+            var r = (byte) (operand & AR);
 
-            SR.Negative = (operand & (byte)ProcessorStatusFlags.Negative) == (byte)ProcessorStatusFlags.Negative;
-            SR.Overflow = (operand & (byte)ProcessorStatusFlags.Overflow) == (byte)ProcessorStatusFlags.Overflow;
-
-            SR.SetZero((byte)r);
+            SR.Negative = operand.IsBitSet((BitFlag)ProcessorStatusFlags.Negative);
+            SR.Overflow = operand.IsBitSet((BitFlag)ProcessorStatusFlags.Overflow);
+            SR.SetZero(r);
         }
 
         public void EOR(byte operand) {
@@ -124,7 +124,7 @@ namespace Cpu6502 {
             // https://www.masswerk.at/6502/6502_instruction_set.html#LSR
             // TODO: Needs verification!
 
-            SR.Carry = (byte)(operand & 0b00000001) == 0b00000001;
+            SR.Carry = operand.IsBitSet(BitFlag.BIT_0);
             operand >>= 1;
             SR.SetNegative(operand);
             SR.SetZero(operand);
@@ -132,13 +132,35 @@ namespace Cpu6502 {
 
         public void ORA(byte operand) {
             var r = operand | AR;
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
             AR = (byte)r;
+            SR.SetNegative(AR);
+            SR.SetZero(AR);
         }
 
-        public void ROL(byte operand) { }
-        public void ROR(byte operand) { }
+        public void ROL(byte operand) {
+            // https://www.masswerk.at/6502/6502_instruction_set.html#ROL
+            // TODO: Needs verification!
+
+            var c = SR.Carry;
+            SR.Carry = operand.IsBitSet(BitFlag.BIT_7);
+            operand <<= 1;
+            operand = operand.SetBit(BitFlag.BIT_0, c);
+
+            SR.SetNegative(operand);
+            SR.SetZero(operand);
+        }
+        public void ROR(byte operand) {
+            // https://www.masswerk.at/6502/6502_instruction_set.html#ROR
+            // TODO: Needs verification!
+
+            var c = SR.Carry;
+            SR.Carry = operand.IsBitSet(BitFlag.BIT_0);
+            operand >>= 1;
+            operand = operand.SetBit(BitFlag.BIT_7, c);
+
+            SR.SetNegative(operand);
+            SR.SetZero(operand);
+        }
 
 
 
