@@ -17,6 +17,24 @@ namespace Cpu6502 {
         public StatusRegister SR { get; set; }
 
 
+        //public void Process() {
+        //    var opcode = {
+
+        //    };
+
+        //    switch (opcode) {
+        //        case 0x87:
+        //            LDA(GetZeroPageOperand(b1));
+        //            break;
+
+        //        case 0x88:
+        //            LDA(GetAbsoluteOperand(b1, b2));
+        //            break;
+        //    }
+
+
+        //    opcodes[0x87].Run(GetOperand(opcodes[0x87].AddresingMode, opcode));
+        //}
 
 
         // STORAGE
