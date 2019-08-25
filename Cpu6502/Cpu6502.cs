@@ -163,6 +163,43 @@ namespace Cpu6502 {
         }
 
 
+        // MATH
+        public void DEC(ref byte operand) {
+            operand--;
+            SR.SetNegative(operand);
+            SR.SetZero(operand);
+        }
+
+        public void DEX() {
+            XR--;
+            SR.SetNegative(XR);
+            SR.SetZero(XR);
+        }
+
+        public void DEY() {
+            YR--;
+            SR.SetNegative(YR);
+            SR.SetZero(YR);
+        }
+
+        public void INC(ref byte operand) {
+            operand++;
+            SR.SetNegative(operand);
+            SR.SetZero(operand);
+        }
+
+        public void INX() {
+            XR++;
+            SR.SetNegative(XR);
+            SR.SetZero(XR);
+        }
+
+        public void INY() {
+            YR++;
+            SR.SetNegative(YR);
+            SR.SetZero(YR);
+        }
+
 
 
 
