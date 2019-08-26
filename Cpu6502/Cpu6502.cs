@@ -1,7 +1,6 @@
 using Extensions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Cpu6502 {
@@ -65,6 +64,86 @@ namespace Cpu6502 {
         }
 
 
+        public void Step() {
+            var oc = Memory[PC];
+
+            var opCode = OpCodeCache[oc];
+
+            Console.WriteLine();
+            Console.WriteLine($"OpCode: {opCode.Code:X2}, OpCodeName: {opCode.Name}, AddressingMode: {opCode.AddressingMode}");
+            Console.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+
+            if (opCode.AddressingMode == AddressingMode.Implied) {
+                opCode.Action(null);
+
+            } else if (opCode.AddressingMode == AddressingMode.Absolute) { // || AbsoluteX/Y
+                var absoluteAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
+                opCode.Action(new object[] { absoluteAddress });
+
+            } else {
+                ref byte operand = ref GetOperand(opCode.AddressingMode);
+                var parameters = new object[] { operand };
+                opCode.Action(parameters);
+                operand = (byte)parameters[0];
+            }
+
+            Console.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+            Console.WriteLine();
+
+            PC += opCode.Length;
+        }
+
+        public ref byte GetOperand(AddressingMode addressingMode) {
+            switch (addressingMode) {
+                case AddressingMode.Accumulator:
+                    return ref AR;
+
+                case AddressingMode.AbsoluteX:
+                    var absoluteXAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
+                    return ref Memory[absoluteXAddress + XR];
+
+                case AddressingMode.AbsoluteY:
+                    var absoluteYAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
+                    return ref Memory[absoluteYAddress + YR];
+
+                case AddressingMode.Immediate:
+                    return ref Memory[PC + 1];
+
+                case AddressingMode.Indirect:
+                    var indirectAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
+                    return ref Memory[Memory[indirectAddress]];
+
+                case AddressingMode.XIndirect:
+                    var xIndirectAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1 + XR], Memory[PC + 2 + XR] }, 0);
+                    return ref Memory[Memory[xIndirectAddress]];
+
+                case AddressingMode.IndirectY:
+                    var indirectYAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
+                    return ref Memory[Memory[indirectYAddress + YR]];
+
+                case AddressingMode.Relative:
+                    return ref Memory[PC + 1];
+
+                case AddressingMode.Zeropage:
+                    var addressZeroPage = Memory[PC + 1];
+                    return ref Memory[addressZeroPage];
+
+                case AddressingMode.ZeropageX:
+                    var addressZeroPageX = Memory[PC + 1 + XR];
+                    return ref Memory[addressZeroPageX];
+
+                case AddressingMode.ZeropageY:
+                    var addressZeroPageY = Memory[PC + 1 + YR];
+                    return ref Memory[addressZeroPageY];
+
+                case AddressingMode.Implied:
+                    throw new NotImplementedException();
+
+                default:
+                    throw new NotImplementedException($"Unknown {nameof(AddressingMode)}: {addressingMode}");
+
+            }
+        }
 
 
         // STORAGE
@@ -464,7 +543,7 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(JSR), Code = 0x20, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         public void JSR(byte operand) {
             // http://6502.org/tutorials/6502opcodes.html#JSR
-            
+
             // Push (operand - 1) -> Stack
             // PC = operand;
 
