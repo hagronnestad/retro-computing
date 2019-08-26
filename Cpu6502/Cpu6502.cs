@@ -432,7 +432,7 @@ namespace Cpu6502 {
         // SYSTEM
 
         [OpCode(Name = nameof(BRK), Code = 0x00, Length = 2, Cycles = 7, AddressingMode = AddressingMode.Immediate)]
-        public void BRK(byte operand) {
+        public void BRK() {
             // http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=BRK
 
             PC += 2;
@@ -478,7 +478,7 @@ namespace Cpu6502 {
         }
 
         [OpCode(Name = nameof(RTI), Code = 0x40, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
-        public void RTI(byte operand) {
+        public void RTI() {
             // http://6502.org/tutorials/6502opcodes.html#RTI
 
             // RTI retrieves the Processor Status Word (flags) and the Program Counter from the stack in that order (interrupts push the PC first and then the PSW).
@@ -494,7 +494,7 @@ namespace Cpu6502 {
         }
 
         [OpCode(Name = nameof(RTS), Code = 0x60, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
-        public void RTS(byte operand) {
+        public void RTS() {
             // http://6502.org/tutorials/6502opcodes.html#RTS
 
             // RTS pulls the top two bytes off the stack (low byte first) and transfers program control to that address+1. It is used, as expected, to exit a subroutine invoked via JSR which pushed the address-1.
@@ -512,28 +512,28 @@ namespace Cpu6502 {
         // STACK
 
         [OpCode(Name = nameof(PHA), Code = 0x48, Length = 1, Cycles = 3, AddressingMode = AddressingMode.Implied)]
-        public void PHA(byte operand) {
+        public void PHA() {
             // http://6502.org/tutorials/6502opcodes.html#PHA
 
             PushStack(AR);
         }
 
         [OpCode(Name = nameof(PLA), Code = 0x68, Length = 1, Cycles = 4, AddressingMode = AddressingMode.Implied)]
-        public void PLA(byte operand) {
+        public void PLA() {
             // http://6502.org/tutorials/6502opcodes.html#PLA 
 
             AR = PopStack();
         }
 
         [OpCode(Name = nameof(PHP), Code = 0x08, Length = 1, Cycles = 3, AddressingMode = AddressingMode.Implied)]
-        public void PHP(byte operand) {
+        public void PHP() {
             // http://6502.org/tutorials/6502opcodes.html#PHP
 
             PushStack(SR.Register);
         }
 
         [OpCode(Name = nameof(PLP), Code = 0x28, Length = 1, Cycles = 4, AddressingMode = AddressingMode.Implied)]
-        public void PLP(byte operand) {
+        public void PLP() {
             // http://6502.org/tutorials/6502opcodes.html#PLP 
 
             SR.Register = PopStack();
@@ -707,7 +707,7 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(CMP), Code = 0xD9, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(CMP), Code = 0xC1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(CMP), Code = 0xD1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void CMP(byte operand) {
+        public void CMP() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#CMP
 
             throw new NotImplementedException();
@@ -716,7 +716,7 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(CPX), Code = 0xE0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
         [OpCode(Name = nameof(CPX), Code = 0xE4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(CPX), Code = 0xEC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
-        public void CPX(byte operand) {
+        public void CPX() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#CPX
 
             throw new NotImplementedException();
@@ -725,7 +725,7 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(CPY), Code = 0xC0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
         [OpCode(Name = nameof(CPY), Code = 0xC4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(CPY), Code = 0xCC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
-        public void CPY(byte operand) {
+        public void CPY() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#CPY
 
             throw new NotImplementedException();
