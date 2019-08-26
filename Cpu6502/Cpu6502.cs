@@ -593,11 +593,7 @@ namespace Cpu6502 {
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         [OpCode(Name = nameof(BNE), Code = 0xD0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
@@ -612,11 +608,7 @@ namespace Cpu6502 {
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         [OpCode(Name = nameof(BMI), Code = 0x30, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
@@ -631,11 +623,7 @@ namespace Cpu6502 {
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         [OpCode(Name = nameof(BPL), Code = 0x10, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
@@ -650,11 +638,7 @@ namespace Cpu6502 {
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         [OpCode(Name = nameof(BVC), Code = 0x50, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
@@ -669,11 +653,7 @@ namespace Cpu6502 {
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         [OpCode(Name = nameof(BVS), Code = 0x70, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
@@ -688,11 +668,7 @@ namespace Cpu6502 {
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
 
