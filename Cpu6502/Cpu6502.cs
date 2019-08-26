@@ -1,13 +1,14 @@
 using Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Cpu6502 {
     public class Cpu6502 {
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
-        public Dictionary<byte, AddressingMode> AddressingModeCache { get; set; }
+        public OpCodeDefinition OpCode => OpCodeCache[Memory[PC]];
 
 
         public byte[] Memory = new byte[0x10000];
@@ -39,9 +40,15 @@ namespace Cpu6502 {
                 .ToList();
 
             OpCodeCache = OpCodes.ToDictionary(x => x.Code, x => x);
-            AddressingModeCache = OpCodes.ToDictionary(x => x.Code, x => x.AddressingMode);
 
             Reset();
+        }
+
+        public void LoadMemory(byte[] data, int location) {
+            if (data == null || data.Length == 0) throw new ArgumentNullException();
+            if ((location + data.Length) > Memory.Length) throw new OutOfMemoryException();
+
+            Array.Copy(data, 0, Memory, location, data.Length);
         }
 
         public void Reset() {
@@ -66,12 +73,11 @@ namespace Cpu6502 {
 
         public void Step() {
             var oc = Memory[PC];
-
             var opCode = OpCodeCache[oc];
 
-            Console.WriteLine();
-            Console.WriteLine($"OpCode: {opCode.Code:X2}, OpCodeName: {opCode.Name}, AddressingMode: {opCode.AddressingMode}");
-            Console.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+            Debug.WriteLine("");
+            Debug.WriteLine($"OpCode: {opCode.Code:X2}, OpCodeName: {opCode.Name}, AddressingMode: {opCode.AddressingMode}");
+            Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
 
             if (opCode.AddressingMode == AddressingMode.Implied) {
                 opCode.Action(null);
@@ -87,8 +93,8 @@ namespace Cpu6502 {
                 operand = (byte)parameters[0];
             }
 
-            Console.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
-            Console.WriteLine();
+            Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+            Debug.WriteLine("");
 
             PC += opCode.Length;
         }
