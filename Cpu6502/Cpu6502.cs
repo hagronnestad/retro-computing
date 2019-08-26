@@ -431,7 +431,7 @@ namespace Cpu6502 {
 
         // SYSTEM
 
-        [OpCode(Name = nameof(BRK), Code = 0x00, Length = 2, Cycles = 7, AddressingMode = AddressingMode.Immediate)]
+        [OpCode(Name = nameof(BRK), Code = 0x00, Length = 1, Cycles = 7, AddressingMode = AddressingMode.Implied)]
         public void BRK() {
             // http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=BRK
 
