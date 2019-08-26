@@ -11,21 +11,21 @@ namespace Cpu6502 {
         public Dictionary<byte, AddressingMode> AddressingModeCache { get; set; }
 
 
-        public byte[] Memory { get; set; } = new byte[0x10000];
+        public byte[] Memory = new byte[0x10000];
 
-        public ushort PC { get; set; }
+        public ushort PC;
 
         /// <summary>
         /// Stack Pointer. The SP starts at 0xFF and is decremented on push.
         /// The stack stores its values in address range 0x01FF - 0x0100.
         /// </summary>
-        public byte SP { get; set; }
+        public byte SP;
 
-        public byte AR { get; set; }
-        public byte XR { get; set; }
-        public byte YR { get; set; }
+        public byte AR;
+        public byte XR;
+        public byte YR;
 
-        public StatusRegister SR { get; set; } = new StatusRegister();
+        public StatusRegister SR = new StatusRegister();
 
 
         public Cpu6502() {
