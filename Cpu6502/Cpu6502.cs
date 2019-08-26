@@ -455,16 +455,10 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(JMP), Code = 0x4C, Length = 3, Cycles = 3, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(JMP), Code = 0x6C, Length = 3, Cycles = 5, AddressingMode = AddressingMode.Indirect)]
-        public void JMP(byte operand, byte operand2) {
+        public void JMP(ushort operand) {
             // http://6502.org/tutorials/6502opcodes.html#JMP
 
-            // (PC + 1) -> PCL
-            // (PC + 2) -> PCH
-
-            PC = BitConverter.ToUInt16(new byte[] { operand2, operand }, 0);
-            PC = operand; // This it?
-
-            throw new NotImplementedException();
+            PC = operand;
         }
 
         [OpCode(Name = nameof(JSR), Code = 0x20, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
