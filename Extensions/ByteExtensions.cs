@@ -9,7 +9,7 @@
         }
 
         public static bool IsBitSet(this byte i, BitFlag flag) {
-            return (i | (byte)flag) == (byte)flag;
+            return (i & (byte)flag) == (byte)flag;
         }
     }
 }
