@@ -37,6 +37,11 @@
             set => SetValue(ProcessorStatusFlags.Negative, value);
         }
 
+        public bool Reserved {
+            get => Get(ProcessorStatusFlags.Reserved);
+            set => SetValue(ProcessorStatusFlags.Reserved, value);
+        }
+
 
 
         public bool Get(ProcessorStatusFlags flag) {
