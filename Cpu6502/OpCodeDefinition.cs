@@ -12,15 +12,17 @@ namespace Cpu6502 {
 
         public string Description { get; set; }
 
-        public Action<object[]> Action { get; set; }
+        public Action GetAddress { get; set; }
+        public Action Run { get; set; }
 
         public OpCodeDefinition() {
 
         }
 
-        public static OpCodeDefinition FromOpCodeAttribute(Action<object[]> action, OpCodeAttribute a) {
+        public static OpCodeDefinition FromOpCodeAttribute(Action action, Action getAddress, OpCodeAttribute a) {
             return new OpCodeDefinition {
-                Action = action,
+                GetAddress = getAddress,
+                Run = action,
                 AddCycleIfBoundaryCrossed = a.AddCycleIfBoundaryCrossed,
                 AddressingMode = a.AddressingMode,
                 Code = a.Code,

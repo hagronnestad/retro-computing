@@ -3,15 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace Cpu6502 {
     public class Cpu6502 {
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
-        public OpCodeDefinition OpCode => OpCodeCache[Memory[PC]];
 
-
-        public byte[] Memory = new byte[0x10000];
+        public byte[] Memory = new byte[0x100000];
 
         public ushort PC;
 
@@ -28,15 +27,55 @@ namespace Cpu6502 {
         public StatusRegister SR = new StatusRegister();
 
 
+        public OpCodeDefinition OpCode { get; set; }
+        public ushort OpCodeAddress;
+
+        public ushort Address;
+        public byte Value {
+            get {
+                return OpCode.AddressingMode == AddressingMode.Accumulator ? AR : Memory[Address];
+            }
+            set {
+                if (OpCode.AddressingMode == AddressingMode.Accumulator) {
+                    AR = value;
+
+                } else {
+                    Memory[Address] = value;
+                }
+            }
+        }
+
+
         public Cpu6502() {
-            OpCodes = GetType()
+            //OpCodes = GetType()
+            //    .GetMethods()
+            //    .SelectMany(m => m.GetCustomAttributes(typeof(OpCodeAttribute), true)
+            //    .Select(a => new {
+            //        Attribute = a as OpCodeAttribute,
+            //        Method = m
+            //    }))
+            //    .Select(a => OpCodeDefinition.FromOpCodeAttribute(() => a.Method.Invoke(this, null), null, a.Attribute))
+
+            //    .ToList();
+
+            var opCodesMethods = GetType()
                 .GetMethods()
                 .SelectMany(m => m.GetCustomAttributes(typeof(OpCodeAttribute), true)
                 .Select(a => new {
                     Attribute = a as OpCodeAttribute,
                     Method = m
-                }))
-                .Select(a => OpCodeDefinition.FromOpCodeAttribute((parameters) => a.Method.Invoke(this, parameters), a.Attribute))
+                }));
+
+            var addressingMethods = GetType()
+                .GetMethods()
+                .SelectMany(m => m.GetCustomAttributes(typeof(AddressingModeAttribute), true)
+                .Select(a => new {
+                    Attribute = a as AddressingModeAttribute,
+                    Method = m
+                }));
+
+            OpCodes = opCodesMethods
+                .Select(x => OpCodeDefinition.FromOpCodeAttribute(() => x.Method.Invoke(this, null), () => addressingMethods.FirstOrDefault(y => y.Attribute.AddressingMode == x.Attribute.AddressingMode).Method.Invoke(this, null), x.Attribute))
                 .ToList();
 
             OpCodeCache = OpCodes.ToDictionary(x => x.Code, x => x);
@@ -110,91 +149,138 @@ namespace Cpu6502 {
         }
 
         public byte PopStack() {
-            var b = Memory[0x0100 + SP];
             SP++;
+            var b = Memory[0x0100 + SP];
             return b;
         }
 
 
         public void Step() {
-            var oc = Memory[PC];
-            var opCode = OpCodeCache[oc];
+
+            OpCode = OpCodeCache[Memory[PC]];
+            OpCodeAddress = PC;
+            PC++;
 
             Debug.WriteLine("");
-            Debug.WriteLine($"OpCode: {opCode.Code:X2}, OpCodeName: {opCode.Name}, AddressingMode: {opCode.AddressingMode}");
+            Debug.WriteLine($"OpCode: {OpCode.Code:X2}, OpCodeName: {OpCode.Name}, AddressingMode: {OpCode.AddressingMode}");
             Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
 
-            if (opCode.AddressingMode == AddressingMode.Implied) {
-                opCode.Action(null);
+            if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
+                OpCode.GetAddress();
+            }
+            OpCode.Run();
 
-            } else if (opCode.AddressingMode == AddressingMode.Absolute) { // || AbsoluteX/Y
-                var absoluteAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
-                opCode.Action(new object[] { absoluteAddress });
+            Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+            Debug.WriteLine("");
+        }
+
+
+        [AddressingMode(AddressingMode = AddressingMode.Absolute)]
+        public void Absolute() {
+            var lowAddressByte = Memory[PC];
+            PC++;
+            var highAddressByte = Memory[PC];
+            PC++;
+
+            Address = (ushort)((highAddressByte << 8) | lowAddressByte);
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.AbsoluteX)]
+        public void AbsoluteX() {
+            var lowAddressByte = Memory[PC];
+            PC++;
+            var highAddressByte = Memory[PC];
+            PC++;
+
+            Address = (ushort)((highAddressByte << 8) | lowAddressByte);
+            Address += XR;
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.AbsoluteY)]
+        public void AbsoluteY() {
+            var lowAddressByte = Memory[PC];
+            PC++;
+            var highAddressByte = Memory[PC];
+            PC++;
+
+            Address = (ushort)((highAddressByte << 8) | lowAddressByte);
+            Address += YR;
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.Immediate)]
+        public void Immediate() {
+            Address = PC;
+            PC++;
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.Indirect)]
+        public void Indirect() {
+            var lowAddressPointer = Memory[PC];
+            PC++;
+            var highAddressPointer = Memory[PC];
+            PC++;
+
+            var addressPointer = (ushort)((highAddressPointer << 8) | lowAddressPointer);
+
+            if (lowAddressPointer == 0xFF) {
+                // This handles a hardware bug in the 6502
+                Address = (ushort)(Memory[addressPointer & 0xFF00] << 8 | Memory[addressPointer]);
 
             } else {
-                ref byte operand = ref GetOperand(opCode.AddressingMode);
-                var parameters = new object[] { operand };
-                opCode.Action(parameters);
-                operand = (byte)parameters[0];
-            }
-
-            Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
-            Debug.WriteLine("");
-
-            PC += opCode.Length;
-        }
-
-        public ref byte GetOperand(AddressingMode addressingMode) {
-            switch (addressingMode) {
-                case AddressingMode.Accumulator:
-                    return ref AR;
-
-                case AddressingMode.AbsoluteX:
-                    var absoluteXAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
-                    return ref Memory[absoluteXAddress + XR];
-
-                case AddressingMode.AbsoluteY:
-                    var absoluteYAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
-                    return ref Memory[absoluteYAddress + YR];
-
-                case AddressingMode.Immediate:
-                    return ref Memory[PC + 1];
-
-                case AddressingMode.Indirect:
-                    var indirectAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
-                    return ref Memory[Memory[indirectAddress]];
-
-                case AddressingMode.XIndirect:
-                    var xIndirectAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1 + XR], Memory[PC + 2 + XR] }, 0);
-                    return ref Memory[Memory[xIndirectAddress]];
-
-                case AddressingMode.IndirectY:
-                    var indirectYAddress = BitConverter.ToUInt16(new byte[] { Memory[PC + 1], Memory[PC + 2] }, 0);
-                    return ref Memory[Memory[indirectYAddress + YR]];
-
-                case AddressingMode.Relative:
-                    return ref Memory[PC + 1];
-
-                case AddressingMode.Zeropage:
-                    var addressZeroPage = Memory[PC + 1];
-                    return ref Memory[addressZeroPage];
-
-                case AddressingMode.ZeropageX:
-                    var addressZeroPageX = Memory[PC + 1 + XR];
-                    return ref Memory[addressZeroPageX];
-
-                case AddressingMode.ZeropageY:
-                    var addressZeroPageY = Memory[PC + 1 + YR];
-                    return ref Memory[addressZeroPageY];
-
-                case AddressingMode.Implied:
-                    throw new NotImplementedException();
-
-                default:
-                    throw new NotImplementedException($"Unknown {nameof(AddressingMode)}: {addressingMode}");
-
+                Address = (ushort)(Memory[addressPointer + 1] << 8 | Memory[addressPointer]);
             }
         }
+
+        [AddressingMode(AddressingMode = AddressingMode.XIndirect)]
+        public void XIndirect() {
+            var pageZeroAddress = Memory[PC];
+            PC++;
+
+            var lowAddress = Memory[pageZeroAddress + XR];
+            var highAddress = Memory[pageZeroAddress + 1 + XR];
+
+            Address = (ushort)((highAddress << 8) | lowAddress);
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.IndirectY)]
+        public void IndirectY() {
+            var pageZeroAddress = Memory[PC];
+            PC++;
+
+            var lowAddress = Memory[pageZeroAddress];
+            var highAddress = Memory[pageZeroAddress + 1];
+
+            Address = (ushort)((highAddress << 8) | lowAddress);
+            Address += YR;
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.Relative)]
+        public void Relative() {
+            sbyte rel_addr = (sbyte)Memory[PC];
+            PC++;
+            Address = (ushort)(PC + rel_addr);
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.Zeropage)]
+        public void Zeropage() {
+            Address = Memory[PC];
+            PC++;
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.ZeropageX)]
+        public void ZeropageX() {
+            Address = (ushort)(Memory[PC] + XR);
+            PC++;
+        }
+
+        [AddressingMode(AddressingMode = AddressingMode.ZeropageY)]
+        public void ZeropageY() {
+            Address = (ushort)(Memory[PC] + YR);
+            PC++;
+        }
+
+
+
 
 
         // STORAGE
@@ -207,10 +293,10 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(LDA), Code = 0xB9, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(LDA), Code = 0xA1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(LDA), Code = 0xB1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void LDA(byte operand) {
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
-            AR = operand;
+        public void LDA() {
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
+            AR = Value;
         }
 
         [OpCode(Name = nameof(LDX), Code = 0xA2, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
@@ -218,10 +304,10 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(LDX), Code = 0xB6, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(LDX), Code = 0xAE, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(LDX), Code = 0xBE, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteX, AddCycleIfBoundaryCrossed = true)]
-        public void LDX(byte operand) {
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
-            XR = operand;
+        public void LDX() {
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
+            XR = Value;
         }
 
         [OpCode(Name = nameof(LDY), Code = 0xA0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
@@ -229,10 +315,10 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(LDY), Code = 0xB4, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(LDY), Code = 0xAC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(LDY), Code = 0xBC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteX, AddCycleIfBoundaryCrossed = true)]
-        public void LDY(byte operand) {
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
-            YR = operand;
+        public void LDY() {
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
+            YR = Value;
         }
 
         [OpCode(Name = nameof(STA), Code = 0x85, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
@@ -242,22 +328,22 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(STA), Code = 0x99, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(STA), Code = 0x81, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(STA), Code = 0x91, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void STA(ref byte operand) {
-            operand = AR;
+        public void STA() {
+            Value = AR;
         }
 
         [OpCode(Name = nameof(STX), Code = 0x86, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(STX), Code = 0x96, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageY)]
         [OpCode(Name = nameof(STX), Code = 0x8E, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
-        public void STX(ref byte operand) {
-            operand = XR;
+        public void STX() {
+            Value = XR;
         }
 
         [OpCode(Name = nameof(STY), Code = 0x84, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(STY), Code = 0x94, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(STY), Code = 0x8C, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
-        public void STY(ref byte operand) {
-            operand = YR;
+        public void STY() {
+            Value = YR;
         }
 
         [OpCode(Name = nameof(TAX), Code = 0xAA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied)]
@@ -314,9 +400,8 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(AND), Code = 0x39, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(AND), Code = 0x21, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(AND), Code = 0x31, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void AND(byte operand) {
-            var r = operand & AR;
-            AR = (byte)r;
+        public void AND() {
+            AR = (byte)(Value & AR);
 
             SR.SetNegative(AR);
             SR.SetZero(AR);
@@ -327,26 +412,26 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ASL), Code = 0x16, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(ASL), Code = 0x0E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(ASL), Code = 0x1E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
-        public void ASL(ref byte operand) {
+        public void ASL() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#ASL
             // TODO: Needs verification!
 
-            SR.Carry = operand.IsBitSet(BitFlag.BIT_7);
-            operand <<= 1;
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
+            SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
+            Value <<= 1;
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
         }
 
         [OpCode(Name = nameof(BIT), Code = 0x24, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(BIT), Code = 0x2C, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
-        public void BIT(byte operand) {
+        public void BIT() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BIT
             // TODO: Needs verification!
 
-            var r = (byte)(operand & AR);
+            var r = (byte)(Value & AR);
 
-            SR.Negative = operand.IsBitSet((BitFlag)ProcessorStatusFlags.Negative);
-            SR.Overflow = operand.IsBitSet((BitFlag)ProcessorStatusFlags.Overflow);
+            SR.Negative = Value.IsBitSet((BitFlag)ProcessorStatusFlags.Negative);
+            SR.Overflow = Value.IsBitSet((BitFlag)ProcessorStatusFlags.Overflow);
             SR.SetZero(r);
         }
 
@@ -358,12 +443,11 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(EOR), Code = 0x59, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(EOR), Code = 0x41, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(EOR), Code = 0x51, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void EOR(byte operand) {
+        public void EOR() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#EOR
             // TODO: Needs verification!
 
-            var r = operand ^ AR;
-            AR = (byte)r;
+            AR = (byte)(Value ^ AR);
 
             SR.SetNegative(AR);
             SR.SetZero(AR);
@@ -374,14 +458,14 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(LSR), Code = 0x56, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(LSR), Code = 0x4E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(LSR), Code = 0x5E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
-        public void LSR(ref byte operand) {
+        public void LSR() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#LSR
             // TODO: Needs verification!
 
-            SR.Carry = operand.IsBitSet(BitFlag.BIT_0);
-            operand >>= 1;
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
+            SR.Carry = Value.IsBitSet(BitFlag.BIT_0);
+            Value >>= 1;
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
         }
 
         [OpCode(Name = nameof(ORA), Code = 0x09, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
@@ -392,9 +476,8 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ORA), Code = 0x19, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(ORA), Code = 0x01, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(ORA), Code = 0x11, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void ORA(byte operand) {
-            var r = operand | AR;
-            AR = (byte)r;
+        public void ORA() {
+            AR = (byte)(Value | AR);
             SR.SetNegative(AR);
             SR.SetZero(AR);
         }
@@ -404,17 +487,17 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ROL), Code = 0x36, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(ROL), Code = 0x2E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(ROL), Code = 0x3E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
-        public void ROL(byte operand) {
+        public void ROL() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#ROL
             // TODO: Needs verification!
 
             var c = SR.Carry;
-            SR.Carry = operand.IsBitSet(BitFlag.BIT_7);
-            operand <<= 1;
-            operand = operand.SetBit(BitFlag.BIT_0, c);
+            SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
+            Value <<= 1;
+            Value = Value.SetBit(BitFlag.BIT_0, c);
 
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
         }
 
         [OpCode(Name = nameof(ROR), Code = 0x6A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Accumulator)]
@@ -422,17 +505,17 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ROR), Code = 0x76, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(ROR), Code = 0x6E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(ROR), Code = 0x7E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
-        public void ROR(byte operand) {
+        public void ROR() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#ROR
             // TODO: Needs verification!
 
             var c = SR.Carry;
-            SR.Carry = operand.IsBitSet(BitFlag.BIT_0);
-            operand >>= 1;
-            operand = operand.SetBit(BitFlag.BIT_7, c);
+            SR.Carry = Value.IsBitSet(BitFlag.BIT_0);
+            Value >>= 1;
+            Value = Value.SetBit(BitFlag.BIT_7, c);
 
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
         }
 
 
@@ -446,10 +529,13 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ADC), Code = 0x79, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(ADC), Code = 0x61, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(ADC), Code = 0x71, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void ADC(byte operand) {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#ADC
+        public void ADC() {
+            var temp = AR + Value + (SR.Carry ? 0 : 1);
 
-            throw new NotImplementedException();
+            SR.Carry = temp > 255;
+            SR.Overflow = ((AR ^ temp) & ~(AR ^ Value) & 0b10000000) == 0b10000000;
+            SR.SetZero((byte)temp);
+            SR.SetNegative((byte)temp);
         }
 
         [OpCode(Name = nameof(SBC), Code = 0xE9, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
@@ -460,10 +546,15 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(SBC), Code = 0xF9, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, AddCycleIfBoundaryCrossed = true)]
         [OpCode(Name = nameof(SBC), Code = 0xE1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(SBC), Code = 0xF1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
-        public void SBC(byte operand) {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#SBC
+        public void SBC() {
+            // https://youtu.be/8XmxKPJDGU0?t=3141
 
-            throw new NotImplementedException();
+            var temp = AR + (Value ^ 0x00FF) + (SR.Carry ? 0 : 1);
+
+            SR.Carry = temp > 255;
+            SR.Overflow = ((AR ^ temp) & ~(AR ^ Value) & 0b10000000) == 0b10000000;
+            SR.SetZero((byte)temp);
+            SR.SetNegative((byte)temp);
         }
 
 
@@ -471,10 +562,10 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(DEC), Code = 0xD6, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(DEC), Code = 0xCE, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(DEC), Code = 0xDE, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
-        public void DEC(ref byte operand) {
-            operand--;
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
+        public void DEC() {
+            Value--;
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
         }
 
         [OpCode(Name = nameof(DEX), Code = 0xCA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied)]
@@ -495,10 +586,10 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(INC), Code = 0xF6, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX)]
         [OpCode(Name = nameof(INC), Code = 0xEE, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(INC), Code = 0xFE, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
-        public void INC(ref byte operand) {
-            operand++;
-            SR.SetNegative(operand);
-            SR.SetZero(operand);
+        public void INC() {
+            Value++;
+            SR.SetNegative(Value);
+            SR.SetZero(Value);
         }
 
         [OpCode(Name = nameof(INX), Code = 0xE8, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied)]
@@ -567,12 +658,11 @@ namespace Cpu6502 {
 
             SR.IrqDisable = true;
 
-            PushStack((byte)((PC + 1) >> 8)); // MSB
-            PushStack((byte)((PC + 1) & 0xFF)); // LSB
+            PushStack((byte)((PC) >> 8)); // MSB
+            PushStack((byte)((PC) & 0xFF)); // LSB
             PushStack(SR.Register);
 
             PC = BitConverter.ToUInt16(new byte[] { Memory[0xFFFE], Memory[0xFFFF] }, 0); // BRK interrupt vector
-            PC--; // Compensate for `PC += opCode.Length;` in the `Step`-method
         }
 
         [OpCode(Name = nameof(NOP), Code = 0xEA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied)]
@@ -585,20 +675,22 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(JMP), Code = 0x4C, Length = 3, Cycles = 3, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(JMP), Code = 0x6C, Length = 3, Cycles = 5, AddressingMode = AddressingMode.Indirect)]
-        public void JMP(ushort operand) {
+        public void JMP() {
             // http://6502.org/tutorials/6502opcodes.html#JMP
 
-            PC = operand;
+            PC = Address;
         }
 
         [OpCode(Name = nameof(JSR), Code = 0x20, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
-        public void JSR(byte operand) {
+        public void JSR() {
             // http://6502.org/tutorials/6502opcodes.html#JSR
 
-            // Push (operand - 1) -> Stack
-            // PC = operand;
+            PC--;
 
-            throw new NotImplementedException();
+            PushStack((byte)((PC) >> 8)); // MSB
+            PushStack((byte)((PC) & 0xFF)); // LSB
+
+            PC = Address;
         }
 
         [OpCode(Name = nameof(RTI), Code = 0x40, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
@@ -628,7 +720,6 @@ namespace Cpu6502 {
             byte highByte = PopStack();
 
             PC = (ushort)(lowByte | (highByte << 8));
-            PC++;
         }
 
 
@@ -669,51 +760,40 @@ namespace Cpu6502 {
         // BRANCHING
 
         [OpCode(Name = nameof(BCC), Code = 0x90, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BCC(byte operand) {
+        public void BCC() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BCC
 
             if (!SR.Carry) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         [OpCode(Name = nameof(BCS), Code = 0xB0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BCS(byte operand) {
+        public void BCS() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BCS
 
             if (SR.Carry) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
                 // Increment cycle count
-
-                throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         [OpCode(Name = nameof(BEQ), Code = 0xF0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BEQ(byte operand) {
+        public void BEQ() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BEQ
 
             if (SR.Zero) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
@@ -722,13 +802,12 @@ namespace Cpu6502 {
         }
 
         [OpCode(Name = nameof(BNE), Code = 0xD0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BNE(byte operand) {
+        public void BNE() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BNE
 
             if (!SR.Zero) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
@@ -737,13 +816,12 @@ namespace Cpu6502 {
         }
 
         [OpCode(Name = nameof(BMI), Code = 0x30, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BMI(byte operand) {
+        public void BMI() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BMI
 
             if (SR.Negative) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
@@ -752,13 +830,12 @@ namespace Cpu6502 {
         }
 
         [OpCode(Name = nameof(BPL), Code = 0x10, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BPL(byte operand) {
+        public void BPL() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BPL
 
             if (!SR.Negative) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
@@ -767,13 +844,12 @@ namespace Cpu6502 {
         }
 
         [OpCode(Name = nameof(BVC), Code = 0x50, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BVC(byte operand) {
+        public void BVC() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BVC
 
             if (!SR.Overflow) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
@@ -782,13 +858,12 @@ namespace Cpu6502 {
         }
 
         [OpCode(Name = nameof(BVS), Code = 0x70, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
-        public void BVS(byte operand) {
+        public void BVS() {
             // https://www.masswerk.at/6502/6502_instruction_set.html#BVS
 
             if (SR.Overflow) {
                 // Branch
-                var displacement = (sbyte)operand;
-                PC = (ushort)(PC + displacement);
+                PC = Address;
 
             } else {
                 // Don't branch
