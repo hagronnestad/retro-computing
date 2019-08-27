@@ -52,11 +52,56 @@ namespace Cpu6502 {
         }
 
         public void Reset() {
+            // From https://youtu.be/8XmxKPJDGU0?t=3252
+
             AR = XR = YR = 0x00;
-            PC = 0x00;
-            SP = 0xFF;
+            SP = 0xFD;
             SR.Register = 0x00;
-            Array.Clear(Memory, 0, Memory.Length);
+
+            SR.Reserved = true; // From YouTube, undocumented way to detect reset/IRQ?
+
+            var resetVectorAddress = 0xFFFC;
+            PC = (ushort)((Memory[resetVectorAddress + 1] << 8) | Memory[resetVectorAddress + 0]);
+
+            // Reset takes 8 cycles
+        }
+
+        public void Interrupt() { // IRQ
+            // From https://youtu.be/8XmxKPJDGU0?t=3362
+
+            if (SR.IrqDisable) return;
+
+            PushStack((byte)(PC >> 8));
+            PushStack((byte)(PC & 0x00FF));
+
+            SR.BreakCommand = false;
+            SR.Reserved = true; // From YouTube, undocumented way to detect reset/IRQ?
+            SR.IrqDisable = true;
+
+            PushStack(SR.Register);
+
+            var irqVectorAddress = 0xFFFE;
+            PC = (ushort)((Memory[irqVectorAddress + 1] << 8) | Memory[irqVectorAddress + 0]);
+
+            // IRQ takes 7 cycles
+        }
+
+        public void NonMaskableInterrupt() { // NMI
+            // From https://youtu.be/8XmxKPJDGU0?t=3362
+
+            PushStack((byte)(PC >> 8));
+            PushStack((byte)(PC & 0x00FF));
+
+            SR.BreakCommand = false;
+            SR.Reserved = true; // From YouTube, undocumented way to detect reset/IRQ?
+            SR.IrqDisable = true;
+
+            PushStack(SR.Register);
+
+            var nmiVectorAddress = 0xFFFA;
+            PC = (ushort)((Memory[nmiVectorAddress + 1] << 8) | Memory[nmiVectorAddress + 0]);
+
+            // NMI takes 8 cycles
         }
 
         public void PushStack(byte value) {
@@ -520,14 +565,14 @@ namespace Cpu6502 {
         public void BRK() {
             // http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=BRK
 
-            PC += 2;
             SR.IrqDisable = true;
 
-            PushStack((byte)(PC >> 8)); // MSB
-            PushStack((byte)(PC & 0xFF)); // LSB
+            PushStack((byte)((PC + 1) >> 8)); // MSB
+            PushStack((byte)((PC + 1) & 0xFF)); // LSB
             PushStack(SR.Register);
 
-            PC = BitConverter.ToUInt16(new byte[] { Memory[0xFE], Memory[0xFF] }, 0); // BRK interrupt vector
+            PC = BitConverter.ToUInt16(new byte[] { Memory[0xFFFE], Memory[0xFFFF] }, 0); // BRK interrupt vector
+            PC--; // Compensate for `PC += opCode.Length;` in the `Step`-method
         }
 
         [OpCode(Name = nameof(NOP), Code = 0xEA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied)]
@@ -558,18 +603,17 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(RTI), Code = 0x40, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
         public void RTI() {
-            // http://6502.org/tutorials/6502opcodes.html#RTI
-
-            // RTI retrieves the Processor Status Word (flags) and the Program Counter from the stack in that order (interrupts push the PC first and then the PSW).
-            // Pop Stack -> SR
-            // Pop Stack -> PC
+            // From https://youtu.be/8XmxKPJDGU0?t=3413
 
             SR.Register = PopStack();
+
+            SR.BreakCommand = false;
+            SR.Reserved = false; // From YouTube, undocumented way to detect reset/IRQ?
 
             byte lowByte = PopStack();
             byte highByte = PopStack();
 
-            PC = BitConverter.ToUInt16(new byte[] { lowByte, highByte }, 0);
+            PC = (ushort)(lowByte | (highByte << 8));
         }
 
         [OpCode(Name = nameof(RTS), Code = 0x60, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
@@ -583,7 +627,7 @@ namespace Cpu6502 {
             byte lowByte = PopStack();
             byte highByte = PopStack();
 
-            PC = BitConverter.ToUInt16(new byte[] { lowByte, highByte }, 0);
+            PC = (ushort)(lowByte | (highByte << 8));
             PC++;
         }
 
@@ -602,6 +646,8 @@ namespace Cpu6502 {
             // http://6502.org/tutorials/6502opcodes.html#PLA 
 
             AR = PopStack();
+            SR.SetNegative(AR);
+            SR.SetZero(AR);
         }
 
         [OpCode(Name = nameof(PHP), Code = 0x08, Length = 1, Cycles = 3, AddressingMode = AddressingMode.Implied)]
