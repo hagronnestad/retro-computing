@@ -60,20 +60,26 @@
             this.chkCurrentCarry = new System.Windows.Forms.CheckBox();
             this.lblCurrentSP = new System.Windows.Forms.Label();
             this.lblCurrentPC = new System.Windows.Forms.Label();
-            this.bvMemory = new System.ComponentModel.Design.ByteViewer();
             this.lblPreviousOpCode = new System.Windows.Forms.Label();
             this.lblPreviousAddressingMode = new System.Windows.Forms.Label();
             this.lblCurrentAddressingMode = new System.Windows.Forms.Label();
             this.lblCurrentOpCode = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
+            this.dgWatch = new System.Windows.Forms.DataGridView();
+            this.clmAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmValueHex = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmValueDecimal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnMemory = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStep
             // 
             this.btnStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStep.Location = new System.Drawing.Point(940, 770);
+            this.btnStep.Location = new System.Drawing.Point(815, 692);
             this.btnStep.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnStep.Name = "btnStep";
             this.btnStep.Size = new System.Drawing.Size(100, 32);
@@ -84,7 +90,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.lblPreviousAddressingMode);
             this.groupBox1.Controls.Add(this.lblPreviousOpCode);
             this.groupBox1.Controls.Add(this.txtPreviousYR);
@@ -105,11 +110,11 @@
             this.groupBox1.Controls.Add(this.chkPreviousZero);
             this.groupBox1.Controls.Add(this.chkPreviousCarry);
             this.groupBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(679, 17);
+            this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox1.Size = new System.Drawing.Size(361, 344);
+            this.groupBox1.Size = new System.Drawing.Size(380, 344);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Current State";
@@ -202,7 +207,7 @@
             // chkPreviousNegative
             // 
             this.chkPreviousNegative.AutoSize = true;
-            this.chkPreviousNegative.Location = new System.Drawing.Point(189, 301);
+            this.chkPreviousNegative.Location = new System.Drawing.Point(190, 301);
             this.chkPreviousNegative.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPreviousNegative.Name = "chkPreviousNegative";
             this.chkPreviousNegative.Size = new System.Drawing.Size(91, 22);
@@ -213,7 +218,7 @@
             // chkPreviousOverflow
             // 
             this.chkPreviousOverflow.AutoSize = true;
-            this.chkPreviousOverflow.Location = new System.Drawing.Point(189, 269);
+            this.chkPreviousOverflow.Location = new System.Drawing.Point(190, 269);
             this.chkPreviousOverflow.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPreviousOverflow.Name = "chkPreviousOverflow";
             this.chkPreviousOverflow.Size = new System.Drawing.Size(91, 22);
@@ -224,7 +229,7 @@
             // chkPreviousBreakCommand
             // 
             this.chkPreviousBreakCommand.AutoSize = true;
-            this.chkPreviousBreakCommand.Location = new System.Drawing.Point(189, 238);
+            this.chkPreviousBreakCommand.Location = new System.Drawing.Point(190, 238);
             this.chkPreviousBreakCommand.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPreviousBreakCommand.Name = "chkPreviousBreakCommand";
             this.chkPreviousBreakCommand.Size = new System.Drawing.Size(123, 22);
@@ -235,7 +240,7 @@
             // chkPreviousDecimalMode
             // 
             this.chkPreviousDecimalMode.AutoSize = true;
-            this.chkPreviousDecimalMode.Location = new System.Drawing.Point(189, 206);
+            this.chkPreviousDecimalMode.Location = new System.Drawing.Point(190, 206);
             this.chkPreviousDecimalMode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPreviousDecimalMode.Name = "chkPreviousDecimalMode";
             this.chkPreviousDecimalMode.Size = new System.Drawing.Size(115, 22);
@@ -246,7 +251,7 @@
             // chkPreviousIrqDisable
             // 
             this.chkPreviousIrqDisable.AutoSize = true;
-            this.chkPreviousIrqDisable.Location = new System.Drawing.Point(189, 174);
+            this.chkPreviousIrqDisable.Location = new System.Drawing.Point(190, 174);
             this.chkPreviousIrqDisable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPreviousIrqDisable.Name = "chkPreviousIrqDisable";
             this.chkPreviousIrqDisable.Size = new System.Drawing.Size(107, 22);
@@ -257,7 +262,7 @@
             // chkPreviousZero
             // 
             this.chkPreviousZero.AutoSize = true;
-            this.chkPreviousZero.Location = new System.Drawing.Point(189, 142);
+            this.chkPreviousZero.Location = new System.Drawing.Point(190, 142);
             this.chkPreviousZero.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPreviousZero.Name = "chkPreviousZero";
             this.chkPreviousZero.Size = new System.Drawing.Size(59, 22);
@@ -268,7 +273,7 @@
             // chkPreviousCarry
             // 
             this.chkPreviousCarry.AutoSize = true;
-            this.chkPreviousCarry.Location = new System.Drawing.Point(189, 110);
+            this.chkPreviousCarry.Location = new System.Drawing.Point(190, 110);
             this.chkPreviousCarry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkPreviousCarry.Name = "chkPreviousCarry";
             this.chkPreviousCarry.Size = new System.Drawing.Size(67, 22);
@@ -278,7 +283,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.lblCurrentAddressingMode);
             this.groupBox2.Controls.Add(this.lblCurrentOpCode);
             this.groupBox2.Controls.Add(this.txtCurrentYR);
@@ -299,18 +303,18 @@
             this.groupBox2.Controls.Add(this.lblCurrentSP);
             this.groupBox2.Controls.Add(this.lblCurrentPC);
             this.groupBox2.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(682, 382);
+            this.groupBox2.Location = new System.Drawing.Point(432, 13);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox2.Size = new System.Drawing.Size(361, 375);
+            this.groupBox2.Size = new System.Drawing.Size(380, 344);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Next Instruction";
             // 
             // txtCurrentYR
             // 
-            this.txtCurrentYR.Location = new System.Drawing.Point(57, 240);
+            this.txtCurrentYR.Location = new System.Drawing.Point(50, 239);
             this.txtCurrentYR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtCurrentYR.Name = "txtCurrentYR";
             this.txtCurrentYR.Size = new System.Drawing.Size(105, 25);
@@ -319,7 +323,7 @@
             // chkCurrentNegative
             // 
             this.chkCurrentNegative.AutoSize = true;
-            this.chkCurrentNegative.Location = new System.Drawing.Point(186, 308);
+            this.chkCurrentNegative.Location = new System.Drawing.Point(190, 307);
             this.chkCurrentNegative.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCurrentNegative.Name = "chkCurrentNegative";
             this.chkCurrentNegative.Size = new System.Drawing.Size(91, 22);
@@ -329,7 +333,7 @@
             // 
             // txtCurrentXR
             // 
-            this.txtCurrentXR.Location = new System.Drawing.Point(57, 208);
+            this.txtCurrentXR.Location = new System.Drawing.Point(50, 207);
             this.txtCurrentXR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtCurrentXR.Name = "txtCurrentXR";
             this.txtCurrentXR.Size = new System.Drawing.Size(105, 25);
@@ -338,7 +342,7 @@
             // chkCurrentOverflow
             // 
             this.chkCurrentOverflow.AutoSize = true;
-            this.chkCurrentOverflow.Location = new System.Drawing.Point(186, 277);
+            this.chkCurrentOverflow.Location = new System.Drawing.Point(190, 276);
             this.chkCurrentOverflow.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCurrentOverflow.Name = "chkCurrentOverflow";
             this.chkCurrentOverflow.Size = new System.Drawing.Size(91, 22);
@@ -348,7 +352,7 @@
             // 
             // txtCurrentAR
             // 
-            this.txtCurrentAR.Location = new System.Drawing.Point(57, 176);
+            this.txtCurrentAR.Location = new System.Drawing.Point(50, 175);
             this.txtCurrentAR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtCurrentAR.Name = "txtCurrentAR";
             this.txtCurrentAR.Size = new System.Drawing.Size(105, 25);
@@ -357,7 +361,7 @@
             // chkCurrentBreakCommand
             // 
             this.chkCurrentBreakCommand.AutoSize = true;
-            this.chkCurrentBreakCommand.Location = new System.Drawing.Point(186, 245);
+            this.chkCurrentBreakCommand.Location = new System.Drawing.Point(190, 244);
             this.chkCurrentBreakCommand.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCurrentBreakCommand.Name = "chkCurrentBreakCommand";
             this.chkCurrentBreakCommand.Size = new System.Drawing.Size(123, 22);
@@ -367,7 +371,7 @@
             // 
             // txtCurrentSP
             // 
-            this.txtCurrentSP.Location = new System.Drawing.Point(57, 144);
+            this.txtCurrentSP.Location = new System.Drawing.Point(50, 143);
             this.txtCurrentSP.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtCurrentSP.Name = "txtCurrentSP";
             this.txtCurrentSP.Size = new System.Drawing.Size(105, 25);
@@ -376,7 +380,7 @@
             // chkCurrentDecimalMode
             // 
             this.chkCurrentDecimalMode.AutoSize = true;
-            this.chkCurrentDecimalMode.Location = new System.Drawing.Point(186, 213);
+            this.chkCurrentDecimalMode.Location = new System.Drawing.Point(190, 212);
             this.chkCurrentDecimalMode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCurrentDecimalMode.Name = "chkCurrentDecimalMode";
             this.chkCurrentDecimalMode.Size = new System.Drawing.Size(115, 22);
@@ -386,7 +390,7 @@
             // 
             // txtCurrentPC
             // 
-            this.txtCurrentPC.Location = new System.Drawing.Point(57, 112);
+            this.txtCurrentPC.Location = new System.Drawing.Point(50, 111);
             this.txtCurrentPC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtCurrentPC.Name = "txtCurrentPC";
             this.txtCurrentPC.Size = new System.Drawing.Size(105, 25);
@@ -394,7 +398,7 @@
             // 
             // lblCurrentYR
             // 
-            this.lblCurrentYR.Location = new System.Drawing.Point(16, 245);
+            this.lblCurrentYR.Location = new System.Drawing.Point(9, 244);
             this.lblCurrentYR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentYR.Name = "lblCurrentYR";
             this.lblCurrentYR.Size = new System.Drawing.Size(33, 19);
@@ -404,7 +408,7 @@
             // chkCurrentIrqDisable
             // 
             this.chkCurrentIrqDisable.AutoSize = true;
-            this.chkCurrentIrqDisable.Location = new System.Drawing.Point(186, 181);
+            this.chkCurrentIrqDisable.Location = new System.Drawing.Point(190, 180);
             this.chkCurrentIrqDisable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCurrentIrqDisable.Name = "chkCurrentIrqDisable";
             this.chkCurrentIrqDisable.Size = new System.Drawing.Size(107, 22);
@@ -414,7 +418,7 @@
             // 
             // lblCurrentXR
             // 
-            this.lblCurrentXR.Location = new System.Drawing.Point(16, 213);
+            this.lblCurrentXR.Location = new System.Drawing.Point(9, 212);
             this.lblCurrentXR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentXR.Name = "lblCurrentXR";
             this.lblCurrentXR.Size = new System.Drawing.Size(33, 19);
@@ -424,7 +428,7 @@
             // chkCurrentZero
             // 
             this.chkCurrentZero.AutoSize = true;
-            this.chkCurrentZero.Location = new System.Drawing.Point(186, 149);
+            this.chkCurrentZero.Location = new System.Drawing.Point(190, 148);
             this.chkCurrentZero.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCurrentZero.Name = "chkCurrentZero";
             this.chkCurrentZero.Size = new System.Drawing.Size(59, 22);
@@ -434,7 +438,7 @@
             // 
             // lblCurrentAR
             // 
-            this.lblCurrentAR.Location = new System.Drawing.Point(16, 181);
+            this.lblCurrentAR.Location = new System.Drawing.Point(9, 180);
             this.lblCurrentAR.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentAR.Name = "lblCurrentAR";
             this.lblCurrentAR.Size = new System.Drawing.Size(33, 19);
@@ -444,7 +448,7 @@
             // chkCurrentCarry
             // 
             this.chkCurrentCarry.AutoSize = true;
-            this.chkCurrentCarry.Location = new System.Drawing.Point(186, 117);
+            this.chkCurrentCarry.Location = new System.Drawing.Point(190, 116);
             this.chkCurrentCarry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkCurrentCarry.Name = "chkCurrentCarry";
             this.chkCurrentCarry.Size = new System.Drawing.Size(67, 22);
@@ -454,7 +458,7 @@
             // 
             // lblCurrentSP
             // 
-            this.lblCurrentSP.Location = new System.Drawing.Point(16, 150);
+            this.lblCurrentSP.Location = new System.Drawing.Point(9, 149);
             this.lblCurrentSP.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentSP.Name = "lblCurrentSP";
             this.lblCurrentSP.Size = new System.Drawing.Size(33, 19);
@@ -463,34 +467,12 @@
             // 
             // lblCurrentPC
             // 
-            this.lblCurrentPC.Location = new System.Drawing.Point(16, 118);
+            this.lblCurrentPC.Location = new System.Drawing.Point(9, 117);
             this.lblCurrentPC.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentPC.Name = "lblCurrentPC";
             this.lblCurrentPC.Size = new System.Drawing.Size(33, 19);
             this.lblCurrentPC.TabIndex = 17;
             this.lblCurrentPC.Text = "PC:";
-            // 
-            // bvMemory
-            // 
-            this.bvMemory.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset;
-            this.bvMemory.ColumnCount = 1;
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.bvMemory.Location = new System.Drawing.Point(16, 17);
-            this.bvMemory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.bvMemory.Name = "bvMemory";
-            this.bvMemory.RowCount = 1;
-            this.bvMemory.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.bvMemory.Size = new System.Drawing.Size(634, 740);
-            this.bvMemory.TabIndex = 3;
             // 
             // lblPreviousOpCode
             // 
@@ -516,7 +498,7 @@
             // lblCurrentAddressingMode
             // 
             this.lblCurrentAddressingMode.AutoSize = true;
-            this.lblCurrentAddressingMode.Location = new System.Drawing.Point(16, 69);
+            this.lblCurrentAddressingMode.Location = new System.Drawing.Point(9, 68);
             this.lblCurrentAddressingMode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentAddressingMode.Name = "lblCurrentAddressingMode";
             this.lblCurrentAddressingMode.Size = new System.Drawing.Size(120, 18);
@@ -527,7 +509,7 @@
             // 
             this.lblCurrentOpCode.AutoSize = true;
             this.lblCurrentOpCode.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentOpCode.Location = new System.Drawing.Point(15, 36);
+            this.lblCurrentOpCode.Location = new System.Drawing.Point(8, 35);
             this.lblCurrentOpCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentOpCode.Name = "lblCurrentOpCode";
             this.lblCurrentOpCode.Size = new System.Drawing.Size(82, 24);
@@ -537,7 +519,7 @@
             // btnReset
             // 
             this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReset.Location = new System.Drawing.Point(827, 770);
+            this.btnReset.Location = new System.Drawing.Point(702, 692);
             this.btnReset.Margin = new System.Windows.Forms.Padding(4);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(100, 32);
@@ -546,13 +528,69 @@
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
             // 
+            // dgWatch
+            // 
+            this.dgWatch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgWatch.BackgroundColor = System.Drawing.Color.White;
+            this.dgWatch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgWatch.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.clmAddress,
+            this.clmValueHex,
+            this.clmValueDecimal,
+            this.clmDescription});
+            this.dgWatch.EnableHeadersVisualStyles = false;
+            this.dgWatch.Location = new System.Drawing.Point(13, 375);
+            this.dgWatch.Name = "dgWatch";
+            this.dgWatch.Size = new System.Drawing.Size(902, 299);
+            this.dgWatch.TabIndex = 6;
+            this.dgWatch.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.DgWatch_CellEndEdit);
+            // 
+            // clmAddress
+            // 
+            this.clmAddress.HeaderText = "Address";
+            this.clmAddress.Name = "clmAddress";
+            this.clmAddress.Width = 150;
+            // 
+            // clmValueHex
+            // 
+            this.clmValueHex.HeaderText = "Value Hex";
+            this.clmValueHex.Name = "clmValueHex";
+            this.clmValueHex.Width = 150;
+            // 
+            // clmValueDecimal
+            // 
+            this.clmValueDecimal.HeaderText = "Value Dec";
+            this.clmValueDecimal.Name = "clmValueDecimal";
+            this.clmValueDecimal.Width = 150;
+            // 
+            // clmDescription
+            // 
+            this.clmDescription.HeaderText = "Description";
+            this.clmDescription.Name = "clmDescription";
+            this.clmDescription.Width = 300;
+            // 
+            // btnMemory
+            // 
+            this.btnMemory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMemory.Location = new System.Drawing.Point(524, 692);
+            this.btnMemory.Margin = new System.Windows.Forms.Padding(4);
+            this.btnMemory.Name = "btnMemory";
+            this.btnMemory.Size = new System.Drawing.Size(138, 32);
+            this.btnMemory.TabIndex = 7;
+            this.btnMemory.Text = "Show Memory";
+            this.btnMemory.UseVisualStyleBackColor = true;
+            this.btnMemory.Click += new System.EventHandler(this.BtnMemory_Click);
+            // 
             // FormDebugger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1056, 813);
+            this.ClientSize = new System.Drawing.Size(933, 737);
+            this.Controls.Add(this.btnMemory);
+            this.Controls.Add(this.dgWatch);
             this.Controls.Add(this.btnReset);
-            this.Controls.Add(this.bvMemory);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnStep);
@@ -560,11 +598,13 @@
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FormDebugger";
             this.Text = "6502 Debugger";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDebugger_FormClosing);
             this.Load += new System.EventHandler(this.FormDebugger_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -608,12 +648,17 @@
         private System.Windows.Forms.Label lblCurrentAR;
         private System.Windows.Forms.Label lblCurrentSP;
         private System.Windows.Forms.Label lblCurrentPC;
-        private System.ComponentModel.Design.ByteViewer bvMemory;
         private System.Windows.Forms.Label lblPreviousAddressingMode;
         private System.Windows.Forms.Label lblPreviousOpCode;
         private System.Windows.Forms.Label lblCurrentAddressingMode;
         private System.Windows.Forms.Label lblCurrentOpCode;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.DataGridView dgWatch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmAddress;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmValueHex;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmValueDecimal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmDescription;
+        private System.Windows.Forms.Button btnMemory;
     }
 }
 

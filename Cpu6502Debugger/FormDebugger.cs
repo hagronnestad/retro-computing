@@ -1,22 +1,29 @@
 ﻿using System.IO;
 using System.Windows.Forms;
 using System.Linq;
+using System.Globalization;
+using System.Drawing;
+using Newtonsoft.Json;
 
 namespace Cpu6502Debugger {
     public partial class FormDebugger : Form {
 
         Cpu6502.Cpu6502 Cpu;
+        FormMemoryViewer FormMemoryViewer = new FormMemoryViewer();
 
         public FormDebugger() {
             InitializeComponent();
 
             Cpu = new Cpu6502.Cpu6502();
 
-            //ushort startAddress = 0x4000;
-            //Cpu.LoadMemory(File.ReadAllBytes(@"TestImages\LoadDecrementMemory0x50.bin"), startAddress);
+            ushort startAddress = 0x4000;
+            Cpu.LoadMemory(File.ReadAllBytes(@"TestImages\LoadDecrementMemory0x50.bin"), startAddress);
 
-            ushort startAddress = 0x6210;
-            Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\instr_test-v5\instr_test-v5\rom_singles\02-implied.nes"), 0);
+            //ushort startAddress = 0x6210;
+            //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\instr_test-v5\instr_test-v5\rom_singles\02-implied.nes"), 0);
+
+            //ushort startAddress = 0xC000;
+            //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\nestest.nes"), 0xC000);
 
             Cpu.PC = (ushort)(startAddress);
 
@@ -25,7 +32,8 @@ namespace Cpu6502Debugger {
         }
 
         private void FormDebugger_Load(object sender, System.EventArgs e) {
-
+            LoadWatches();
+            UpdateMemoryWatch();
         }
 
         private void BtnStep_Click(object sender, System.EventArgs e) {
@@ -71,13 +79,125 @@ namespace Cpu6502Debugger {
             txtCurrentXR.Text = Cpu.XR.ToString("X2");
             txtCurrentYR.Text = Cpu.YR.ToString("X2");
 
-            bvMemory.SetBytes(Cpu.Memory);
-            btnStep.Focus();
+            UpdateMemoryWatch();
+            if (FormMemoryViewer.Visible) FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
+        }
+
+        private void UpdateMemoryWatch() {
+            for (int i = 0; i < dgWatch.Rows.Count; i++) {
+                var addressString = dgWatch.Rows[i].Cells[0].Value as string;
+                if (addressString == null || string.IsNullOrWhiteSpace(addressString)) continue;
+
+                var address = StringToInt(addressString);
+
+                if (address == null) {
+                    dgWatch.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
+                    continue;
+
+                } else {
+                    dgWatch.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                }
+
+                var valueHex = $"0x{Cpu.Memory[address.Value]:X2}";
+                var valueDec = $"{Cpu.Memory[address.Value]}";
+
+                var colorHex = !valueHex.Equals(dgWatch.Rows[i].Cells[1].Value) ? Color.Red : Color.Black;
+                dgWatch.Rows[i].Cells[1].Style.ForeColor = colorHex;
+                dgWatch.Rows[i].Cells[1].Value = valueHex;
+
+                var colorDec = !valueDec.Equals(dgWatch.Rows[i].Cells[2].Value) ? Color.Red : Color.Black;
+                dgWatch.Rows[i].Cells[2].Style.ForeColor = colorDec;
+                dgWatch.Rows[i].Cells[2].Value = valueDec;
+            }
+        }
+
+        private int? StringToInt(string intString) {
+            int address = 0;
+
+            if (intString.ToLower().StartsWith("0x") || intString.ToLower().StartsWith("&h")) {
+                if (int.TryParse(intString.Substring(2), NumberStyles.HexNumber, null, out address)) return address;
+
+            } else {
+                if (int.TryParse(intString, out address)) return address;
+            }
+
+            return null;
         }
 
         private void BtnReset_Click(object sender, System.EventArgs e) {
             Cpu.Reset();
             UpdatePreviousStateUi();
+            UpdateCurrentStateUi();
+        }
+
+        private void DgWatch_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
+            switch (e.ColumnIndex) {
+                case 0:
+                    UpdateMemoryWatch();
+                    break;
+
+                case 1:
+                case 2:
+                    var addressString = dgWatch.Rows[e.RowIndex].Cells[0].Value as string;
+                    if (addressString == null || string.IsNullOrWhiteSpace(addressString)) break;
+
+                    var address = StringToInt(addressString);
+                    if (address == null) break;
+
+                    var value = StringToInt(dgWatch.Rows[e.RowIndex].Cells[e.ColumnIndex].Value as string);
+                    if (value == null) break;
+
+                    Cpu.Memory[address.Value] = (byte)value.Value;
+
+                    UpdateMemoryWatch();
+                    UpdateCurrentStateUi();
+
+                    break;
+
+            }
+        }
+
+        private void FormDebugger_FormClosing(object sender, FormClosingEventArgs e) {
+            SaveWatches();
+        }
+
+        private void SaveWatches() {
+            string[,] data = new string[dgWatch.Rows.Count, dgWatch.Columns.Count];
+
+            for (int i = 0; i < dgWatch.Rows.Count; i++) {
+
+                for (int j = 0; j < dgWatch.Rows[i].Cells.Count; j++) {
+
+                    data[i,j] = (string)dgWatch.Rows[i].Cells[j].Value;
+
+                }
+
+            }
+
+            var json = JsonConvert.SerializeObject(data);
+            File.WriteAllText("watches.json", json);
+        }
+
+        private void LoadWatches() {
+            if (!File.Exists("watches.json")) return;
+
+            var json = File.ReadAllText("watches.json");
+            var data = JsonConvert.DeserializeObject<string[,]>(json);
+
+            for (int i = 0; i < data.GetLength(0); i++) {
+                var rowdata = new string[data.GetLength(1)];
+
+                for (int j = 0; j < data.GetLength(1); j++) {
+                    rowdata[j] = data[i, j];
+                }
+
+                if (rowdata.All(x => string.IsNullOrWhiteSpace(x))) continue;
+                dgWatch.Rows.Add(rowdata);
+            }
+        }
+
+        private void BtnMemory_Click(object sender, System.EventArgs e) {
+            FormMemoryViewer.Show();
             UpdateCurrentStateUi();
         }
     }
