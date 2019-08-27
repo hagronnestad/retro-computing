@@ -16,18 +16,17 @@ namespace Cpu6502Debugger {
 
             Cpu = new Cpu6502.Cpu6502();
 
-            ushort startAddress = 0x4000;
-            Cpu.LoadMemory(File.ReadAllBytes(@"TestImages\LoadDecrementMemory0x50.bin"), startAddress);
+            //ushort startAddress = 0x4000;
+            //Cpu.LoadMemory(File.ReadAllBytes(@"TestImages\LoadDecrementMemory0x50.bin"), startAddress);
 
             //ushort startAddress = 0x6210;
             //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\instr_test-v5\instr_test-v5\rom_singles\02-implied.nes"), 0);
 
-            //ushort startAddress = 0xC000;
-            //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\nestest.nes"), 0xC000);
+            ushort startAddress = 0xC000;
+            Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\nestest.nes"), 0xC000 - 0x10);
 
-            Cpu.PC = (ushort)(startAddress);
+            Cpu.InitPC(startAddress);
 
-            UpdatePreviousStateUi();
             UpdateCurrentStateUi();
         }
 
@@ -43,8 +42,8 @@ namespace Cpu6502Debugger {
         }
 
         private void UpdatePreviousStateUi() {
-            lblPreviousOpCode.Text = $"{Cpu.OpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.PC).Take(Cpu.OpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
-            lblPreviousAddressingMode.Text = Cpu.OpCode?.AddressingMode.ToString();
+            lblPreviousOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
+            lblPreviousAddressingMode.Text = Cpu.NextOpCode?.AddressingMode.ToString();
 
             chkPreviousCarry.Checked = Cpu.SR.Carry;
             chkPreviousZero.Checked = Cpu.SR.Zero;
@@ -62,8 +61,8 @@ namespace Cpu6502Debugger {
         }
 
         private void UpdateCurrentStateUi() {
-            lblCurrentOpCode.Text = $"{Cpu.OpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.PC).Take(Cpu.OpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
-            lblCurrentAddressingMode.Text = Cpu.OpCode?.AddressingMode.ToString();
+            lblCurrentOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
+            lblCurrentAddressingMode.Text = Cpu.NextOpCode?.AddressingMode.ToString();
 
             chkCurrentCarry.Checked = Cpu.SR.Carry;
             chkCurrentZero.Checked = Cpu.SR.Zero;

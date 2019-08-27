@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 
 namespace Cpu6502 {
     public class Cpu6502 {
@@ -29,6 +28,9 @@ namespace Cpu6502 {
 
         public OpCodeDefinition OpCode { get; set; }
         public ushort OpCodeAddress;
+
+        public OpCodeDefinition NextOpCode { get; set; }
+        public ushort NextOpCodeAddress;
 
         public ushort Address;
         public byte Value {
@@ -88,6 +90,13 @@ namespace Cpu6502 {
             if ((location + data.Length) > Memory.Length) throw new OutOfMemoryException();
 
             Array.Copy(data, 0, Memory, location, data.Length);
+        }
+
+        public void InitPC(ushort pc) {
+            PC = pc;
+
+            NextOpCode = OpCodeCache[Memory[PC]];
+            NextOpCodeAddress = PC;
         }
 
         public void Reset() {
@@ -172,6 +181,9 @@ namespace Cpu6502 {
 
             Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
             Debug.WriteLine("");
+
+            NextOpCode = OpCodeCache[Memory[PC]];
+            NextOpCodeAddress = PC;
         }
 
 
