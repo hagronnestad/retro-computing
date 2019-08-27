@@ -732,6 +732,7 @@ namespace Cpu6502 {
             byte highByte = PopStack();
 
             PC = (ushort)(lowByte | (highByte << 8));
+            PC++;
         }
 
 
