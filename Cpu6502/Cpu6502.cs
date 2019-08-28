@@ -535,12 +535,15 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ADC), Code = 0x61, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(ADC), Code = 0x71, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
         public void ADC() {
-            var temp = AR + Value + (SR.Carry ? 0 : 1);
+            var temp = AR + Value + (SR.Carry ? 1 : 0);
 
             SR.Carry = temp > 255;
-            SR.Overflow = ((AR ^ temp) & ~(AR ^ Value) & 0b10000000) == 0b10000000;
+            SR.Overflow = ((~(AR ^ Value) & (AR ^ temp)) & 0b10000000) == 0b10000000;
+
             SR.SetZero((byte)temp);
             SR.SetNegative((byte)temp);
+
+            AR = (byte)temp;
         }
 
         [OpCode(Name = nameof(SBC), Code = 0xE9, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
@@ -554,12 +557,16 @@ namespace Cpu6502 {
         public void SBC() {
             // https://youtu.be/8XmxKPJDGU0?t=3141
 
-            var temp = AR + (Value ^ 0x00FF) + (SR.Carry ? 0 : 1);
+            var v = Value ^ 0x00FF;
+            var temp = AR + v + (SR.Carry ? 1 : 0);
 
             SR.Carry = temp > 255;
-            SR.Overflow = ((AR ^ temp) & ~(AR ^ Value) & 0b10000000) == 0b10000000;
+            SR.Overflow = ((~(AR ^ v) & (AR ^ temp)) & 0b10000000) == 0b10000000;
+
             SR.SetZero((byte)temp);
             SR.SetNegative((byte)temp);
+
+            AR = (byte)temp;
         }
 
 
