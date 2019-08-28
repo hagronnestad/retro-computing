@@ -25,6 +25,8 @@
         private void InitializeComponent() {
             this.btnStep = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblPreviousAddressingMode = new System.Windows.Forms.Label();
+            this.lblPreviousOpCode = new System.Windows.Forms.Label();
             this.txtPreviousYR = new System.Windows.Forms.TextBox();
             this.txtPreviousXR = new System.Windows.Forms.TextBox();
             this.txtPreviousAR = new System.Windows.Forms.TextBox();
@@ -43,6 +45,8 @@
             this.chkPreviousZero = new System.Windows.Forms.CheckBox();
             this.chkPreviousCarry = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblCurrentAddressingMode = new System.Windows.Forms.Label();
+            this.lblCurrentOpCode = new System.Windows.Forms.Label();
             this.txtCurrentYR = new System.Windows.Forms.TextBox();
             this.chkCurrentNegative = new System.Windows.Forms.CheckBox();
             this.txtCurrentXR = new System.Windows.Forms.TextBox();
@@ -60,10 +64,6 @@
             this.chkCurrentCarry = new System.Windows.Forms.CheckBox();
             this.lblCurrentSP = new System.Windows.Forms.Label();
             this.lblCurrentPC = new System.Windows.Forms.Label();
-            this.lblPreviousOpCode = new System.Windows.Forms.Label();
-            this.lblPreviousAddressingMode = new System.Windows.Forms.Label();
-            this.lblCurrentAddressingMode = new System.Windows.Forms.Label();
-            this.lblCurrentOpCode = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
             this.dgWatch = new System.Windows.Forms.DataGridView();
             this.clmAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,6 +71,9 @@
             this.clmValueDecimal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnMemory = new System.Windows.Forms.Button();
+            this.lblSR = new System.Windows.Forms.Label();
+            this.chkCurrentReserved = new System.Windows.Forms.CheckBox();
+            this.chkPreviousReserved = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).BeginInit();
@@ -80,7 +83,7 @@
             // 
             this.btnStep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStep.Location = new System.Drawing.Point(815, 692);
-            this.btnStep.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnStep.Margin = new System.Windows.Forms.Padding(4);
             this.btnStep.Name = "btnStep";
             this.btnStep.Size = new System.Drawing.Size(100, 32);
             this.btnStep.TabIndex = 0;
@@ -90,6 +93,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkPreviousReserved);
             this.groupBox1.Controls.Add(this.lblPreviousAddressingMode);
             this.groupBox1.Controls.Add(this.lblPreviousOpCode);
             this.groupBox1.Controls.Add(this.txtPreviousYR);
@@ -111,18 +115,39 @@
             this.groupBox1.Controls.Add(this.chkPreviousCarry);
             this.groupBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(380, 344);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Current State";
             // 
+            // lblPreviousAddressingMode
+            // 
+            this.lblPreviousAddressingMode.AutoSize = true;
+            this.lblPreviousAddressingMode.Location = new System.Drawing.Point(9, 68);
+            this.lblPreviousAddressingMode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPreviousAddressingMode.Name = "lblPreviousAddressingMode";
+            this.lblPreviousAddressingMode.Size = new System.Drawing.Size(120, 18);
+            this.lblPreviousAddressingMode.TabIndex = 18;
+            this.lblPreviousAddressingMode.Text = "AddressingMode";
+            // 
+            // lblPreviousOpCode
+            // 
+            this.lblPreviousOpCode.AutoSize = true;
+            this.lblPreviousOpCode.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPreviousOpCode.Location = new System.Drawing.Point(8, 35);
+            this.lblPreviousOpCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPreviousOpCode.Name = "lblPreviousOpCode";
+            this.lblPreviousOpCode.Size = new System.Drawing.Size(82, 24);
+            this.lblPreviousOpCode.TabIndex = 17;
+            this.lblPreviousOpCode.Text = "OPCODE";
+            // 
             // txtPreviousYR
             // 
             this.txtPreviousYR.Location = new System.Drawing.Point(49, 235);
-            this.txtPreviousYR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPreviousYR.Margin = new System.Windows.Forms.Padding(4);
             this.txtPreviousYR.Name = "txtPreviousYR";
             this.txtPreviousYR.Size = new System.Drawing.Size(105, 25);
             this.txtPreviousYR.TabIndex = 16;
@@ -130,7 +155,7 @@
             // txtPreviousXR
             // 
             this.txtPreviousXR.Location = new System.Drawing.Point(49, 204);
-            this.txtPreviousXR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPreviousXR.Margin = new System.Windows.Forms.Padding(4);
             this.txtPreviousXR.Name = "txtPreviousXR";
             this.txtPreviousXR.Size = new System.Drawing.Size(105, 25);
             this.txtPreviousXR.TabIndex = 15;
@@ -138,7 +163,7 @@
             // txtPreviousAR
             // 
             this.txtPreviousAR.Location = new System.Drawing.Point(49, 172);
-            this.txtPreviousAR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPreviousAR.Margin = new System.Windows.Forms.Padding(4);
             this.txtPreviousAR.Name = "txtPreviousAR";
             this.txtPreviousAR.Size = new System.Drawing.Size(105, 25);
             this.txtPreviousAR.TabIndex = 14;
@@ -146,7 +171,7 @@
             // txtPreviousSP
             // 
             this.txtPreviousSP.Location = new System.Drawing.Point(49, 140);
-            this.txtPreviousSP.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPreviousSP.Margin = new System.Windows.Forms.Padding(4);
             this.txtPreviousSP.Name = "txtPreviousSP";
             this.txtPreviousSP.Size = new System.Drawing.Size(105, 25);
             this.txtPreviousSP.TabIndex = 13;
@@ -154,7 +179,7 @@
             // txtPreviousPC
             // 
             this.txtPreviousPC.Location = new System.Drawing.Point(49, 108);
-            this.txtPreviousPC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPreviousPC.Margin = new System.Windows.Forms.Padding(4);
             this.txtPreviousPC.Name = "txtPreviousPC";
             this.txtPreviousPC.Size = new System.Drawing.Size(105, 25);
             this.txtPreviousPC.TabIndex = 12;
@@ -207,8 +232,8 @@
             // chkPreviousNegative
             // 
             this.chkPreviousNegative.AutoSize = true;
-            this.chkPreviousNegative.Location = new System.Drawing.Point(190, 301);
-            this.chkPreviousNegative.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPreviousNegative.Location = new System.Drawing.Point(210, 287);
+            this.chkPreviousNegative.Margin = new System.Windows.Forms.Padding(4);
             this.chkPreviousNegative.Name = "chkPreviousNegative";
             this.chkPreviousNegative.Size = new System.Drawing.Size(91, 22);
             this.chkPreviousNegative.TabIndex = 6;
@@ -218,8 +243,8 @@
             // chkPreviousOverflow
             // 
             this.chkPreviousOverflow.AutoSize = true;
-            this.chkPreviousOverflow.Location = new System.Drawing.Point(190, 269);
-            this.chkPreviousOverflow.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPreviousOverflow.Location = new System.Drawing.Point(210, 255);
+            this.chkPreviousOverflow.Margin = new System.Windows.Forms.Padding(4);
             this.chkPreviousOverflow.Name = "chkPreviousOverflow";
             this.chkPreviousOverflow.Size = new System.Drawing.Size(91, 22);
             this.chkPreviousOverflow.TabIndex = 5;
@@ -229,8 +254,8 @@
             // chkPreviousBreakCommand
             // 
             this.chkPreviousBreakCommand.AutoSize = true;
-            this.chkPreviousBreakCommand.Location = new System.Drawing.Point(190, 238);
-            this.chkPreviousBreakCommand.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPreviousBreakCommand.Location = new System.Drawing.Point(210, 195);
+            this.chkPreviousBreakCommand.Margin = new System.Windows.Forms.Padding(4);
             this.chkPreviousBreakCommand.Name = "chkPreviousBreakCommand";
             this.chkPreviousBreakCommand.Size = new System.Drawing.Size(123, 22);
             this.chkPreviousBreakCommand.TabIndex = 4;
@@ -240,8 +265,8 @@
             // chkPreviousDecimalMode
             // 
             this.chkPreviousDecimalMode.AutoSize = true;
-            this.chkPreviousDecimalMode.Location = new System.Drawing.Point(190, 206);
-            this.chkPreviousDecimalMode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPreviousDecimalMode.Location = new System.Drawing.Point(210, 163);
+            this.chkPreviousDecimalMode.Margin = new System.Windows.Forms.Padding(4);
             this.chkPreviousDecimalMode.Name = "chkPreviousDecimalMode";
             this.chkPreviousDecimalMode.Size = new System.Drawing.Size(115, 22);
             this.chkPreviousDecimalMode.TabIndex = 3;
@@ -251,8 +276,8 @@
             // chkPreviousIrqDisable
             // 
             this.chkPreviousIrqDisable.AutoSize = true;
-            this.chkPreviousIrqDisable.Location = new System.Drawing.Point(190, 174);
-            this.chkPreviousIrqDisable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPreviousIrqDisable.Location = new System.Drawing.Point(210, 131);
+            this.chkPreviousIrqDisable.Margin = new System.Windows.Forms.Padding(4);
             this.chkPreviousIrqDisable.Name = "chkPreviousIrqDisable";
             this.chkPreviousIrqDisable.Size = new System.Drawing.Size(107, 22);
             this.chkPreviousIrqDisable.TabIndex = 2;
@@ -262,8 +287,8 @@
             // chkPreviousZero
             // 
             this.chkPreviousZero.AutoSize = true;
-            this.chkPreviousZero.Location = new System.Drawing.Point(190, 142);
-            this.chkPreviousZero.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPreviousZero.Location = new System.Drawing.Point(210, 99);
+            this.chkPreviousZero.Margin = new System.Windows.Forms.Padding(4);
             this.chkPreviousZero.Name = "chkPreviousZero";
             this.chkPreviousZero.Size = new System.Drawing.Size(59, 22);
             this.chkPreviousZero.TabIndex = 1;
@@ -273,8 +298,8 @@
             // chkPreviousCarry
             // 
             this.chkPreviousCarry.AutoSize = true;
-            this.chkPreviousCarry.Location = new System.Drawing.Point(190, 110);
-            this.chkPreviousCarry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkPreviousCarry.Location = new System.Drawing.Point(210, 67);
+            this.chkPreviousCarry.Margin = new System.Windows.Forms.Padding(4);
             this.chkPreviousCarry.Name = "chkPreviousCarry";
             this.chkPreviousCarry.Size = new System.Drawing.Size(67, 22);
             this.chkPreviousCarry.TabIndex = 0;
@@ -283,6 +308,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.chkCurrentReserved);
+            this.groupBox2.Controls.Add(this.lblSR);
             this.groupBox2.Controls.Add(this.lblCurrentAddressingMode);
             this.groupBox2.Controls.Add(this.lblCurrentOpCode);
             this.groupBox2.Controls.Add(this.txtCurrentYR);
@@ -304,18 +331,39 @@
             this.groupBox2.Controls.Add(this.lblCurrentPC);
             this.groupBox2.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(432, 13);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(380, 344);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Next Instruction";
             // 
+            // lblCurrentAddressingMode
+            // 
+            this.lblCurrentAddressingMode.AutoSize = true;
+            this.lblCurrentAddressingMode.Location = new System.Drawing.Point(9, 68);
+            this.lblCurrentAddressingMode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblCurrentAddressingMode.Name = "lblCurrentAddressingMode";
+            this.lblCurrentAddressingMode.Size = new System.Drawing.Size(120, 18);
+            this.lblCurrentAddressingMode.TabIndex = 28;
+            this.lblCurrentAddressingMode.Text = "AddressingMode";
+            // 
+            // lblCurrentOpCode
+            // 
+            this.lblCurrentOpCode.AutoSize = true;
+            this.lblCurrentOpCode.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentOpCode.Location = new System.Drawing.Point(8, 35);
+            this.lblCurrentOpCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblCurrentOpCode.Name = "lblCurrentOpCode";
+            this.lblCurrentOpCode.Size = new System.Drawing.Size(82, 24);
+            this.lblCurrentOpCode.TabIndex = 27;
+            this.lblCurrentOpCode.Text = "OPCODE";
+            // 
             // txtCurrentYR
             // 
             this.txtCurrentYR.Location = new System.Drawing.Point(50, 239);
-            this.txtCurrentYR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCurrentYR.Margin = new System.Windows.Forms.Padding(4);
             this.txtCurrentYR.Name = "txtCurrentYR";
             this.txtCurrentYR.Size = new System.Drawing.Size(105, 25);
             this.txtCurrentYR.TabIndex = 26;
@@ -323,8 +371,8 @@
             // chkCurrentNegative
             // 
             this.chkCurrentNegative.AutoSize = true;
-            this.chkCurrentNegative.Location = new System.Drawing.Point(190, 307);
-            this.chkCurrentNegative.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCurrentNegative.Location = new System.Drawing.Point(211, 286);
+            this.chkCurrentNegative.Margin = new System.Windows.Forms.Padding(4);
             this.chkCurrentNegative.Name = "chkCurrentNegative";
             this.chkCurrentNegative.Size = new System.Drawing.Size(91, 22);
             this.chkCurrentNegative.TabIndex = 13;
@@ -334,7 +382,7 @@
             // txtCurrentXR
             // 
             this.txtCurrentXR.Location = new System.Drawing.Point(50, 207);
-            this.txtCurrentXR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCurrentXR.Margin = new System.Windows.Forms.Padding(4);
             this.txtCurrentXR.Name = "txtCurrentXR";
             this.txtCurrentXR.Size = new System.Drawing.Size(105, 25);
             this.txtCurrentXR.TabIndex = 25;
@@ -342,8 +390,8 @@
             // chkCurrentOverflow
             // 
             this.chkCurrentOverflow.AutoSize = true;
-            this.chkCurrentOverflow.Location = new System.Drawing.Point(190, 276);
-            this.chkCurrentOverflow.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCurrentOverflow.Location = new System.Drawing.Point(211, 255);
+            this.chkCurrentOverflow.Margin = new System.Windows.Forms.Padding(4);
             this.chkCurrentOverflow.Name = "chkCurrentOverflow";
             this.chkCurrentOverflow.Size = new System.Drawing.Size(91, 22);
             this.chkCurrentOverflow.TabIndex = 12;
@@ -353,7 +401,7 @@
             // txtCurrentAR
             // 
             this.txtCurrentAR.Location = new System.Drawing.Point(50, 175);
-            this.txtCurrentAR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCurrentAR.Margin = new System.Windows.Forms.Padding(4);
             this.txtCurrentAR.Name = "txtCurrentAR";
             this.txtCurrentAR.Size = new System.Drawing.Size(105, 25);
             this.txtCurrentAR.TabIndex = 24;
@@ -361,8 +409,8 @@
             // chkCurrentBreakCommand
             // 
             this.chkCurrentBreakCommand.AutoSize = true;
-            this.chkCurrentBreakCommand.Location = new System.Drawing.Point(190, 244);
-            this.chkCurrentBreakCommand.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCurrentBreakCommand.Location = new System.Drawing.Point(211, 195);
+            this.chkCurrentBreakCommand.Margin = new System.Windows.Forms.Padding(4);
             this.chkCurrentBreakCommand.Name = "chkCurrentBreakCommand";
             this.chkCurrentBreakCommand.Size = new System.Drawing.Size(123, 22);
             this.chkCurrentBreakCommand.TabIndex = 11;
@@ -372,7 +420,7 @@
             // txtCurrentSP
             // 
             this.txtCurrentSP.Location = new System.Drawing.Point(50, 143);
-            this.txtCurrentSP.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCurrentSP.Margin = new System.Windows.Forms.Padding(4);
             this.txtCurrentSP.Name = "txtCurrentSP";
             this.txtCurrentSP.Size = new System.Drawing.Size(105, 25);
             this.txtCurrentSP.TabIndex = 23;
@@ -380,8 +428,8 @@
             // chkCurrentDecimalMode
             // 
             this.chkCurrentDecimalMode.AutoSize = true;
-            this.chkCurrentDecimalMode.Location = new System.Drawing.Point(190, 212);
-            this.chkCurrentDecimalMode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCurrentDecimalMode.Location = new System.Drawing.Point(211, 163);
+            this.chkCurrentDecimalMode.Margin = new System.Windows.Forms.Padding(4);
             this.chkCurrentDecimalMode.Name = "chkCurrentDecimalMode";
             this.chkCurrentDecimalMode.Size = new System.Drawing.Size(115, 22);
             this.chkCurrentDecimalMode.TabIndex = 10;
@@ -391,7 +439,7 @@
             // txtCurrentPC
             // 
             this.txtCurrentPC.Location = new System.Drawing.Point(50, 111);
-            this.txtCurrentPC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtCurrentPC.Margin = new System.Windows.Forms.Padding(4);
             this.txtCurrentPC.Name = "txtCurrentPC";
             this.txtCurrentPC.Size = new System.Drawing.Size(105, 25);
             this.txtCurrentPC.TabIndex = 22;
@@ -408,8 +456,8 @@
             // chkCurrentIrqDisable
             // 
             this.chkCurrentIrqDisable.AutoSize = true;
-            this.chkCurrentIrqDisable.Location = new System.Drawing.Point(190, 180);
-            this.chkCurrentIrqDisable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCurrentIrqDisable.Location = new System.Drawing.Point(211, 131);
+            this.chkCurrentIrqDisable.Margin = new System.Windows.Forms.Padding(4);
             this.chkCurrentIrqDisable.Name = "chkCurrentIrqDisable";
             this.chkCurrentIrqDisable.Size = new System.Drawing.Size(107, 22);
             this.chkCurrentIrqDisable.TabIndex = 9;
@@ -428,8 +476,8 @@
             // chkCurrentZero
             // 
             this.chkCurrentZero.AutoSize = true;
-            this.chkCurrentZero.Location = new System.Drawing.Point(190, 148);
-            this.chkCurrentZero.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCurrentZero.Location = new System.Drawing.Point(211, 99);
+            this.chkCurrentZero.Margin = new System.Windows.Forms.Padding(4);
             this.chkCurrentZero.Name = "chkCurrentZero";
             this.chkCurrentZero.Size = new System.Drawing.Size(59, 22);
             this.chkCurrentZero.TabIndex = 8;
@@ -448,8 +496,8 @@
             // chkCurrentCarry
             // 
             this.chkCurrentCarry.AutoSize = true;
-            this.chkCurrentCarry.Location = new System.Drawing.Point(190, 116);
-            this.chkCurrentCarry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkCurrentCarry.Location = new System.Drawing.Point(211, 67);
+            this.chkCurrentCarry.Margin = new System.Windows.Forms.Padding(4);
             this.chkCurrentCarry.Name = "chkCurrentCarry";
             this.chkCurrentCarry.Size = new System.Drawing.Size(67, 22);
             this.chkCurrentCarry.TabIndex = 7;
@@ -473,48 +521,6 @@
             this.lblCurrentPC.Size = new System.Drawing.Size(33, 19);
             this.lblCurrentPC.TabIndex = 17;
             this.lblCurrentPC.Text = "PC:";
-            // 
-            // lblPreviousOpCode
-            // 
-            this.lblPreviousOpCode.AutoSize = true;
-            this.lblPreviousOpCode.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPreviousOpCode.Location = new System.Drawing.Point(8, 35);
-            this.lblPreviousOpCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblPreviousOpCode.Name = "lblPreviousOpCode";
-            this.lblPreviousOpCode.Size = new System.Drawing.Size(82, 24);
-            this.lblPreviousOpCode.TabIndex = 17;
-            this.lblPreviousOpCode.Text = "OPCODE";
-            // 
-            // lblPreviousAddressingMode
-            // 
-            this.lblPreviousAddressingMode.AutoSize = true;
-            this.lblPreviousAddressingMode.Location = new System.Drawing.Point(9, 68);
-            this.lblPreviousAddressingMode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblPreviousAddressingMode.Name = "lblPreviousAddressingMode";
-            this.lblPreviousAddressingMode.Size = new System.Drawing.Size(120, 18);
-            this.lblPreviousAddressingMode.TabIndex = 18;
-            this.lblPreviousAddressingMode.Text = "AddressingMode";
-            // 
-            // lblCurrentAddressingMode
-            // 
-            this.lblCurrentAddressingMode.AutoSize = true;
-            this.lblCurrentAddressingMode.Location = new System.Drawing.Point(9, 68);
-            this.lblCurrentAddressingMode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblCurrentAddressingMode.Name = "lblCurrentAddressingMode";
-            this.lblCurrentAddressingMode.Size = new System.Drawing.Size(120, 18);
-            this.lblCurrentAddressingMode.TabIndex = 28;
-            this.lblCurrentAddressingMode.Text = "AddressingMode";
-            // 
-            // lblCurrentOpCode
-            // 
-            this.lblCurrentOpCode.AutoSize = true;
-            this.lblCurrentOpCode.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentOpCode.Location = new System.Drawing.Point(8, 35);
-            this.lblCurrentOpCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblCurrentOpCode.Name = "lblCurrentOpCode";
-            this.lblCurrentOpCode.Size = new System.Drawing.Size(82, 24);
-            this.lblCurrentOpCode.TabIndex = 27;
-            this.lblCurrentOpCode.Text = "OPCODE";
             // 
             // btnReset
             // 
@@ -583,6 +589,37 @@
             this.btnMemory.UseVisualStyleBackColor = true;
             this.btnMemory.Click += new System.EventHandler(this.BtnMemory_Click);
             // 
+            // lblSR
+            // 
+            this.lblSR.AutoSize = true;
+            this.lblSR.Location = new System.Drawing.Point(47, 277);
+            this.lblSR.Name = "lblSR";
+            this.lblSR.Size = new System.Drawing.Size(56, 18);
+            this.lblSR.TabIndex = 29;
+            this.lblSR.Text = "label1";
+            // 
+            // chkCurrentReserved
+            // 
+            this.chkCurrentReserved.AutoSize = true;
+            this.chkCurrentReserved.Location = new System.Drawing.Point(211, 225);
+            this.chkCurrentReserved.Margin = new System.Windows.Forms.Padding(4);
+            this.chkCurrentReserved.Name = "chkCurrentReserved";
+            this.chkCurrentReserved.Size = new System.Drawing.Size(91, 22);
+            this.chkCurrentReserved.TabIndex = 30;
+            this.chkCurrentReserved.Text = "Reserved";
+            this.chkCurrentReserved.UseVisualStyleBackColor = true;
+            // 
+            // chkPreviousReserved
+            // 
+            this.chkPreviousReserved.AutoSize = true;
+            this.chkPreviousReserved.Location = new System.Drawing.Point(210, 225);
+            this.chkPreviousReserved.Margin = new System.Windows.Forms.Padding(4);
+            this.chkPreviousReserved.Name = "chkPreviousReserved";
+            this.chkPreviousReserved.Size = new System.Drawing.Size(91, 22);
+            this.chkPreviousReserved.TabIndex = 31;
+            this.chkPreviousReserved.Text = "Reserved";
+            this.chkPreviousReserved.UseVisualStyleBackColor = true;
+            // 
             // FormDebugger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -595,7 +632,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnStep);
             this.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormDebugger";
             this.Text = "6502 Debugger";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDebugger_FormClosing);
@@ -659,6 +696,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn clmValueDecimal;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmDescription;
         private System.Windows.Forms.Button btnMemory;
+        private System.Windows.Forms.Label lblSR;
+        private System.Windows.Forms.CheckBox chkPreviousReserved;
+        private System.Windows.Forms.CheckBox chkCurrentReserved;
     }
 }
 

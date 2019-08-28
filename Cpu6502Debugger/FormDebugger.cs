@@ -4,6 +4,8 @@ using System.Linq;
 using System.Globalization;
 using System.Drawing;
 using Newtonsoft.Json;
+using System;
+using System.Diagnostics;
 
 namespace Cpu6502Debugger {
     public partial class FormDebugger : Form {
@@ -36,6 +38,11 @@ namespace Cpu6502Debugger {
         }
 
         private void BtnStep_Click(object sender, System.EventArgs e) {
+
+            for (int i = 0; i < 4979; i++) {
+                Cpu.Step();
+            }
+
             UpdatePreviousStateUi();
             Cpu.Step();
             UpdateCurrentStateUi();
@@ -50,6 +57,7 @@ namespace Cpu6502Debugger {
             chkPreviousIrqDisable.Checked = Cpu.SR.IrqDisable;
             chkPreviousDecimalMode.Checked = Cpu.SR.DecimalMode;
             chkPreviousBreakCommand.Checked = Cpu.SR.BreakCommand;
+            chkPreviousReserved.Checked = Cpu.SR.Reserved;
             chkPreviousOverflow.Checked = Cpu.SR.Overflow;
             chkPreviousNegative.Checked = Cpu.SR.Negative;
 
@@ -69,6 +77,7 @@ namespace Cpu6502Debugger {
             chkCurrentIrqDisable.Checked = Cpu.SR.IrqDisable;
             chkCurrentDecimalMode.Checked = Cpu.SR.DecimalMode;
             chkCurrentBreakCommand.Checked = Cpu.SR.BreakCommand;
+            chkCurrentReserved.Checked = Cpu.SR.Reserved;
             chkCurrentOverflow.Checked = Cpu.SR.Overflow;
             chkCurrentNegative.Checked = Cpu.SR.Negative;
 
@@ -77,6 +86,8 @@ namespace Cpu6502Debugger {
             txtCurrentAR.Text = Cpu.AR.ToString("X2");
             txtCurrentXR.Text = Cpu.XR.ToString("X2");
             txtCurrentYR.Text = Cpu.YR.ToString("X2");
+
+            lblSR.Text = $"{Cpu.SR.Register:X2} ({Convert.ToString(Cpu.SR.Register, 2).PadLeft(8, '0')})";
 
             UpdateMemoryWatch();
             if (FormMemoryViewer.Visible) FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
