@@ -435,14 +435,9 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(BIT), Code = 0x24, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(BIT), Code = 0x2C, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
         public void BIT() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BIT
-            // TODO: Needs verification!
-
-            var r = (byte)(Value & AR);
-
+            SR.SetZero((byte)(Value & AR));
             SR.Negative = Value.IsBitSet((BitFlag)ProcessorStatusFlags.Negative);
             SR.Overflow = Value.IsBitSet((BitFlag)ProcessorStatusFlags.Overflow);
-            SR.SetZero(r);
         }
 
         [OpCode(Name = nameof(EOR), Code = 0x49, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
