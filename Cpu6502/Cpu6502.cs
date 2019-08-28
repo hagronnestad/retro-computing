@@ -388,8 +388,6 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(TXS), Code = 0x9A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied)]
         public void TXS() {
-            SR.SetNegative(XR);
-            SR.SetZero(XR);
             SP = XR;
         }
 
