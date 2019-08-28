@@ -897,27 +897,33 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(CMP), Code = 0xC1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(CMP), Code = 0xD1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
         public void CMP() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#CMP
+            var r = (byte)(AR - Value);
 
-            throw new NotImplementedException();
+            SR.Carry = r >= 0;
+            SR.SetZero(r);
+            SR.SetNegative(r);
         }
 
         [OpCode(Name = nameof(CPX), Code = 0xE0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
         [OpCode(Name = nameof(CPX), Code = 0xE4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(CPX), Code = 0xEC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
         public void CPX() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#CPX
+            var r = (byte)(XR - Value);
 
-            throw new NotImplementedException();
+            SR.Carry = r >= 0;
+            SR.SetZero(r);
+            SR.SetNegative(r);
         }
 
         [OpCode(Name = nameof(CPY), Code = 0xC0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
         [OpCode(Name = nameof(CPY), Code = 0xC4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(CPY), Code = 0xCC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
         public void CPY() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#CPY
+            var r = (byte)(YR - Value);
 
-            throw new NotImplementedException();
+            SR.Carry = r >= 0;
+            SR.SetZero(r);
+            SR.SetNegative(r);
         }
     }
 }
