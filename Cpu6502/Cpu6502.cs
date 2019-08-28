@@ -2,6 +2,7 @@ using Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace Cpu6502 {
@@ -23,7 +24,9 @@ namespace Cpu6502 {
         public byte XR;
         public byte YR;
 
-        public StatusRegister SR = new StatusRegister();
+        public StatusRegister SR = new StatusRegister() {
+            Reserved = true
+        };
 
 
         public OpCodeDefinition OpCode { get; set; }
@@ -82,6 +85,8 @@ namespace Cpu6502 {
 
             OpCodeCache = OpCodes.ToDictionary(x => x.Code, x => x);
 
+            File.WriteAllText("log.txt", "");
+
             Reset();
         }
 
@@ -100,13 +105,10 @@ namespace Cpu6502 {
         }
 
         public void Reset() {
-            // From https://youtu.be/8XmxKPJDGU0?t=3252
-
             AR = XR = YR = 0x00;
             SP = 0xFD;
-            SR.Register = 0x00;
 
-            SR.Reserved = true; // From YouTube, undocumented way to detect reset/IRQ?
+            SR.IrqDisable = true;
 
             var resetVectorAddress = 0xFFFC;
             PC = (ushort)((Memory[resetVectorAddress + 1] << 8) | Memory[resetVectorAddress + 0]);
@@ -123,7 +125,7 @@ namespace Cpu6502 {
             PushStack((byte)(PC & 0x00FF));
 
             SR.BreakCommand = false;
-            SR.Reserved = true; // From YouTube, undocumented way to detect reset/IRQ?
+            SR.Reserved = true;
             SR.IrqDisable = true;
 
             PushStack(SR.Register);
@@ -141,7 +143,7 @@ namespace Cpu6502 {
             PushStack((byte)(PC & 0x00FF));
 
             SR.BreakCommand = false;
-            SR.Reserved = true; // From YouTube, undocumented way to detect reset/IRQ?
+            SR.Reserved = true;
             SR.IrqDisable = true;
 
             PushStack(SR.Register);
@@ -168,19 +170,24 @@ namespace Cpu6502 {
 
             OpCode = OpCodeCache[Memory[PC]];
             OpCodeAddress = PC;
+
+            var opCodeBytes = string.Join(" ", Memory.Skip(PC).Take(OpCode.Length).Select(x => $"{x:X2}")).PadRight(8);
+            var logLine = $"{PC:X4}  {opCodeBytes}  {OpCode.Name}  A:{AR:X2} X:{XR:X2} Y:{YR:X2} P:{SR.Register:X2} SP:{SP:X2}\n";
+            File.AppendAllText("log.txt", logLine);
+
             PC++;
 
-            Debug.WriteLine("");
-            Debug.WriteLine($"OpCode: {OpCode.Code:X2}, OpCodeName: {OpCode.Name}, AddressingMode: {OpCode.AddressingMode}");
-            Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+            //Debug.WriteLine("");
+            //Debug.WriteLine($"OpCode: {OpCode.Code:X2}, OpCodeName: {OpCode.Name}, AddressingMode: {OpCode.AddressingMode}");
+            //Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
 
             if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
                 OpCode.GetAddress();
             }
             OpCode.Run();
 
-            Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
-            Debug.WriteLine("");
+            //Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+            //Debug.WriteLine("");
 
             NextOpCode = OpCodeCache[Memory[PC]];
             NextOpCodeAddress = PC;
@@ -423,9 +430,6 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ASL), Code = 0x0E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(ASL), Code = 0x1E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
         public void ASL() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#ASL
-            // TODO: Needs verification!
-
             SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
             Value <<= 1;
             SR.SetNegative(Value);
@@ -449,9 +453,6 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(EOR), Code = 0x41, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(EOR), Code = 0x51, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
         public void EOR() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#EOR
-            // TODO: Needs verification!
-
             AR = (byte)(Value ^ AR);
 
             SR.SetNegative(AR);
@@ -464,9 +465,6 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(LSR), Code = 0x4E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(LSR), Code = 0x5E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
         public void LSR() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#LSR
-            // TODO: Needs verification!
-
             SR.Carry = Value.IsBitSet(BitFlag.BIT_0);
             Value >>= 1;
             SR.SetNegative(Value);
@@ -493,9 +491,6 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ROL), Code = 0x2E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(ROL), Code = 0x3E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
         public void ROL() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#ROL
-            // TODO: Needs verification!
-
             var c = SR.Carry;
             SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
             Value <<= 1;
@@ -511,9 +506,6 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(ROR), Code = 0x6E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(ROR), Code = 0x7E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX)]
         public void ROR() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#ROR
-            // TODO: Needs verification!
-
             var c = SR.Carry;
             SR.Carry = Value.IsBitSet(BitFlag.BIT_0);
             Value >>= 1;
@@ -555,8 +547,6 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(SBC), Code = 0xE1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(SBC), Code = 0xF1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
         public void SBC() {
-            // https://youtu.be/8XmxKPJDGU0?t=3141
-
             var v = Value ^ 0x00FF;
             var temp = AR + v + (SR.Carry ? 1 : 0);
 
@@ -666,13 +656,11 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BRK), Code = 0x00, Length = 1, Cycles = 7, AddressingMode = AddressingMode.Implied)]
         public void BRK() {
-            // http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=BRK
-
-            SR.IrqDisable = true;
-
             PushStack((byte)((PC) >> 8)); // MSB
             PushStack((byte)((PC) & 0xFF)); // LSB
-            PushStack(SR.Register);
+            PushStack((byte)(SR.Register | (byte)ProcessorStatusFlags.BreakCommand));
+
+            SR.IrqDisable = true;
 
             PC = BitConverter.ToUInt16(new byte[] { Memory[0xFFFE], Memory[0xFFFF] }, 0); // BRK interrupt vector
         }
@@ -688,15 +676,11 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(JMP), Code = 0x4C, Length = 3, Cycles = 3, AddressingMode = AddressingMode.Absolute)]
         [OpCode(Name = nameof(JMP), Code = 0x6C, Length = 3, Cycles = 5, AddressingMode = AddressingMode.Indirect)]
         public void JMP() {
-            // http://6502.org/tutorials/6502opcodes.html#JMP
-
             PC = Address;
         }
 
         [OpCode(Name = nameof(JSR), Code = 0x20, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute)]
         public void JSR() {
-            // http://6502.org/tutorials/6502opcodes.html#JSR
-
             PC--;
 
             PushStack((byte)((PC) >> 8)); // MSB
@@ -707,12 +691,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(RTI), Code = 0x40, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
         public void RTI() {
-            // From https://youtu.be/8XmxKPJDGU0?t=3413
-
             SR.Register = PopStack();
-
-            SR.BreakCommand = false;
-            SR.Reserved = false; // From YouTube, undocumented way to detect reset/IRQ?
 
             byte lowByte = PopStack();
             byte highByte = PopStack();
@@ -722,12 +701,6 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(RTS), Code = 0x60, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
         public void RTS() {
-            // http://6502.org/tutorials/6502opcodes.html#RTS
-
-            // RTS pulls the top two bytes off the stack (low byte first) and transfers program control to that address+1. It is used, as expected, to exit a subroutine invoked via JSR which pushed the address-1.
-            // Pop Stack -> SR
-            // Pop Stack -> PC
-
             byte lowByte = PopStack();
             byte highByte = PopStack();
 
@@ -740,15 +713,11 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(PHA), Code = 0x48, Length = 1, Cycles = 3, AddressingMode = AddressingMode.Implied)]
         public void PHA() {
-            // http://6502.org/tutorials/6502opcodes.html#PHA
-
             PushStack(AR);
         }
 
         [OpCode(Name = nameof(PLA), Code = 0x68, Length = 1, Cycles = 4, AddressingMode = AddressingMode.Implied)]
         public void PLA() {
-            // http://6502.org/tutorials/6502opcodes.html#PLA 
-
             AR = PopStack();
             SR.SetNegative(AR);
             SR.SetZero(AR);
@@ -756,15 +725,11 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(PHP), Code = 0x08, Length = 1, Cycles = 3, AddressingMode = AddressingMode.Implied)]
         public void PHP() {
-            // http://6502.org/tutorials/6502opcodes.html#PHP
-
-            PushStack(SR.Register);
+            PushStack((byte)(SR.Register | (byte)ProcessorStatusFlags.BreakCommand));
         }
 
         [OpCode(Name = nameof(PLP), Code = 0x28, Length = 1, Cycles = 4, AddressingMode = AddressingMode.Implied)]
         public void PLP() {
-            // http://6502.org/tutorials/6502opcodes.html#PLP 
-
             SR.Register = PopStack();
         }
 
@@ -774,10 +739,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BCC), Code = 0x90, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BCC() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BCC
-
             if (!SR.Carry) {
-                // Branch
                 PC = Address;
 
             } else {
@@ -788,10 +750,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BCS), Code = 0xB0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BCS() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BCS
-
             if (SR.Carry) {
-                // Branch
                 PC = Address;
 
             } else {
@@ -802,10 +761,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BEQ), Code = 0xF0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BEQ() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BEQ
-
             if (SR.Zero) {
-                // Branch
                 PC = Address;
 
             } else {
@@ -816,10 +772,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BNE), Code = 0xD0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BNE() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BNE
-
             if (!SR.Zero) {
-                // Branch
                 PC = Address;
 
             } else {
@@ -830,10 +783,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BMI), Code = 0x30, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BMI() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BMI
-
             if (SR.Negative) {
-                // Branch
                 PC = Address;
 
             } else {
@@ -844,10 +794,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BPL), Code = 0x10, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BPL() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BPL
-
             if (!SR.Negative) {
-                // Branch
                 PC = Address;
 
             } else {
@@ -858,10 +805,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BVC), Code = 0x50, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BVC() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BVC
-
             if (!SR.Overflow) {
-                // Branch
                 PC = Address;
 
             } else {
@@ -872,10 +816,7 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(BVS), Code = 0x70, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, AddCycleIfBoundaryCrossed = true)]
         public void BVS() {
-            // https://www.masswerk.at/6502/6502_instruction_set.html#BVS
-
             if (SR.Overflow) {
-                // Branch
                 PC = Address;
 
             } else {
