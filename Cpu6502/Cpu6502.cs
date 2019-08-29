@@ -842,33 +842,36 @@ namespace Cpu6502 {
         [OpCode(Name = nameof(CMP), Code = 0xC1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect)]
         [OpCode(Name = nameof(CMP), Code = 0xD1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, AddCycleIfBoundaryCrossed = true)]
         public void CMP() {
-            var r = (byte)(AR - Value);
+            // The int type below is used intentionally to allow byte rollover check
+            int r = AR - Value;
 
             SR.Carry = r >= 0;
-            SR.SetZero(r);
-            SR.SetNegative(r);
+            SR.Zero = r == 0;
+            SR.Negative = ((r >> 7) & 1) == 1;
         }
 
         [OpCode(Name = nameof(CPX), Code = 0xE0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
         [OpCode(Name = nameof(CPX), Code = 0xE4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(CPX), Code = 0xEC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
         public void CPX() {
-            var r = (byte)(XR - Value);
+            // The int type below is used intentionally to allow byte rollover check
+            int r = XR - Value;
 
             SR.Carry = r >= 0;
-            SR.SetZero(r);
-            SR.SetNegative(r);
+            SR.Zero = r == 0;
+            SR.Negative = ((r >> 7) & 1) == 1;
         }
 
         [OpCode(Name = nameof(CPY), Code = 0xC0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate)]
         [OpCode(Name = nameof(CPY), Code = 0xC4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage)]
         [OpCode(Name = nameof(CPY), Code = 0xCC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute)]
         public void CPY() {
-            var r = (byte)(YR - Value);
+            // The int type below is used intentionally to allow byte rollover check
+            int r = YR - Value;
 
             SR.Carry = r >= 0;
-            SR.SetZero(r);
-            SR.SetNegative(r);
+            SR.Zero = r == 0;
+            SR.Negative = ((r >> 7) & 1) == 1;
         }
     }
 }
