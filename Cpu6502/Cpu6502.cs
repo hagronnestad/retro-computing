@@ -1,7 +1,6 @@
 using Extensions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +8,8 @@ namespace Cpu6502 {
     public class Cpu6502 {
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
+
+        public int TotalInstructions = 0;
 
         public byte[] Memory = new byte[0x100000];
 
@@ -52,6 +53,7 @@ namespace Cpu6502 {
 
 
         public Cpu6502() {
+
             var opCodesMethods = GetType()
                 .GetMethods()
                 .SelectMany(m => m.GetCustomAttributes(typeof(OpCodeAttribute), true)
@@ -74,8 +76,6 @@ namespace Cpu6502 {
 
             OpCodeCache = OpCodes.ToDictionary(x => x.Code, x => x);
 
-            File.WriteAllText("log.txt", "");
-
             Reset();
         }
 
@@ -88,6 +88,26 @@ namespace Cpu6502 {
 
         public void InitPC(ushort pc) {
             PC = pc;
+
+            NextOpCode = OpCodeCache[Memory[PC]];
+            NextOpCodeAddress = PC;
+        }
+
+        public void Step() {
+            TotalInstructions += 1;
+
+            OpCode = OpCodeCache[Memory[PC]];
+            OpCodeAddress = PC;
+            PC++;
+
+            //var opCodeBytes = string.Join(" ", Memory.Skip(OpCodeAddress).Take(OpCode.Length).Select(x => $"{x:X2}")).PadRight(8);
+            //var logLine = $"{OpCodeAddress:X4}  {opCodeBytes}  {OpCode.Name}  A:{AR:X2} X:{XR:X2} Y:{YR:X2} P:{SR.Register:X2} SP:{SP:X2}\n";
+            //File.AppendAllText("log.txt", logLine);
+
+            if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
+                OpCode.GetAddress();
+            }
+            OpCode.Run();
 
             NextOpCode = OpCodeCache[Memory[PC]];
             NextOpCodeAddress = PC;
@@ -150,26 +170,6 @@ namespace Cpu6502 {
             SP++;
             var b = Memory[0x0100 + SP];
             return b;
-        }
-
-
-        public void Step() {
-
-            OpCode = OpCodeCache[Memory[PC]];
-            OpCodeAddress = PC;
-            PC++;
-
-            //var opCodeBytes = string.Join(" ", Memory.Skip(OpCodeAddress).Take(OpCode.Length).Select(x => $"{x:X2}")).PadRight(8);
-            //var logLine = $"{OpCodeAddress:X4}  {opCodeBytes}  {OpCode.Name}  A:{AR:X2} X:{XR:X2} Y:{YR:X2} P:{SR.Register:X2} SP:{SP:X2}\n";
-            //File.AppendAllText("log.txt", logLine);
-
-            if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
-                OpCode.GetAddress();
-            }
-            OpCode.Run();
-
-            NextOpCode = OpCodeCache[Memory[PC]];
-            NextOpCodeAddress = PC;
         }
 
 
