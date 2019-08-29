@@ -128,11 +128,8 @@ namespace Cpu6502 {
             PushStack((byte)(PC >> 8));
             PushStack((byte)(PC & 0x00FF));
 
-            SR.BreakCommand = false;
-            SR.Reserved = true;
+            PushStack((byte)((SR.Register | (byte)ProcessorStatusFlags.Reserved) & (byte)~ProcessorStatusFlags.BreakCommand));
             SR.IrqDisable = true;
-
-            PushStack(SR.Register);
 
             var irqVectorAddress = 0xFFFE;
             PC = (ushort)((Memory[irqVectorAddress + 1] << 8) | Memory[irqVectorAddress + 0]);
@@ -146,11 +143,8 @@ namespace Cpu6502 {
             PushStack((byte)(PC >> 8));
             PushStack((byte)(PC & 0x00FF));
 
-            SR.BreakCommand = false;
-            SR.Reserved = true;
+            PushStack((byte)((SR.Register | (byte)ProcessorStatusFlags.Reserved) & (byte)~ProcessorStatusFlags.BreakCommand));
             SR.IrqDisable = true;
-
-            PushStack(SR.Register);
 
             var nmiVectorAddress = 0xFFFA;
             PC = (ushort)((Memory[nmiVectorAddress + 1] << 8) | Memory[nmiVectorAddress + 0]);
