@@ -695,7 +695,15 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(RTI), Code = 0x40, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied)]
         public void RTI() {
-            SR.Register = PopStack();
+            var poppedSR = new StatusRegister() { Register = PopStack() };
+
+            SR.Carry = poppedSR.Carry;
+            SR.Zero = poppedSR.Zero;
+            SR.IrqDisable = poppedSR.IrqDisable;
+            SR.DecimalMode = poppedSR.DecimalMode;
+            // This instruction ignores DecimalMode and Break
+            SR.Overflow = poppedSR.Overflow;
+            SR.Negative = poppedSR.Negative;
 
             byte lowByte = PopStack();
             byte highByte = PopStack();
@@ -734,7 +742,15 @@ namespace Cpu6502 {
 
         [OpCode(Name = nameof(PLP), Code = 0x28, Length = 1, Cycles = 4, AddressingMode = AddressingMode.Implied)]
         public void PLP() {
-            SR.Register = PopStack();
+            var poppedSR = new StatusRegister() { Register = PopStack() };
+
+            SR.Carry = poppedSR.Carry;
+            SR.Zero = poppedSR.Zero;
+            SR.IrqDisable = poppedSR.IrqDisable;
+            SR.DecimalMode = poppedSR.DecimalMode;
+            // This instruction ignores DecimalMode and Break
+            SR.Overflow = poppedSR.Overflow;
+            SR.Negative = poppedSR.Negative;
         }
 
 
