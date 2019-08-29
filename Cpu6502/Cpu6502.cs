@@ -256,22 +256,26 @@ namespace Cpu6502 {
 
         [AddressingMode(AddressingMode = AddressingMode.XIndirect)]
         public void XIndirect() {
-            var pageZeroAddress = Memory[PC];
+            // The ushort type below is used intentionally to allow byte rollover check
+
+            ushort pageZeroAddress = Memory[PC];
             PC++;
 
-            var lowAddress = Memory[pageZeroAddress + XR];
-            var highAddress = Memory[pageZeroAddress + 1 + XR];
+            var lowAddress = Memory[(pageZeroAddress + XR) & 0x00FF];
+            var highAddress = Memory[(pageZeroAddress + XR + 1) & 0x00FF];
 
             Address = (ushort)((highAddress << 8) | lowAddress);
         }
 
         [AddressingMode(AddressingMode = AddressingMode.IndirectY)]
         public void IndirectY() {
-            var pageZeroAddress = Memory[PC];
+            // The ushort type below is used intentionally to allow byte rollover check
+
+            ushort pageZeroAddress = Memory[PC];
             PC++;
 
-            var lowAddress = Memory[pageZeroAddress];
-            var highAddress = Memory[pageZeroAddress + 1];
+            var lowAddress = Memory[pageZeroAddress & 0x00FF];
+            var highAddress = Memory[(pageZeroAddress + 1) & 0x00FF];
 
             Address = (ushort)((highAddress << 8) | lowAddress);
             Address += YR;
@@ -292,13 +296,19 @@ namespace Cpu6502 {
 
         [AddressingMode(AddressingMode = AddressingMode.ZeropageX)]
         public void ZeropageX() {
-            Address = (ushort)(Memory[PC] + XR);
+            // The ushort type below is used intentionally to allow byte rollover check
+
+            ushort a = (ushort)(Memory[PC] + XR);
+            Address = (a &= 0x00FF);
             PC++;
         }
 
         [AddressingMode(AddressingMode = AddressingMode.ZeropageY)]
         public void ZeropageY() {
-            Address = (ushort)(Memory[PC] + YR);
+            // The ushort type below is used intentionally to allow byte rollover check
+
+            ushort a = (ushort)(Memory[PC] + YR);
+            Address = (a &= 0x00FF);
             PC++;
         }
 
