@@ -106,7 +106,11 @@ namespace Cpu6502 {
 
         public void Reset() {
             AR = XR = YR = 0x00;
-            SP = 0xFD;
+
+            // SP should be 0xFD, I used to initialize it directly, but `-= 3` on a `byte` becomes 0xFD after roll over
+            // I'm not sure if this is correct on multiple resets yet
+            SP -= 3;
+            //SP = 0xFD;
 
             SR.IrqDisable = true;
 
