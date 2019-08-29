@@ -6,6 +6,7 @@ using System.Drawing;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Cpu6502Debugger {
     public partial class FormDebugger : Form {
@@ -24,10 +25,33 @@ namespace Cpu6502Debugger {
             //ushort startAddress = 0x6210;
             //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\instr_test-v5\instr_test-v5\rom_singles\02-implied.nes"), 0);
 
-            ushort startAddress = 0xC000;
-            Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\nestest.nes"), 0xC000 - 0x10);
 
-            Cpu.InitPC(startAddress);
+
+            //ushort startAddress = 0xC000;
+            //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\nestest.nes"), 0xC000 - 0x10);
+            //Cpu.InitPC(startAddress);
+            ////clock.Enabled = true;
+
+            //for (int i = 0; i < 48000; i++) {
+            //    Cpu.Step();
+            //}
+
+
+
+            var romBasic = File.ReadAllBytes(@"TestImages\basic.rom");
+            var romChar = File.ReadAllBytes(@"TestImages\char.rom");
+            var romKernal = File.ReadAllBytes(@"TestImages\kernal.rom");
+            Cpu.LoadMemory(romBasic, 0xA000);
+            Cpu.LoadMemory(romChar, 0xD000);
+            Cpu.LoadMemory(romKernal, 0xE000);
+            Cpu.Reset();
+            //clock.Enabled = true;
+
+            new Thread(() => {
+                while (true) {
+                    Work();
+                }
+            }).Start();
 
             UpdateCurrentStateUi();
         }
@@ -38,11 +62,6 @@ namespace Cpu6502Debugger {
         }
 
         private void BtnStep_Click(object sender, System.EventArgs e) {
-
-            for (int i = 0; i < 4979; i++) {
-                Cpu.Step();
-            }
-
             UpdatePreviousStateUi();
             Cpu.Step();
             UpdateCurrentStateUi();
@@ -90,7 +109,7 @@ namespace Cpu6502Debugger {
             lblSR.Text = $"{Cpu.SR.Register:X2} ({Convert.ToString(Cpu.SR.Register, 2).PadLeft(8, '0')})";
 
             UpdateMemoryWatch();
-            if (FormMemoryViewer.Visible) FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
+            //if (FormMemoryViewer.Visible) FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
         }
 
         private void UpdateMemoryWatch() {
@@ -178,7 +197,7 @@ namespace Cpu6502Debugger {
 
                 for (int j = 0; j < dgWatch.Rows[i].Cells.Count; j++) {
 
-                    data[i,j] = (string)dgWatch.Rows[i].Cells[j].Value;
+                    data[i, j] = (string)dgWatch.Rows[i].Cells[j].Value;
 
                 }
 
@@ -208,7 +227,23 @@ namespace Cpu6502Debugger {
 
         private void BtnMemory_Click(object sender, System.EventArgs e) {
             FormMemoryViewer.Show();
-            UpdateCurrentStateUi();
+            FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
+        }
+
+
+        void Work() {
+            Cpu.Step();
+
+            if (Cpu.TotalInstructions % 100000 == 0) {
+                Debug.WriteLine($"{Cpu.TotalInstructions}");
+                Debug.WriteLine($"{Cpu.PC:X2}");
+
+                try {
+                    Invoke(new Action(() => { UpdateCurrentStateUi(); }));
+
+                } catch (Exception) {
+                }
+            }
         }
     }
 }

@@ -25,6 +25,7 @@
         private void InitializeComponent() {
             this.btnStep = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkPreviousReserved = new System.Windows.Forms.CheckBox();
             this.lblPreviousAddressingMode = new System.Windows.Forms.Label();
             this.lblPreviousOpCode = new System.Windows.Forms.Label();
             this.txtPreviousYR = new System.Windows.Forms.TextBox();
@@ -45,6 +46,8 @@
             this.chkPreviousZero = new System.Windows.Forms.CheckBox();
             this.chkPreviousCarry = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkCurrentReserved = new System.Windows.Forms.CheckBox();
+            this.lblSR = new System.Windows.Forms.Label();
             this.lblCurrentAddressingMode = new System.Windows.Forms.Label();
             this.lblCurrentOpCode = new System.Windows.Forms.Label();
             this.txtCurrentYR = new System.Windows.Forms.TextBox();
@@ -71,9 +74,6 @@
             this.clmValueDecimal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnMemory = new System.Windows.Forms.Button();
-            this.lblSR = new System.Windows.Forms.Label();
-            this.chkCurrentReserved = new System.Windows.Forms.CheckBox();
-            this.chkPreviousReserved = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).BeginInit();
@@ -122,6 +122,17 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Current State";
+            // 
+            // chkPreviousReserved
+            // 
+            this.chkPreviousReserved.AutoSize = true;
+            this.chkPreviousReserved.Location = new System.Drawing.Point(210, 225);
+            this.chkPreviousReserved.Margin = new System.Windows.Forms.Padding(4);
+            this.chkPreviousReserved.Name = "chkPreviousReserved";
+            this.chkPreviousReserved.Size = new System.Drawing.Size(91, 22);
+            this.chkPreviousReserved.TabIndex = 31;
+            this.chkPreviousReserved.Text = "Reserved";
+            this.chkPreviousReserved.UseVisualStyleBackColor = true;
             // 
             // lblPreviousAddressingMode
             // 
@@ -338,6 +349,26 @@
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Next Instruction";
+            // 
+            // chkCurrentReserved
+            // 
+            this.chkCurrentReserved.AutoSize = true;
+            this.chkCurrentReserved.Location = new System.Drawing.Point(211, 225);
+            this.chkCurrentReserved.Margin = new System.Windows.Forms.Padding(4);
+            this.chkCurrentReserved.Name = "chkCurrentReserved";
+            this.chkCurrentReserved.Size = new System.Drawing.Size(91, 22);
+            this.chkCurrentReserved.TabIndex = 30;
+            this.chkCurrentReserved.Text = "Reserved";
+            this.chkCurrentReserved.UseVisualStyleBackColor = true;
+            // 
+            // lblSR
+            // 
+            this.lblSR.AutoSize = true;
+            this.lblSR.Location = new System.Drawing.Point(47, 277);
+            this.lblSR.Name = "lblSR";
+            this.lblSR.Size = new System.Drawing.Size(56, 18);
+            this.lblSR.TabIndex = 29;
+            this.lblSR.Text = "label1";
             // 
             // lblCurrentAddressingMode
             // 
@@ -588,37 +619,6 @@
             this.btnMemory.Text = "Show Memory";
             this.btnMemory.UseVisualStyleBackColor = true;
             this.btnMemory.Click += new System.EventHandler(this.BtnMemory_Click);
-            // 
-            // lblSR
-            // 
-            this.lblSR.AutoSize = true;
-            this.lblSR.Location = new System.Drawing.Point(47, 277);
-            this.lblSR.Name = "lblSR";
-            this.lblSR.Size = new System.Drawing.Size(56, 18);
-            this.lblSR.TabIndex = 29;
-            this.lblSR.Text = "label1";
-            // 
-            // chkCurrentReserved
-            // 
-            this.chkCurrentReserved.AutoSize = true;
-            this.chkCurrentReserved.Location = new System.Drawing.Point(211, 225);
-            this.chkCurrentReserved.Margin = new System.Windows.Forms.Padding(4);
-            this.chkCurrentReserved.Name = "chkCurrentReserved";
-            this.chkCurrentReserved.Size = new System.Drawing.Size(91, 22);
-            this.chkCurrentReserved.TabIndex = 30;
-            this.chkCurrentReserved.Text = "Reserved";
-            this.chkCurrentReserved.UseVisualStyleBackColor = true;
-            // 
-            // chkPreviousReserved
-            // 
-            this.chkPreviousReserved.AutoSize = true;
-            this.chkPreviousReserved.Location = new System.Drawing.Point(210, 225);
-            this.chkPreviousReserved.Margin = new System.Windows.Forms.Padding(4);
-            this.chkPreviousReserved.Name = "chkPreviousReserved";
-            this.chkPreviousReserved.Size = new System.Drawing.Size(91, 22);
-            this.chkPreviousReserved.TabIndex = 31;
-            this.chkPreviousReserved.Text = "Reserved";
-            this.chkPreviousReserved.UseVisualStyleBackColor = true;
             // 
             // FormDebugger
             // 
