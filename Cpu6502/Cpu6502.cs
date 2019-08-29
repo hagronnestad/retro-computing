@@ -52,17 +52,6 @@ namespace Cpu6502 {
 
 
         public Cpu6502() {
-            //OpCodes = GetType()
-            //    .GetMethods()
-            //    .SelectMany(m => m.GetCustomAttributes(typeof(OpCodeAttribute), true)
-            //    .Select(a => new {
-            //        Attribute = a as OpCodeAttribute,
-            //        Method = m
-            //    }))
-            //    .Select(a => OpCodeDefinition.FromOpCodeAttribute(() => a.Method.Invoke(this, null), null, a.Attribute))
-
-            //    .ToList();
-
             var opCodesMethods = GetType()
                 .GetMethods()
                 .SelectMany(m => m.GetCustomAttributes(typeof(OpCodeAttribute), true)
@@ -77,10 +66,10 @@ namespace Cpu6502 {
                 .Select(a => new {
                     Attribute = a as AddressingModeAttribute,
                     Method = m
-                }));
+                })).ToDictionary(x => x.Attribute.AddressingMode, x => x);
 
             OpCodes = opCodesMethods
-                .Select(x => OpCodeDefinition.FromOpCodeAttribute(() => x.Method.Invoke(this, null), () => addressingMethods.FirstOrDefault(y => y.Attribute.AddressingMode == x.Attribute.AddressingMode).Method.Invoke(this, null), x.Attribute))
+                .Select(x => OpCodeDefinition.FromOpCodeAttribute(() => x.Method.Invoke(this, null), () => addressingMethods[x.Attribute.AddressingMode].Method.Invoke(this, null), x.Attribute))
                 .ToList();
 
             OpCodeCache = OpCodes.ToDictionary(x => x.Code, x => x);
@@ -168,24 +157,16 @@ namespace Cpu6502 {
 
             OpCode = OpCodeCache[Memory[PC]];
             OpCodeAddress = PC;
-
-            var opCodeBytes = string.Join(" ", Memory.Skip(PC).Take(OpCode.Length).Select(x => $"{x:X2}")).PadRight(8);
-            var logLine = $"{PC:X4}  {opCodeBytes}  {OpCode.Name}  A:{AR:X2} X:{XR:X2} Y:{YR:X2} P:{SR.Register:X2} SP:{SP:X2}\n";
-            File.AppendAllText("log.txt", logLine);
-
             PC++;
 
-            //Debug.WriteLine("");
-            //Debug.WriteLine($"OpCode: {OpCode.Code:X2}, OpCodeName: {OpCode.Name}, AddressingMode: {OpCode.AddressingMode}");
-            //Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
+            //var opCodeBytes = string.Join(" ", Memory.Skip(OpCodeAddress).Take(OpCode.Length).Select(x => $"{x:X2}")).PadRight(8);
+            //var logLine = $"{OpCodeAddress:X4}  {opCodeBytes}  {OpCode.Name}  A:{AR:X2} X:{XR:X2} Y:{YR:X2} P:{SR.Register:X2} SP:{SP:X2}\n";
+            //File.AppendAllText("log.txt", logLine);
 
             if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
                 OpCode.GetAddress();
             }
             OpCode.Run();
-
-            //Debug.WriteLine($"PC: {PC:X2}, AR: {AR:X2}, XR: {XR:X2}, YR: {YR:X2}, SP: {SP:X2}, ZERO: {SR.Zero}, NEGATIVE: {SR.Negative}, M 0x50:{Memory[0x50]:X2}");
-            //Debug.WriteLine("");
 
             NextOpCode = OpCodeCache[Memory[PC]];
             NextOpCodeAddress = PC;
