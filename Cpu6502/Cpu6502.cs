@@ -1,7 +1,6 @@
 using Extensions;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Cpu6502 {
