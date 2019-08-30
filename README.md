@@ -1,4 +1,4 @@
-# 6502.NET
+# 6502
 
 ### This is my implementation of the **MOS Technology 6502** 8-bit microprocessor.
 
