@@ -74,6 +74,9 @@
             this.clmValueDecimal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnMemory = new System.Windows.Forms.Button();
+            this.txtTemporaryKeyboardInput = new System.Windows.Forms.TextBox();
+            this.btnShowCharacterBufferOutput = new System.Windows.Forms.Button();
+            this.lblKeyboardInput = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).BeginInit();
@@ -620,11 +623,44 @@
             this.btnMemory.UseVisualStyleBackColor = true;
             this.btnMemory.Click += new System.EventHandler(this.BtnMemory_Click);
             // 
+            // txtTemporaryKeyboardInput
+            // 
+            this.txtTemporaryKeyboardInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtTemporaryKeyboardInput.Location = new System.Drawing.Point(420, 695);
+            this.txtTemporaryKeyboardInput.Name = "txtTemporaryKeyboardInput";
+            this.txtTemporaryKeyboardInput.Size = new System.Drawing.Size(41, 25);
+            this.txtTemporaryKeyboardInput.TabIndex = 9;
+            this.txtTemporaryKeyboardInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtTemporaryKeyboardInput_KeyPress);
+            // 
+            // btnShowCharacterBufferOutput
+            // 
+            this.btnShowCharacterBufferOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnShowCharacterBufferOutput.Location = new System.Drawing.Point(13, 692);
+            this.btnShowCharacterBufferOutput.Name = "btnShowCharacterBufferOutput";
+            this.btnShowCharacterBufferOutput.Size = new System.Drawing.Size(260, 32);
+            this.btnShowCharacterBufferOutput.TabIndex = 10;
+            this.btnShowCharacterBufferOutput.Text = "Show Character Buffer Output";
+            this.btnShowCharacterBufferOutput.UseVisualStyleBackColor = true;
+            this.btnShowCharacterBufferOutput.Click += new System.EventHandler(this.BtnShowCharacterBufferOutput_Click);
+            // 
+            // lblKeyboardInput
+            // 
+            this.lblKeyboardInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblKeyboardInput.AutoSize = true;
+            this.lblKeyboardInput.Location = new System.Drawing.Point(294, 699);
+            this.lblKeyboardInput.Name = "lblKeyboardInput";
+            this.lblKeyboardInput.Size = new System.Drawing.Size(120, 18);
+            this.lblKeyboardInput.TabIndex = 11;
+            this.lblKeyboardInput.Text = "Keyboard Input";
+            // 
             // FormDebugger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 737);
+            this.Controls.Add(this.lblKeyboardInput);
+            this.Controls.Add(this.btnShowCharacterBufferOutput);
+            this.Controls.Add(this.txtTemporaryKeyboardInput);
             this.Controls.Add(this.btnMemory);
             this.Controls.Add(this.dgWatch);
             this.Controls.Add(this.btnReset);
@@ -643,6 +679,7 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -699,6 +736,9 @@
         private System.Windows.Forms.Label lblSR;
         private System.Windows.Forms.CheckBox chkPreviousReserved;
         private System.Windows.Forms.CheckBox chkCurrentReserved;
+        private System.Windows.Forms.TextBox txtTemporaryKeyboardInput;
+        private System.Windows.Forms.Button btnShowCharacterBufferOutput;
+        private System.Windows.Forms.Label lblKeyboardInput;
     }
 }
 
