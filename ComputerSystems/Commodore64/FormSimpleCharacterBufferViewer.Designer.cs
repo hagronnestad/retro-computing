@@ -1,4 +1,4 @@
-﻿namespace Debugger {
+﻿namespace ComputerSystem.Commodore64 {
     partial class FormSimpleCharacterBufferViewer {
         /// <summary>
         /// Required designer variable.

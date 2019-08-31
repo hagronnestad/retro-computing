@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5617D1B2-8228-4920-A35B-F1352B260E3E}</ProjectGuid>
+    <ProjectGuid>{A72CCFE6-D364-4A67-B41B-EC6BDA2CD561}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Debugger</RootNamespace>
-    <AssemblyName>Debugger</AssemblyName>
+    <RootNamespace>Commodore64</RootNamespace>
+    <AssemblyName>Commodore64</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,12 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,25 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormDebugger.cs">
+    <Compile Include="C64.cs" />
+    <Compile Include="FormSimpleCharacterBufferViewer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDebugger.Designer.cs">
-      <DependentUpon>FormDebugger.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormMemoryViewer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormMemoryViewer.Designer.cs">
-      <DependentUpon>FormMemoryViewer.cs</DependentUpon>
+    <Compile Include="FormSimpleCharacterBufferViewer.Designer.cs">
+      <DependentUpon>FormSimpleCharacterBufferViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FormDebugger.resx">
-      <DependentUpon>FormDebugger.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormMemoryViewer.resx">
-      <DependentUpon>FormMemoryViewer.cs</DependentUpon>
+    <EmbeddedResource Include="FormSimpleCharacterBufferViewer.resx">
+      <DependentUpon>FormSimpleCharacterBufferViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -79,7 +67,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -89,27 +76,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="TestImages\64c.251913-01.bin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestImages\basic.rom">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestImages\char.rom">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestImages\kernal.rom">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestImages\LoadDecrementMemory0x50.bin">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MicroProcessor\MicroProcessor.csproj">
+    <ProjectReference Include="..\..\MicroProcessor\MicroProcessor.csproj">
       <Project>{B524EAFF-709B-45E6-9B5C-6E830ED40401}</Project>
       <Name>MicroProcessor</Name>
     </ProjectReference>

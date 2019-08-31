@@ -1,24 +1,25 @@
-﻿using System;
+﻿using Commodore64;
+using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Debugger {
+namespace ComputerSystem.Commodore64 {
     public partial class FormSimpleCharacterBufferViewer : Form {
 
-        public byte[] Memory;
+        public C64 C64 { get; set; }
+
         public int ScreenBufferOffset = 0x0400;
 
         private Stopwatch sw = new Stopwatch();
         private Stopwatch sw2 = new Stopwatch();
 
-        private double lastFrameTime = 0.0f;
-        private double fpsActual = 0.0f;
-        private double fpsAdjusted = 0.0f;
-        private double fpsTarget = 60.0f;
-        private double fpsWaitTime = 0.0f;
+        private double _lastFrameTime = 0.0f;
+        private double _fpsActual = 0.0f;
+        private double _fpsAdjusted = 0.0f;
+        private double _fpsTarget = 60.0f;
+        private double _fpsWaitTime = 0.0f;
 
         private Bitmap bBuffer;
 
@@ -31,13 +32,12 @@ namespace Debugger {
 
         private Font fFont = new Font("Consolas", 16);
 
-        public FormSimpleCharacterBufferViewer(byte[] memory) {
+        public FormSimpleCharacterBufferViewer(C64 c64) {
             InitializeComponent();
 
-            Memory = memory;
+            C64 = c64;
 
             bBuffer = new Bitmap(40 * 16, 25 * 16);
-
             g = Graphics.FromImage(bBuffer);
         }
 
@@ -49,13 +49,13 @@ namespace Debugger {
                     sw2.Reset();
                     sw2.Start();
                     Invoke(new Action(() => { Invalidate(); }));
-                    Thread.Sleep(TimeSpan.FromMilliseconds(fpsWaitTime));
+                    Thread.Sleep(TimeSpan.FromMilliseconds(_fpsWaitTime));
 
                     sw2.Stop();
 
-                    fpsAdjusted = 1000f / sw2.Elapsed.TotalMilliseconds;
+                    _fpsAdjusted = 1000f / sw2.Elapsed.TotalMilliseconds;
 
-                    Invoke(new Action(() => { Text = $"{fpsActual:F0} fps max, {fpsAdjusted:F0} fps adjusted"; }));
+                    Invoke(new Action(() => { Text = $"{_fpsActual:F0} fps max, {_fpsAdjusted:F0} fps adjusted"; }));
                 }   
             }).Start();
         }
@@ -71,12 +71,12 @@ namespace Debugger {
 
             sw.Stop();
 
-            lastFrameTime = sw.Elapsed.TotalMilliseconds;
+            _lastFrameTime = sw.Elapsed.TotalMilliseconds;
 
-            fpsActual = 1000f / lastFrameTime;
+            _fpsActual = 1000f / _lastFrameTime;
 
-            if (fpsActual > fpsTarget) {
-                fpsWaitTime = (1000f / fpsTarget) - lastFrameTime;
+            if (_fpsActual > _fpsTarget) {
+                _fpsWaitTime = (1000f / _fpsTarget) - _lastFrameTime;
             }
         }
 
@@ -84,7 +84,7 @@ namespace Debugger {
             g.Clear(Color.Blue);
 
             for (int i = 0; i < 1000; i++) {
-                byte data = Memory[(ushort)(ScreenBufferOffset + i)];
+                byte data = C64.Cpu.Memory[(ushort)(ScreenBufferOffset + i)];
 
                 if (data < 0x20) data += 0x40;
 
@@ -94,10 +94,10 @@ namespace Debugger {
                 g.DrawString(new string((char)data, 1), fFont, bWhite, x - 2, y - 5);
             }
 
-            if (Memory[0x00CC] == 0) // 0 == cursor is visible
+            if (C64.Cpu.Memory[0x00CC] == 0) // 0 == cursor is visible
             {
-                int x = Memory[0x00CA] * 8;
-                int y = Memory[0x00C9] * 8;
+                int x = C64.Cpu.Memory[0x00CA] * 8;
+                int y = C64.Cpu.Memory[0x00C9] * 8;
 
                 g.DrawRectangle(pWhite, x * 2, y * 2, 16, 16);
             }

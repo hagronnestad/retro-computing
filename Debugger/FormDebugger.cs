@@ -14,13 +14,11 @@ namespace Debugger {
 
         Cpu Cpu;
         FormMemoryViewer FormMemoryViewer = new FormMemoryViewer();
-        FormSimpleCharacterBufferViewer FormSimpleCharacterBufferViewer;
 
         public FormDebugger() {
             InitializeComponent();
 
             Cpu = new Cpu();
-            FormSimpleCharacterBufferViewer = new FormSimpleCharacterBufferViewer(Cpu.Memory);
 
             //ushort startAddress = 0x4000;
             //Cpu.LoadMemory(File.ReadAllBytes(@"TestImages\LoadDecrementMemory0x50.bin"), startAddress);
@@ -247,22 +245,6 @@ namespace Debugger {
                 } catch (Exception) {
                 }
             }
-        }
-
-        private void TxtTemporaryKeyboardInput_KeyPress(object sender, KeyPressEventArgs e) {
-            e.Handled = true;
-            var key = e.KeyChar;
-
-            //PETSCII a = 65 dec
-            //ASCII   a = 97 dec
-
-            Cpu.Memory[0x0277] = (key >= 97) ? (byte)(key - 32) : (byte)key;
-            Cpu.Memory[0xC6] = 1;
-            FormMemoryViewer.byteViewer.Invalidate();
-        }
-
-        private void BtnShowCharacterBufferOutput_Click(object sender, EventArgs e) {
-            FormSimpleCharacterBufferViewer.Show();
         }
     }
 }
