@@ -1,4 +1,4 @@
-﻿namespace Cpu6502Debugger {
+﻿namespace Debugger {
     partial class FormSimpleCharacterBufferViewer {
         /// <summary>
         /// Required designer variable.

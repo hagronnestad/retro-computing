@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Cpu6502Debugger.Properties {
+namespace Debugger.Properties {
 
 
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

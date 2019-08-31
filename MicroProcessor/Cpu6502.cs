@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cpu6502 {
+namespace MicroProcessor {
     public class Cpu6502 {
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
 
         public int TotalInstructions = 0;
 
-        public byte[] Memory = new byte[0x100000];
+        public byte[] Memory = new byte[0x10000];
 
         public ushort PC;
 

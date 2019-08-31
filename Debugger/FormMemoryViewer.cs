@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Cpu6502Debugger {
+namespace Debugger {
     public partial class FormMemoryViewer : Form {
         public FormMemoryViewer() {
             InitializeComponent();

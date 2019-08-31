@@ -1,4 +1,4 @@
-﻿namespace Cpu6502Debugger {
+﻿namespace Debugger {
     partial class FormDebugger {
         /// <summary>
         /// Required designer variable.
@@ -670,7 +670,7 @@
             this.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormDebugger";
-            this.Text = "6502 Debugger";
+            this.Text = "Debugger";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDebugger_FormClosing);
             this.Load += new System.EventHandler(this.FormDebugger_Load);
             this.groupBox1.ResumeLayout(false);

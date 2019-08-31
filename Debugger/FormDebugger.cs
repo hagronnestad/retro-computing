@@ -8,17 +8,17 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace Cpu6502Debugger {
+namespace Debugger {
     public partial class FormDebugger : Form {
 
-        Cpu6502.Cpu6502 Cpu;
+        MicroProcessor.Cpu6502 Cpu;
         FormMemoryViewer FormMemoryViewer = new FormMemoryViewer();
         FormSimpleCharacterBufferViewer FormSimpleCharacterBufferViewer;
 
         public FormDebugger() {
             InitializeComponent();
 
-            Cpu = new Cpu6502.Cpu6502();
+            Cpu = new MicroProcessor.Cpu6502();
             FormSimpleCharacterBufferViewer = new FormSimpleCharacterBufferViewer(Cpu.Memory);
 
             //ushort startAddress = 0x4000;

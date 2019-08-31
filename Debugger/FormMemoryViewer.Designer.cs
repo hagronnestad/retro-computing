@@ -1,4 +1,4 @@
-﻿namespace Cpu6502Debugger {
+﻿namespace Debugger {
     partial class FormMemoryViewer {
         /// <summary>
         /// Required designer variable.
@@ -31,10 +31,12 @@
             this.byteViewer.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset;
             this.byteViewer.ColumnCount = 1;
             this.byteViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.byteViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.byteViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.byteViewer.Location = new System.Drawing.Point(0, 0);
             this.byteViewer.Name = "byteViewer";
             this.byteViewer.RowCount = 1;
+            this.byteViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.byteViewer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.byteViewer.Size = new System.Drawing.Size(702, 434);
             this.byteViewer.TabIndex = 0;
@@ -47,7 +49,7 @@
             this.ClientSize = new System.Drawing.Size(702, 434);
             this.Controls.Add(this.byteViewer);
             this.Name = "FormMemoryViewer";
-            this.Text = "6502 Memory";
+            this.Text = "Memory Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMemoryViewer_FormClosing);
             this.ResumeLayout(false);
 

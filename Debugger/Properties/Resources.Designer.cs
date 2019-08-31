@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Cpu6502Debugger.Properties {
+namespace Debugger.Properties {
 
 
     /// <summary>

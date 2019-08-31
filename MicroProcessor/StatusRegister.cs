@@ -1,4 +1,4 @@
-﻿namespace Cpu6502 {
+﻿namespace MicroProcessor {
     public class StatusRegister {
         public byte Register { get; set; }
 

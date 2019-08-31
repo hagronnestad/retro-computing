@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Cpu6502Debugger {
+namespace Debugger {
     public partial class FormSimpleCharacterBufferViewer : Form {
 
         public byte[] Memory;

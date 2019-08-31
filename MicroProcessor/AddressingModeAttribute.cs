@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cpu6502 {
+namespace MicroProcessor {
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class AddressingModeAttribute : Attribute {

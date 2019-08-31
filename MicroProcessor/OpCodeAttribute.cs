@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cpu6502 {
+namespace MicroProcessor {
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class OpCodeAttribute : Attribute {

@@ -1,4 +1,4 @@
-﻿namespace Cpu6502 {
+﻿namespace MicroProcessor {
     public enum AddressingMode {
         Accumulator,    // Accumulator	 	        OPC A	 	    operand is AC (implied single byte instruction)
         Absolute,       // absolute	 	            OPC $LLHH	 	operand is address $HHLL *

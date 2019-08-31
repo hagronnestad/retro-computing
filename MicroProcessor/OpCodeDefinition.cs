@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cpu6502 {
+namespace MicroProcessor {
     public class OpCodeDefinition {
         public byte Code { get; set; }
         public string Name { get; set; }
