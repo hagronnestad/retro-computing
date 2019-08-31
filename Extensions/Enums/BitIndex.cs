@@ -1,4 +1,4 @@
-﻿namespace Extensions {
+﻿namespace Extensions.Enums {
     public enum BitIndex {
         BIT_0 = 0,
         BIT_1 = 1,

@@ -1,4 +1,5 @@
-using Extensions;
+using Extensions.Byte;
+using Extensions.Enums;
 using MicroProcessor.Cpu6502.Attributes;
 using MicroProcessor.Cpu6502.Enums;
 using System;
