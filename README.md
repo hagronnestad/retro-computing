@@ -12,8 +12,14 @@ I implemented the 6502 in about a weeks worth of late nights, including testing 
 ## In this repository
 
 ### MOS Technology 6502
-- C#.NET implementation of the **MOS Technology 6502** 8-bit microprocessor
-- Simple debugger with memory view/watches
+- [x] C#.NET implementation of the **MOS Technology 6502** 8-bit microprocessor
+- [x] Simple debugger with memory view/watches
+- [x] All official/legal instructions tested by running `nestest.nes` and comparing to the golden log from `Nintendulator`
+  - https://wiki.nesdev.com/w/index.php/Emulator_tests#CPU_Tests
+  - http://www.qmtpro.com/~nes/misc/nestest.txt
+  - http://www.qmtpro.com/~nes/misc/nestest.log
+- [ ] Cycle perfect
+- [ ] Decimal mode
 
 ### Commodore 64 emulator
 - [x] Loads the **KERNAL**, **CHARACTER** and **BASIC** ROM
