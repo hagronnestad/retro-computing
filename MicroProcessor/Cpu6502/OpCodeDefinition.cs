@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MicroProcessor.Cpu6502.Attributes;
+using MicroProcessor.Cpu6502.Enums;
+using System;
 
-namespace MicroProcessor {
+namespace MicroProcessor.Cpu6502 {
     public class OpCodeDefinition {
         public byte Code { get; set; }
         public string Name { get; set; }

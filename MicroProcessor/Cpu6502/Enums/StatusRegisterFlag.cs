@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MicroProcessor {
+namespace MicroProcessor.Cpu6502.Enums {
     [Flags]
     public enum ProcessorStatusFlags : byte {
         Carry        = 0b00000001,

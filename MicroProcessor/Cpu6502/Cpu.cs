@@ -1,10 +1,12 @@
 using Extensions;
+using MicroProcessor.Cpu6502.Attributes;
+using MicroProcessor.Cpu6502.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MicroProcessor {
-    public class Cpu6502 {
+namespace MicroProcessor.Cpu6502 {
+    public class Cpu {
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
 
@@ -51,7 +53,7 @@ namespace MicroProcessor {
         }
 
 
-        public Cpu6502() {
+        public Cpu() {
 
             var opCodesMethods = GetType()
                 .GetMethods()

@@ -1,4 +1,6 @@
-﻿namespace MicroProcessor {
+﻿using MicroProcessor.Cpu6502.Enums;
+
+namespace MicroProcessor.Cpu6502 {
     public class StatusRegister {
         public byte Register { get; set; }
 

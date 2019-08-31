@@ -7,18 +7,19 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Threading;
+using MicroProcessor.Cpu6502;
 
 namespace Debugger {
     public partial class FormDebugger : Form {
 
-        MicroProcessor.Cpu6502 Cpu;
+        Cpu Cpu;
         FormMemoryViewer FormMemoryViewer = new FormMemoryViewer();
         FormSimpleCharacterBufferViewer FormSimpleCharacterBufferViewer;
 
         public FormDebugger() {
             InitializeComponent();
 
-            Cpu = new MicroProcessor.Cpu6502();
+            Cpu = new Cpu();
             FormSimpleCharacterBufferViewer = new FormSimpleCharacterBufferViewer(Cpu.Memory);
 
             //ushort startAddress = 0x4000;
