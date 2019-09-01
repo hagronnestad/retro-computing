@@ -1,4 +1,5 @@
-﻿using Commodore64;
+using Commodore64;
+using Commodore64.Enums;
 using System;
 using System.IO;
 using System.Threading;
@@ -32,6 +33,10 @@ namespace ComputerSystem.Commodore64 {
                         c64.Cpu.Memory[145] = 0x7F;
                         return;
 
+                    case (byte)Keys.Back:
+                        key = (byte)PetsciiCode.InstDel;
+                        break;
+
                     default:
                         key = (key >= 97) ? (byte)(key - 32) : (byte)key;
                         break;
@@ -48,6 +53,28 @@ namespace ComputerSystem.Commodore64 {
                         c64.Cpu.Memory[145] = 0xFF;
                         break;
                 }
+            };
+
+            form.KeyDown += (object sender, KeyEventArgs e) => {
+                byte key = 0;
+
+                switch (e.KeyCode) {
+                    case Keys.Home:
+                        if (e.Shift) {
+                            key = (byte)PetsciiCode.ShiftClrHome;
+                        }
+                        break;
+
+                    case Keys.Back:
+                        if (e.Shift) {
+                            key = (byte)PetsciiCode.ShiftInstDel;
+                        }
+                        break;
+                }
+
+                if (key == 0) return;
+                c64.Cpu.Memory[0x0277] = key;
+                c64.Cpu.Memory[0xC6] = 1;
             };
 
             var romBasic = File.ReadAllBytes(@"basic.rom");
