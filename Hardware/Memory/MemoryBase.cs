@@ -15,7 +15,7 @@ namespace Hardware.Memory {
         }
 
 
-        public bool IsReadOnly => false;
+        public bool IsReadOnly { get; set; }
 
 
         public TValue this[int address] {

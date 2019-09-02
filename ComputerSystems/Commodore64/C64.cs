@@ -3,10 +3,16 @@
 namespace Commodore64 {
     public class C64 {
 
-        public Cpu Cpu { get; set; }
+
+
+        public C64Memory Memory { get; private set; }
+        public Cpu Cpu { get; private set; }
 
         public C64() {
-            Cpu = new Cpu();
+            Memory = new C64Memory();
+            Cpu = new Cpu(Memory);
+
+            Cpu.Reset();
         }
 
     }
