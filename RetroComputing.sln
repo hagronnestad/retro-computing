@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commodore64", "ComputerSyst
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hardware", "Hardware", "{C71969A7-DF67-4591-89B3-0A75DB9D8003}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Memory", "Hardware\Memory\Memory.csproj", "{EB604713-48CE-431C-8305-331C5441C90E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Memory", "Hardware\Memory\Memory.csproj", "{EB604713-48CE-431C-8305-331C5441C90E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

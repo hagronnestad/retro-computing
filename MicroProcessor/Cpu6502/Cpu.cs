@@ -1,5 +1,6 @@
 using Extensions.Byte;
 using Extensions.Enums;
+using Hardware.Memory;
 using MicroProcessor.Cpu6502.Attributes;
 using MicroProcessor.Cpu6502.Enums;
 using System;
@@ -13,7 +14,8 @@ namespace MicroProcessor.Cpu6502 {
 
         public int TotalInstructions = 0;
 
-        public byte[] Memory = new byte[0x10000];
+        //public byte[] Memory = new byte[0x10000];
+        public IMemory<byte> Memory { get; private set; }
 
         public ushort PC;
 
@@ -54,7 +56,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
 
-        public Cpu() {
+        public Cpu(IMemory<byte> memory) {
+            Memory = memory;
 
             var opCodesMethods = GetType()
                 .GetMethods()
@@ -133,6 +136,7 @@ namespace MicroProcessor.Cpu6502 {
             PushStack((byte)(PC & 0x00FF));
 
             PushStack((byte)((SR.Register | (byte)ProcessorStatusFlags.Reserved) & (byte)~ProcessorStatusFlags.BreakCommand));
+
             SR.IrqDisable = true;
 
             var irqVectorAddress = 0xFFFE;
