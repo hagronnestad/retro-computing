@@ -109,6 +109,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hardware\Memory\Memory.csproj">
+      <Project>{EB604713-48CE-431C-8305-331C5441C90E}</Project>
+      <Name>Memory</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MicroProcessor\MicroProcessor.csproj">
       <Project>{B524EAFF-709B-45E6-9B5C-6E830ED40401}</Project>
       <Name>MicroProcessor</Name>

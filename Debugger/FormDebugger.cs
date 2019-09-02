@@ -18,42 +18,6 @@ namespace Debugger {
         public FormDebugger() {
             InitializeComponent();
 
-            Cpu = new Cpu();
-
-            //ushort startAddress = 0x4000;
-            //Cpu.LoadMemory(File.ReadAllBytes(@"TestImages\LoadDecrementMemory0x50.bin"), startAddress);
-
-            //ushort startAddress = 0x6210;
-            //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\instr_test-v5\instr_test-v5\rom_singles\02-implied.nes"), 0);
-
-
-
-            //ushort startAddress = 0xC000;
-            //Cpu.LoadMemory(File.ReadAllBytes(@"C:\Users\heina\Downloads\nestest.nes"), 0xC000 - 0x10);
-            //Cpu.InitPC(startAddress);
-            ////clock.Enabled = true;
-
-            //for (int i = 0; i < 48000; i++) {
-            //    Cpu.Step();
-            //}
-
-
-
-            var romBasic = File.ReadAllBytes(@"TestImages\basic.rom");
-            var romChar = File.ReadAllBytes(@"TestImages\char.rom");
-            var romKernal = File.ReadAllBytes(@"TestImages\kernal.rom");
-            Cpu.LoadMemory(romBasic, 0xA000);
-            Cpu.LoadMemory(romChar, 0xD000);
-            Cpu.LoadMemory(romKernal, 0xE000);
-            Cpu.Reset();
-            //clock.Enabled = true;
-
-            new Thread(() => {
-                while (true) {
-                    Work();
-                }
-            }).Start();
-
             UpdateCurrentStateUi();
         }
 
@@ -69,7 +33,7 @@ namespace Debugger {
         }
 
         private void UpdatePreviousStateUi() {
-            lblPreviousOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
+            //lblPreviousOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
             lblPreviousAddressingMode.Text = Cpu.NextOpCode?.AddressingMode.ToString();
 
             chkPreviousCarry.Checked = Cpu.SR.Carry;
@@ -89,7 +53,7 @@ namespace Debugger {
         }
 
         private void UpdateCurrentStateUi() {
-            lblCurrentOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
+            //lblCurrentOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
             lblCurrentAddressingMode.Text = Cpu.NextOpCode?.AddressingMode.ToString();
 
             chkCurrentCarry.Checked = Cpu.SR.Carry;
@@ -228,7 +192,7 @@ namespace Debugger {
 
         private void BtnMemory_Click(object sender, System.EventArgs e) {
             FormMemoryViewer.Show();
-            FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
+            //FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
         }
 
 
