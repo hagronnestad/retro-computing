@@ -81,13 +81,6 @@ namespace MicroProcessor.Cpu6502 {
             Reset();
         }
 
-        public void LoadMemory(byte[] data, int location) {
-            if (data == null || data.Length == 0) throw new ArgumentNullException();
-            if ((location + data.Length) > Memory.Length) throw new OutOfMemoryException();
-
-            Array.Copy(data, 0, Memory, location, data.Length);
-        }
-
         public void InitPC(ushort pc) {
             PC = pc;
 
