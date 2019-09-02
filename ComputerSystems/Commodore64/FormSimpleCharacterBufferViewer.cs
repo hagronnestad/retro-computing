@@ -91,15 +91,15 @@ namespace ComputerSystem.Commodore64 {
                 var x = (i % 40) * 16;
                 var y = (i / 40) * 16;
 
-                g.DrawString(new string((char)data, 1), fFont, bWhite, x - 2, y - 5);
-            }
+                // 0xA0 is the cursor character
+                // Let's just cheat and draw it as a filled rectangle
+                if (data == 0xA0) {
+                    g.FillRectangle(bWhite, x, y, 16, 16);
 
-            if (C64.Cpu.Memory[0x00CC] == 0) // 0 == cursor is visible
-            {
-                int x = C64.Cpu.Memory[0x00CA] * 8;
-                int y = C64.Cpu.Memory[0x00C9] * 8;
-
-                g.DrawRectangle(pWhite, x * 2, y * 2, 16, 16);
+                // Draw other characters as ASCII
+                } else {
+                    g.DrawString(new string((char)data, 1), fFont, bWhite, x - 2, y - 5);
+                }
             }
 
             // Let's make some fake scanlines for fun 😎
