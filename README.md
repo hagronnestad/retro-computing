@@ -39,13 +39,20 @@ One of the main goals was to be able to run the **C64 KERNAL-** and **BASIC-ROM*
 - [x] Boots into **COMMODORE 64 BASIC V2**
 - [x] Simple character buffer view (with limited input possibilities)
 - [x] Able to input BASIC program and run
-- [ ] Proper input/keyboard mapping
-- [ ] Real character mode output in color using the character ROM
+- [/] Proper input/keyboard mapping
+- [x] Real character mode output by using the CHARACTER GENERATOR ROM
+- [ ] Character mode output with char color data
 - [ ] VIC-II emulation? (probably never)
 - [ ] SID emulation? (hopefully)
 
 #### Screenshots
 
+***Preview of the second version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output is using the CHARACTER ROM which is why it looks more like the real thing. Keyboard mapping is also improved in this version. And memory mapping is working as expected too, as we can tell from the `38911 BASIC BYTES FREE`-message!***
+
+![](Gifs/03-character-rom-output.gif)
+
+
+***Preview of the first version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output isn't using the CHARACTER ROM.***
+
 ![](Gifs/01-simple-character-buffer-output.gif)
 
-***Preview of a simple C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program.***
