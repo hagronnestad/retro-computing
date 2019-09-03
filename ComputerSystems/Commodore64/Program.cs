@@ -1,6 +1,7 @@
 ﻿using Commodore64;
 using Commodore64.Enums;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -16,8 +17,8 @@ namespace ComputerSystem.Commodore64 {
 
             var c64 = new C64();
 
-            //var form = new FormC64Screen(c64);
-            var form = new FormSimpleCharacterBufferViewer(c64);
+            var form = new FormC64Screen(c64);
+            //var form = new FormSimpleCharacterBufferViewer(c64);
 
             form.KeyPress += (object sender, KeyPressEventArgs e) => {
                 // PETSCII a = 65 dec
@@ -85,7 +86,7 @@ namespace ComputerSystem.Commodore64 {
 
                     c64.Cpu.Step();
 
-                    //while (sw.Elapsed.TotalMilliseconds < 0.008) {
+                    //while (sw.Elapsed.TotalMilliseconds < 0.0004) {
 
                     //}
 
