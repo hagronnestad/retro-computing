@@ -14,18 +14,14 @@ namespace ComputerSystem.Commodore64 {
 
         public int ScreenBufferOffset = 0x0400;
 
-        private Stopwatch sw = new Stopwatch();
-        private Stopwatch sw2 = new Stopwatch();
+        private readonly Stopwatch _stopWatch = new Stopwatch();
 
         private double _lastFrameTime = 0.0f;
         private double _fpsActual = 0.0f;
-        private double _fpsAdjusted = 0.0f;
-        private double _fpsTarget = 60.0f;
-        private double _fpsWaitTime = 0.0f;
 
-        private Bitmap bBuffer;
-        Color[] pixels;
-        private Pen pScanLine;
+        private readonly Bitmap bBuffer;
+        readonly Color[] screenBufferPixels;
+        private readonly Pen penScanLine;
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
@@ -33,8 +29,8 @@ namespace ComputerSystem.Commodore64 {
             C64 = c64;
 
             bBuffer = new Bitmap(320, 200, PixelFormat.Format24bppRgb);
-            pixels = new Color[bBuffer.Width * bBuffer.Height];
-            pScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
+            screenBufferPixels = new Color[bBuffer.Width * bBuffer.Height];
+            penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
         }
 
         private void FormSimpleCharacterBufferViewer_Load(object sender, EventArgs e) {
@@ -42,25 +38,18 @@ namespace ComputerSystem.Commodore64 {
                 while (true) {
                     if (!Visible) return;
 
-                    sw2.Reset();
-                    sw2.Start();
                     Invoke(new Action(() => { Invalidate(); }));
-                    Thread.Sleep(TimeSpan.FromMilliseconds(_fpsWaitTime));
-
-                    sw2.Stop();
-
-                    _fpsAdjusted = 1000f / sw2.Elapsed.TotalMilliseconds;
-
-                    Invoke(new Action(() => { Text = $"{_fpsActual:F0} fps max, {_fpsAdjusted:F0} fps adjusted"; }));
                 }   
             }).Start();
+
+            OnResize(null);
         }
 
-        protected override void OnPaint(PaintEventArgs e) {
-            sw.Reset();
-            sw.Start();
+        protected override void OnPaintBackground(PaintEventArgs e) {
+            _stopWatch.Reset();
+            _stopWatch.Start();
 
-            //base.OnPaint(e);
+            //base.OnPaintBackground(e);
 
             Update();
 
@@ -68,25 +57,16 @@ namespace ComputerSystem.Commodore64 {
             e.Graphics.DrawImage(bBuffer, 0, 0, ClientRectangle.Width, ClientRectangle.Height);
 
             // Let's make some fake scanlines for fun 😎
-            for (int i = 0; i < ClientRectangle.Height; i += (int)(pScanLine.Width * 2)) {
-                e.Graphics.DrawLine(pScanLine, 0, i, ClientRectangle.Width, i);
+            for (int i = 0; i < ClientRectangle.Height; i += (int)(penScanLine.Width * 2)) {
+                e.Graphics.DrawLine(penScanLine, 0, i, ClientRectangle.Width, i);
             }
 
-            sw.Stop();
+            _stopWatch.Stop();
 
-            _lastFrameTime = sw.Elapsed.TotalMilliseconds;
-
+            _lastFrameTime = _stopWatch.Elapsed.TotalMilliseconds;
             _fpsActual = 1000f / _lastFrameTime;
-
-            if (_fpsActual > _fpsTarget) {
-                _fpsWaitTime = (1000f / _fpsTarget) - _lastFrameTime;
-            }
+            Text = $"{_fpsActual:F1} fps";
         }
-
-        protected override void OnPaintBackground(PaintEventArgs e) {
-            base.OnPaintBackground(e);
-        }
-
         
         public new void Update() {
 
@@ -108,14 +88,14 @@ namespace ComputerSystem.Commodore64 {
                         var pixelSet = (charRow & 0x80) == 0x80;
                         charRow <<= 1;
 
-                        pixels[indexPixelOffset] = pixelSet ? Color.FromArgb(0, 136, 255) : Color.FromArgb(0, 0, 170);
+                        screenBufferPixels[indexPixelOffset] = pixelSet ? Color.FromArgb(0, 136, 255) : Color.FromArgb(0, 0, 170);
                     }
 
                 }
 
             }
 
-            SetPixels(bBuffer, pixels);
+            SetPixels(bBuffer, screenBufferPixels);
         }
 
         public void SetPixels(Bitmap b, Color[] pixels) {
@@ -144,7 +124,7 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private void FormC64Screen_Resize(object sender, EventArgs e) {
-            pScanLine.Width = (int)(ClientRectangle.Height * 0.005);
+            penScanLine.Width = (int)(ClientRectangle.Height * 0.005);
         }
     }
 }
