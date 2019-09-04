@@ -69,9 +69,11 @@ namespace ComputerSystem.Commodore64 {
         }
         
         public new void Update() {
+            var bgColor = Colors.FromByte(C64.Memory[0xD021]);
 
             for (var i = 0; i < 1000; i++) {
                 var petsciiCode = C64.Memory[ScreenBufferOffset + i];
+                var fgColor = Colors.FromByte(C64.Memory[0xD800 + i]);
 
                 var line = (i / 40);
                 var characterInLine = i % 40;
@@ -88,7 +90,7 @@ namespace ComputerSystem.Commodore64 {
                         var pixelSet = (charRow & 0x80) == 0x80;
                         charRow <<= 1;
 
-                        screenBufferPixels[indexPixelOffset] = pixelSet ? Color.FromArgb(0, 136, 255) : Color.FromArgb(0, 0, 170);
+                        screenBufferPixels[indexPixelOffset] = pixelSet ? fgColor : bgColor;
                     }
 
                 }
