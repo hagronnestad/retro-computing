@@ -51,6 +51,7 @@
     <Compile Include="Attributes\PetsciiAttribute.cs" />
     <Compile Include="C64.cs" />
     <Compile Include="C64Memory.cs" />
+    <Compile Include="Colors.cs" />
     <Compile Include="Enums\PetsciiCode.cs" />
     <Compile Include="FormC64Screen.cs">
       <SubType>Form</SubType>
