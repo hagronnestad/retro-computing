@@ -33,6 +33,12 @@ I implemented the 6502 in about a weeks worth of late nights, including testing 
 
 One of the main goals was to be able to run the **C64 KERNAL-** and **BASIC-ROM** on the **6502**. **BASIC** was one of my first introductions to programming and seeing that **`READY.`** prompt on my own C64 emulator so many years later was extremely pleasing. 😁
 
+
+***Preview of the second version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output is using the CHARACTER ROM which is why it looks more like the real thing. Keyboard mapping is also improved in this version. And memory mapping is working as expected too, as we can tell from the `38911 BASIC BYTES FREE`-message!***
+
+![](Gifs/03-character-rom-output.gif)
+
+
 #### Features
 
 - [x] Loads the **KERNAL-**, **CHARACTER-** and **BASIC-ROM**
@@ -47,9 +53,19 @@ One of the main goals was to be able to run the **C64 KERNAL-** and **BASIC-ROM*
 
 #### Screenshots
 
-***Preview of the second version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output is using the CHARACTER ROM which is why it looks more like the real thing. Keyboard mapping is also improved in this version. And memory mapping is working as expected too, as we can tell from the `38911 BASIC BYTES FREE`-message!***
+***BASIC Program to print color bars on screen.***
 
-![](Gifs/03-character-rom-output.gif)
+![](Screenshots/03-foreground-color-bars-basic.png)
+
+
+***Output of BASIC program above.***
+
+![](Screenshots/04-foreground-color-bars.png)
+
+
+***Preview of setting another background color by using the `POKE 53281,2` command.***
+
+![](Screenshots/05-background-color.png)
 
 
 ***Preview of the first version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output isn't using the CHARACTER ROM.***
