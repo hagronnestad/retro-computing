@@ -12,7 +12,10 @@ namespace MicroProcessor.Cpu6502 {
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
 
-        public int TotalInstructions = 0;
+        public int TotalInstructions { get; private set; }
+        public long TotalCycles { get; set; }
+
+        private int _cyclesToComplete = 0;
 
         //public byte[] Memory = new byte[0x10000];
         public IMemory<byte> Memory { get; private set; }
@@ -91,7 +94,16 @@ namespace MicroProcessor.Cpu6502 {
             NextOpCodeAddress = PC;
         }
 
-        public void Step() {
+        public void Cycle() {
+            if (_cyclesToComplete == 0) {
+                Step();
+
+            } else {
+                _cyclesToComplete--;
+            }
+        }
+
+        public void Step(bool ignoreCycles = false) {
             TotalInstructions += 1;
 
             OpCode = OpCodeCache[Memory[PC]];
@@ -106,6 +118,14 @@ namespace MicroProcessor.Cpu6502 {
                 OpCode.GetAddress();
             }
             OpCode.Run();
+
+            // Count total cycles
+            // This doesn't account for extra cycles caused by memory operations crossing pages
+            TotalCycles += OpCode.Cycles;
+
+            // Keeps track of needed cycles to complete the current instruction
+            // ignoreCycles = true is used to step the CPU with a debugger
+            if (!ignoreCycles) _cyclesToComplete += OpCode.Cycles;
 
             NextOpCode = OpCodeCache[Memory[PC]];
             NextOpCodeAddress = PC;
@@ -125,6 +145,7 @@ namespace MicroProcessor.Cpu6502 {
             PC = (ushort)((Memory[resetVectorAddress + 1] << 8) | Memory[resetVectorAddress + 0]);
 
             // Reset takes 8 cycles
+            TotalCycles += 8;
         }
 
         public void Interrupt() { // IRQ
@@ -143,6 +164,7 @@ namespace MicroProcessor.Cpu6502 {
             PC = (ushort)((Memory[irqVectorAddress + 1] << 8) | Memory[irqVectorAddress + 0]);
 
             // IRQ takes 7 cycles
+            TotalCycles += 7;
         }
 
         public void NonMaskableInterrupt() { // NMI
@@ -158,6 +180,7 @@ namespace MicroProcessor.Cpu6502 {
             PC = (ushort)((Memory[nmiVectorAddress + 1] << 8) | Memory[nmiVectorAddress + 0]);
 
             // NMI takes 8 cycles
+            TotalCycles += 8;
         }
 
         public void PushStack(byte value) {
