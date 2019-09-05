@@ -46,6 +46,12 @@ namespace ComputerSystem.Commodore64 {
         }
 
         protected override void OnPaintBackground(PaintEventArgs e) {
+            if (C64.Cpu.Memory[0x009A] != 0x03) { // Current output device number. Default: $03, screen.
+                base.OnPaintBackground(e);
+                Text = "Screen off!";
+                return;
+            }
+
             _stopWatch.Reset();
             _stopWatch.Start();
 
