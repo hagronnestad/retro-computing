@@ -1,7 +1,6 @@
 ﻿using Commodore64;
 using Commodore64.Enums;
 using System;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace ComputerSystem.Commodore64 {
@@ -66,7 +65,7 @@ namespace ComputerSystem.Commodore64 {
 
                     }
 
-                // CTRL modifier
+                    // CTRL modifier
                 } else if (e.Modifiers == Keys.Control) {
                     switch (e.KeyCode) {
                         case Keys.D0:
@@ -101,7 +100,7 @@ namespace ComputerSystem.Commodore64 {
                             break;
                     }
 
-                // Shift+CTRL modifier
+                    // Shift+CTRL modifier
                 } else if (e.Modifiers == (Keys.Shift | Keys.Control)) {
                     switch (e.KeyCode) {
                         case Keys.D1:
@@ -130,7 +129,7 @@ namespace ComputerSystem.Commodore64 {
                             break;
                     }
 
-                // Shift modifier
+                    // Shift modifier
                 } else if (e.Modifiers == Keys.Shift) {
                     switch (e.KeyCode) {
                         case Keys.Home:
@@ -148,48 +147,8 @@ namespace ComputerSystem.Commodore64 {
                 c64.Cpu.Memory[0xC6] = 1;
             };
 
-            //Stopwatch sw = new Stopwatch();
 
-            new Thread(() => {
-                while (true) {
-                    //sw.Start();
-
-                    c64.Cpu.Step();
-
-                    //while (sw.Elapsed.TotalMilliseconds < 0.0004) {
-
-                    //}
-
-                    //sw.Stop();
-                    //sw.Reset();
-
-                    //if (c64.Cpu.TotalInstructions % 100000 == 0) {
-                    //    Debug.WriteLine($"{c64.Cpu.TotalInstructions}");
-                    //    Debug.WriteLine($"{c64.Cpu.PC:X2}");
-                    //}
-
-                    // Raster trigger thingy
-                    if ((c64.Cpu.TotalInstructions % 10000) < 30) {
-                        c64.Cpu.Memory[0xD012] = 0;
-                    } else {
-                        c64.Cpu.Memory[0xD012] = 1;
-                    }
-
-                    // Interrupt from CIA-chip
-                    if (c64.Cpu.TotalInstructions % 30000 == 0) {
-                        c64.Cpu.Interrupt();
-                    }
-                }
-
-            }).Start();
-
-            //new Thread(() => {
-            //    while (true) {
-            //        c64.Cpu.Memory[0xD012] = 0;
-            //        Thread.Sleep(20);
-            //    }
-            //}).Start();
-
+            c64.Run();
             Application.Run(form);
         }
     }
