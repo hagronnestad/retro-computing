@@ -101,18 +101,21 @@ namespace ComputerSystem.Commodore64 {
         }
 
         public void SetPixels(Bitmap b, Color[] pixels) {
-            BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+            var width = b.Width;
+            var height = b.Height;
+
+            BitmapData data = b.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
             int stride = data.Stride;
 
             unsafe {
                 byte* ptr = (byte*)data.Scan0;
 
-                for (int y = 0; y < b.Height; y++) {
+                for (int y = 0; y < height; y++) {
 
-                    for (int x = 0; x < b.Width; x++) {
+                    for (int x = 0; x < width; x++) {
 
-                        var index = (y * b.Width) + x;
+                        var index = (y * width) + x;
 
                         ptr[(x * 3) + y * stride] = pixels[index].B;
                         ptr[(x * 3) + y * stride + 1] = pixels[index].G;
