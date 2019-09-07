@@ -33,7 +33,7 @@
             this.DoubleBuffered = true;
             this.Name = "FormC64Screen";
             this.Text = "FormSimpleCharacterBufferViewer";
-            this.Load += new System.EventHandler(this.FormSimpleCharacterBufferViewer_Load);
+            this.Load += new System.EventHandler(this.FormC64Screen_Load);
             this.Resize += new System.EventHandler(this.FormC64Screen_Resize);
             this.ResumeLayout(false);
 

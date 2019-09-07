@@ -1,4 +1,4 @@
-﻿using Commodore64;
+using Commodore64;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -33,7 +33,7 @@ namespace ComputerSystem.Commodore64 {
             penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
         }
 
-        private void FormSimpleCharacterBufferViewer_Load(object sender, EventArgs e) {
+        private void FormC64Screen_Load(object sender, EventArgs e) {
             new Thread(() => {
                 while (true) {
                     if (!Visible) return;
