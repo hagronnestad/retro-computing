@@ -66,7 +66,7 @@ namespace Commodore64 {
 
             // I/O, RAM, CHAR ROM (page 208-223)
             // Some exceptions for I/O, not implemented yet
-            if (address >= 0xC000 && address <= 0xCFFF) {
+            if (address >= 0xD000 && address <= 0xDFFF) {
                 switch (am) {
                     case 0b011:
                     case 0b010:
