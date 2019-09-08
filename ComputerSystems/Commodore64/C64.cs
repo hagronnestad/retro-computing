@@ -39,7 +39,8 @@ namespace Commodore64 {
                         Cpu.Cycle();
 
                         // I have to work out how to properly time this
-                        Memory[0xD012] = Memory[0xD012] == 0 ? (byte)1 : (byte)0;
+                        Memory[C64MemoryLocations.CURRENT_RASTER_LINE] =
+                            Memory[C64MemoryLocations.CURRENT_RASTER_LINE] == 0 ? (byte)1 : (byte)0;
 
                         swCpuClock.Restart();
                     }

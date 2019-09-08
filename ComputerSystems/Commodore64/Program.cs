@@ -29,7 +29,7 @@ namespace ComputerSystem.Commodore64 {
                 switch (key) {
 
                     case (byte)Keys.Escape:
-                        c64.Cpu.Memory[145] = 0x7F;
+                        c64.Cpu.Memory[C64MemoryLocations.STOP_KEY_INDICATOR] = C64MemoryValues.STOP_KEY_PRESSED;
                         return;
 
                     case (byte)Keys.Back:
@@ -37,19 +37,19 @@ namespace ComputerSystem.Commodore64 {
                         break;
 
                     default:
-                        key = (key >= 97) ? (byte)(key - 32) : (byte)key;
+                        key = (key >= 97) ? (byte)(key - 32) : key;
                         break;
 
                 }
 
-                c64.Cpu.Memory[0x0277] = key;
-                c64.Cpu.Memory[0xC6] = 1;
+                c64.Cpu.Memory[C64MemoryOffsets.KEYBOARD_BUFFER] = key;
+                c64.Cpu.Memory[C64MemoryLocations.KEYBOARD_BUFFER_LENGTH] = 1;
             };
 
             form.KeyUp += (object sender, KeyEventArgs e) => {
                 switch (e.KeyCode) {
                     case Keys.Escape:
-                        c64.Cpu.Memory[145] = 0xFF;
+                        c64.Cpu.Memory[C64MemoryLocations.STOP_KEY_INDICATOR] = C64MemoryValues.STOP_KEY_NOT_PRESSED;
                         break;
                 }
             };
@@ -143,8 +143,8 @@ namespace ComputerSystem.Commodore64 {
                 }
 
                 if (key == 0) return;
-                c64.Cpu.Memory[0x0277] = key;
-                c64.Cpu.Memory[0xC6] = 1;
+                c64.Cpu.Memory[C64MemoryOffsets.KEYBOARD_BUFFER] = key;
+                c64.Cpu.Memory[C64MemoryLocations.KEYBOARD_BUFFER_LENGTH] = 1;
             };
 
 

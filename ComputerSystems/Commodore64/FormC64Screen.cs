@@ -6,13 +6,13 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows.Forms;
+using Extensions.Byte;
+using Extensions.Enums;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
 
         public C64 C64 { get; set; }
-
-        public int ScreenBufferOffset = 0x0400;
 
         private readonly Stopwatch _stopWatch = new Stopwatch();
 
@@ -51,9 +51,9 @@ namespace ComputerSystem.Commodore64 {
         }
 
         protected override void OnPaintBackground(PaintEventArgs e) {
-            if (C64.Cpu.Memory[0x009A] != 0x03) { // Current output device number. Default: $03, screen.
+            if (C64.Cpu.Memory[C64MemoryLocations.CURRENT_OUTPUT_DEVICE] != C64MemoryValues.CURRENT_OUTPUT_DEVICE_SCREEN) {
                 base.OnPaintBackground(e);
-                Text = "Screen off!";
+                Text = "Screen disabled!";
                 return;
             }
 
@@ -76,11 +76,11 @@ namespace ComputerSystem.Commodore64 {
         }
         
         public new void Update() {
-            var bgColor = Colors.FromByte(C64.Memory[0xD021]);
+            var bgColor = Colors.FromByte((byte) (C64.Memory[C64MemoryLocations.SCREEN_BACKGROUND_COLOR] & 0b00001111));
 
             for (var i = 0; i < 1000; i++) {
-                var petsciiCode = C64.Memory[ScreenBufferOffset + i];
-                var fgColor = Colors.FromByte(C64.Memory[0xD800 + i]);
+                var petsciiCode = C64.Memory[C64MemoryOffsets.SCREEN_BUFFER + i];
+                var fgColor = Colors.FromByte((byte) (C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
 
                 var line = (i / 40);
                 var characterInLine = i % 40;
@@ -97,10 +97,7 @@ namespace ComputerSystem.Commodore64 {
                     for (int col = 0; col <= 7; col++) {
                         var indexPixelOffset = indexRowOffset + col;
 
-                        var pixelSet = (charRow & 0x80) == 0x80;
-                        charRow <<= 1;
-
-                        screenBufferPixels[indexPixelOffset] = pixelSet ? fgColor : bgColor;
+                        screenBufferPixels[indexPixelOffset] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
                     }
 
                 }

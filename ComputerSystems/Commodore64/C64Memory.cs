@@ -16,14 +16,14 @@ namespace Commodore64 {
 
             // Intialize processor addressing mode with default values
             // http://sta.c64.org/cbm64mem.html
-            _memory[0] = 0x2f;
-            _memory[1] = 0x37;
+            _memory[0] = C64MemoryValues.PROCESSOR_PORT_DIRECTION_REGISTER_DEFAULT;
+            _memory[1] = C64MemoryValues.PROCESSOR_PORT_REGISTER_DEFAULT;
         }
 
         public override byte Read(int address) {
-
             // Handle the C64 memory map and the bank switching capabilities of the 6510
             // http://sta.c64.org/cbm64mem.html
+            // https://www.c64-wiki.com/wiki/Bank_Switching
 
             // Processor addressing mode
             // Memory location 0x01 is hard wired for bank switching

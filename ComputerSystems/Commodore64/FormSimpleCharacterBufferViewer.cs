@@ -10,8 +10,6 @@ namespace ComputerSystem.Commodore64 {
 
         public C64 C64 { get; set; }
 
-        public int ScreenBufferOffset = 0x0400;
-
         private Stopwatch sw = new Stopwatch();
         private Stopwatch sw2 = new Stopwatch();
 
@@ -84,7 +82,7 @@ namespace ComputerSystem.Commodore64 {
             g.Clear(Color.Blue);
 
             for (int i = 0; i < 1000; i++) {
-                byte data = C64.Cpu.Memory[(ushort)(ScreenBufferOffset + i)];
+                byte data = C64.Cpu.Memory[(ushort)(C64MemoryOffsets.SCREEN_BUFFER + i)];
 
                 if (data < 0x20) data += 0x40;
 
