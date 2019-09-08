@@ -1,4 +1,4 @@
-using Commodore64;
+﻿using Commodore64;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -88,6 +88,9 @@ namespace ComputerSystem.Commodore64 {
 
                 for (int row = 0; row <= 7; row++) {
                     var charRow = C64.Memory._romCharacter.Read((petsciiCode * 8) + row);
+
+                    // TODO: Don't read directly from the character ROM, needs some CIA logic for it to work I think
+                    //var charRow = C64.Memory.Read(0xD000 + (petsciiCode * 8) + row);
 
                     var indexRowOffset = indexLineOffset + (320 * row) ;
 
