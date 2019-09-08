@@ -16,8 +16,8 @@ namespace ComputerSystem.Commodore64 {
 
         private readonly Stopwatch _stopWatch = new Stopwatch();
 
-        private double _lastFrameTime = 0.0f;
         private double _fpsActual = 0.0f;
+        private double _screenRefreshRate = 1000.0f / 60.0f; // 60 fps
 
         private readonly Bitmap bBuffer;
         readonly Color[] screenBufferPixels;
@@ -36,9 +36,14 @@ namespace ComputerSystem.Commodore64 {
         private void FormC64Screen_Load(object sender, EventArgs e) {
             new Thread(() => {
                 while (true) {
-                    if (!Visible) return;
+                    if (!Visible || WindowState == FormWindowState.Minimized) {
+                        Thread.Sleep(1000);
+                        continue;
+                    }
 
                     Invoke(new Action(() => { Invalidate(); }));
+
+                    Thread.Sleep((int)_screenRefreshRate);
                 }   
             }).Start();
 
@@ -52,11 +57,6 @@ namespace ComputerSystem.Commodore64 {
                 return;
             }
 
-            _stopWatch.Reset();
-            _stopWatch.Start();
-
-            //base.OnPaintBackground(e);
-
             Update();
 
             e.Graphics.InterpolationMode = InterpolationMode.Low;
@@ -69,9 +69,10 @@ namespace ComputerSystem.Commodore64 {
 
             _stopWatch.Stop();
 
-            _lastFrameTime = _stopWatch.Elapsed.TotalMilliseconds;
-            _fpsActual = 1000f / _lastFrameTime;
+            _fpsActual = 1000f / _stopWatch.Elapsed.TotalMilliseconds;
             Text = $"{_fpsActual:F1} fps";
+
+            _stopWatch.Restart();
         }
         
         public new void Update() {
