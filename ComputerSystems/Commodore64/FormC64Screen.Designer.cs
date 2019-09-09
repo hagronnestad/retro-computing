@@ -32,7 +32,7 @@
             this.ClientSize = new System.Drawing.Size(656, 465);
             this.DoubleBuffered = true;
             this.Name = "FormC64Screen";
-            this.Text = "FormSimpleCharacterBufferViewer";
+            this.Text = "FormC64Screen";
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
             this.Resize += new System.EventHandler(this.FormC64Screen_Resize);
             this.ResumeLayout(false);
