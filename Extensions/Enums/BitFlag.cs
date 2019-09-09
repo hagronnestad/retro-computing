@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace Extensions.Enums {
+
     [Flags]
     public enum BitFlag : byte {
         BIT_0 = 0b00000001,
@@ -12,4 +13,5 @@ namespace Extensions.Enums {
         BIT_6 = 0b01000000,
         BIT_7 = 0b10000000,
     }
+
 }

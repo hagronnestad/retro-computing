@@ -17,7 +17,6 @@ namespace MicroProcessor.Cpu6502 {
 
         private int _cyclesToComplete = 0;
 
-        //public byte[] Memory = new byte[0x10000];
         public IMemory<byte> Memory { get; private set; }
 
         public ushort PC;

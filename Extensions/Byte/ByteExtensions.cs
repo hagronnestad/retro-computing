@@ -1,6 +1,7 @@
 ﻿using Extensions.Enums;
 
 namespace Extensions.Byte {
+
     public static class ByteExtensions {
         public static byte SetBit(this byte b, BitFlag flag, bool value) {
             return value ? b |= (byte)flag : b &= (byte)~flag;

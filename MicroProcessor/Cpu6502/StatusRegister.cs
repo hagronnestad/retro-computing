@@ -45,7 +45,6 @@ namespace MicroProcessor.Cpu6502 {
         }
 
 
-
         public bool Get(ProcessorStatusFlags flag) {
             return (Register & (byte)flag) == (byte)flag;
         }

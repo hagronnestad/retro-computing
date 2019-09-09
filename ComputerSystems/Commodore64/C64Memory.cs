@@ -91,7 +91,6 @@ namespace Commodore64 {
                 return base.Read(address);
             }
 
-
             return base.Read(address);
         }
 

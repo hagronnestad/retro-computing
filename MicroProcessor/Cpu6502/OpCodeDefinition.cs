@@ -3,6 +3,7 @@ using MicroProcessor.Cpu6502.Enums;
 using System;
 
 namespace MicroProcessor.Cpu6502 {
+
     public class OpCodeDefinition {
         public byte Code { get; set; }
         public string Name { get; set; }
@@ -35,4 +36,5 @@ namespace MicroProcessor.Cpu6502 {
             };
         }
     }
+
 }

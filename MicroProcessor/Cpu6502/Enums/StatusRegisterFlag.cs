@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace MicroProcessor.Cpu6502.Enums {
+
     [Flags]
     public enum ProcessorStatusFlags : byte {
         Carry        = 0b00000001,
@@ -12,4 +13,5 @@ namespace MicroProcessor.Cpu6502.Enums {
         Overflow     = 0b01000000,
         Negative     = 0b10000000,
     }
+
 }

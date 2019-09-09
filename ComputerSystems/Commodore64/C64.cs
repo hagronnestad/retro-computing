@@ -5,8 +5,6 @@ using System.Threading;
 namespace Commodore64 {
     public class C64 {
 
-
-
         public C64Memory Memory { get; private set; }
         public Cpu Cpu { get; private set; }
 

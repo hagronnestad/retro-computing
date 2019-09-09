@@ -6,7 +6,6 @@ using System.Drawing;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
-using System.Threading;
 using MicroProcessor.Cpu6502;
 
 namespace Debugger {
