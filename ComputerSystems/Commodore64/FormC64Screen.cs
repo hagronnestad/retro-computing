@@ -22,6 +22,7 @@ namespace ComputerSystem.Commodore64 {
         private readonly Bitmap bBuffer;
         readonly Color[] screenBufferPixels;
         private readonly Pen penScanLine;
+        private readonly Pen penScanLine2;
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
@@ -31,6 +32,7 @@ namespace ComputerSystem.Commodore64 {
             bBuffer = new Bitmap(320, 200, PixelFormat.Format24bppRgb);
             screenBufferPixels = new Color[bBuffer.Width * bBuffer.Height];
             penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
+            penScanLine2 = new Pen(Color.FromArgb(20, 127, 127, 127));
         }
 
         private void FormC64Screen_Load(object sender, EventArgs e) {
@@ -63,9 +65,14 @@ namespace ComputerSystem.Commodore64 {
             e.Graphics.DrawImage(bBuffer, 0, 0, ClientRectangle.Width, ClientRectangle.Height);
 
             // Let's make some fake scanlines for fun 😎
+            for (int i = 0; i < ClientRectangle.Width; i += (int)(penScanLine2.Width * 2)) {
+                e.Graphics.DrawLine(penScanLine2, i, 0, i, ClientRectangle.Height);
+            }
+
             for (int i = 0; i < ClientRectangle.Height; i += (int)(penScanLine.Width * 2)) {
                 e.Graphics.DrawLine(penScanLine, 0, i, ClientRectangle.Width, i);
             }
+
 
             _stopWatch.Stop();
 
@@ -137,6 +144,7 @@ namespace ComputerSystem.Commodore64 {
 
         private void FormC64Screen_Resize(object sender, EventArgs e) {
             penScanLine.Width = (int)(ClientRectangle.Height * 0.005);
+            penScanLine2.Width = (int)(ClientRectangle.Width * 0.0025);
         }
     }
 }
