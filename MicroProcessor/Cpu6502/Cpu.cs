@@ -770,7 +770,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
@@ -781,7 +782,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
@@ -792,7 +794,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
@@ -803,7 +806,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
@@ -814,7 +818,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
@@ -825,7 +830,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
@@ -836,7 +842,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
@@ -847,7 +854,8 @@ namespace MicroProcessor.Cpu6502 {
 
             } else {
                 // Don't branch
-                // Increment cycle count
+                TotalCycles++;
+                _cyclesToComplete++;
             }
         }
 
