@@ -9,16 +9,36 @@ using System.Linq;
 
 namespace MicroProcessor.Cpu6502 {
     public class Cpu {
+
+        /// <summary>
+        /// Keeps track of the remaining cycles to finish the current instruction.
+        /// Gets decremented on every CPU cycle.
+        /// </summary>
+        private int _cyclesRemainingCurrentInstruction = 0;
+
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
 
-        public int TotalInstructions { get; private set; }
+        /// <summary>
+        /// The total number of executed instructions.
+        /// </summary>
+        public long TotalInstructions { get; private set; }
+
+        /// <summary>
+        /// The total number of times the CPU has been cycled.
+        /// </summary>
         public long TotalCycles { get; set; }
 
-        private int _cyclesToComplete = 0;
-
+        /// <summary>
+        /// The memory available for the CPU.
+        /// The CPU uses the PC to fetch its instructions from the memory.
+        /// </summary>
         public IMemory<byte> Memory { get; private set; }
 
+        /// <summary>
+        /// The Program Counter.
+        /// Points to the current instruction or its operands.
+        /// </summary>
         public ushort PC;
 
         /// <summary>
@@ -27,10 +47,24 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         public byte SP;
 
+        /// <summary>
+        /// Accumulator register.
+        /// </summary>
         public byte AR;
+
+        /// <summary>
+        /// X register.
+        /// </summary>
         public byte XR;
+
+        /// <summary>
+        /// Y register.
+        /// </summary>
         public byte YR;
 
+        /// <summary>
+        /// Status Register. This register contains a set of flags.
+        /// </summary>
         public StatusRegister SR = new StatusRegister() {
             Reserved = true
         };
@@ -42,7 +76,15 @@ namespace MicroProcessor.Cpu6502 {
         public OpCodeDefinition NextOpCode { get; set; }
         public ushort NextOpCodeAddress;
 
+        /// <summary>
+        /// The current Address after applying the current addressing mode.
+        /// </summary>
         public ushort Address;
+
+        /// <summary>
+        /// The current Value to operate on based on the Address or the Accumulator,
+        /// depending on the current addressing mode.
+        /// </summary>
         public byte Value {
             get {
                 return OpCode.AddressingMode == AddressingMode.Accumulator ? AR : Memory[Address];
@@ -57,7 +99,10 @@ namespace MicroProcessor.Cpu6502 {
             }
         }
 
-
+        /// <summary>
+        /// The MOS6502 CPU.
+        /// </summary>
+        /// <param name="memory"></param>
         public Cpu(IMemory<byte> memory) {
             Memory = memory;
 
@@ -93,15 +138,23 @@ namespace MicroProcessor.Cpu6502 {
             NextOpCodeAddress = PC;
         }
 
+        /// <summary>
+        /// Cycles the CPU and makes sure to take up as many cycles as
+        /// the current instruction is supposed to.
+        /// </summary>
         public void Cycle() {
-            if (_cyclesToComplete == 0) {
+            if (_cyclesRemainingCurrentInstruction == 0) {
                 Step();
 
             } else {
-                _cyclesToComplete--;
+                _cyclesRemainingCurrentInstruction--;
             }
         }
 
+        /// <summary>
+        /// Steps the CPU by executing one instruction.
+        /// </summary>
+        /// <param name="ignoreCycles"></param>
         public void Step(bool ignoreCycles = false) {
             TotalInstructions += 1;
 
@@ -124,7 +177,7 @@ namespace MicroProcessor.Cpu6502 {
 
             // Keeps track of needed cycles to complete the current instruction
             // ignoreCycles = true is used to step the CPU with a debugger
-            if (!ignoreCycles) _cyclesToComplete += OpCode.Cycles;
+            if (!ignoreCycles) _cyclesRemainingCurrentInstruction += OpCode.Cycles;
 
             NextOpCode = OpCodeCache[Memory[PC]];
             NextOpCodeAddress = PC;
@@ -182,11 +235,19 @@ namespace MicroProcessor.Cpu6502 {
             TotalCycles += 8;
         }
 
+        /// <summary>
+        /// Pushes a value to the Stack and decrements the Stack-pointer.
+        /// </summary>
+        /// <param name="value"></param>
         public void PushStack(byte value) {
             Memory[0x0100 + SP] = value;
             SP--;
         }
 
+        /// <summary>
+        /// Pops a value off the Stack and increments the Stack-pointer.
+        /// </summary>
+        /// <returns></returns>
         public byte PopStack() {
             SP++;
             var b = Memory[0x0100 + SP];
@@ -771,7 +832,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
@@ -783,7 +844,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
@@ -795,7 +856,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
@@ -807,7 +868,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
@@ -819,7 +880,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
@@ -831,7 +892,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
@@ -843,7 +904,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
@@ -855,7 +916,7 @@ namespace MicroProcessor.Cpu6502 {
             } else {
                 // Don't branch
                 TotalCycles++;
-                _cyclesToComplete++;
+                _cyclesRemainingCurrentInstruction++;
             }
         }
 
