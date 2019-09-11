@@ -1,4 +1,5 @@
 ﻿using Hardware.Memory;
+using Hardware.Mos6526Cia;
 using System.IO;
 
 namespace Commodore64 {
@@ -8,6 +9,8 @@ namespace Commodore64 {
         private MemoryBase<byte> _romBasic;
         public MemoryBase<byte> _romCharacter;
         private MemoryBase<byte> _romKernal;
+
+        public Cia Cia { get; set; } = new Cia();
 
         public C64Memory() : base(0x10000) {
             _romBasic = new MemoryBase<byte>(File.ReadAllBytes("basic.rom")) { IsReadOnly = true };
@@ -67,6 +70,22 @@ namespace Commodore64 {
             // I/O, RAM, CHAR ROM (page 208-223)
             // Some exceptions for I/O, not implemented yet
             if (address >= 0xD000 && address <= 0xDFFF) {
+
+                // CIA 1
+                if (address >= 0xDC00 && address <= 0xDCFF) {
+
+                    switch (address) {
+                        case 0xDC09:
+                            return Cia.TimeOfDaySecondsBcd;
+                        case 0xDC0A:
+                            return Cia.TimeOfDayMinutesBcd;
+                        case 0xDC0B:
+                            return Cia.TimeOfDayHoursBcd;
+                    }
+
+                }
+
+
                 switch (am) {
                     case 0b011:
                     case 0b010:

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -106,6 +106,10 @@
     <ProjectReference Include="..\..\Hardware\Memory\Memory.csproj">
       <Project>{EB604713-48CE-431C-8305-331C5441C90E}</Project>
       <Name>Memory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hardware\Mos6526Cia\Mos6526Cia.csproj">
+      <Project>{DBFBA4A9-ABFC-4C9E-A29D-7F981A152A1A}</Project>
+      <Name>Mos6526Cia</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\MicroProcessor\MicroProcessor.csproj">
       <Project>{B524EAFF-709B-45E6-9B5C-6E830ED40401}</Project>
