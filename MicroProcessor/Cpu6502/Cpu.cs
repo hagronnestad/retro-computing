@@ -16,6 +16,9 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         private int _cyclesRemainingCurrentInstruction = 0;
 
+        private bool interruptWaiting = false;
+        private bool nonMaskableInterruptWaiting = false;
+
         public List<OpCodeDefinition> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinition> OpCodeCache { get; set; }
 
@@ -68,7 +71,6 @@ namespace MicroProcessor.Cpu6502 {
         public StatusRegister SR = new StatusRegister() {
             Reserved = true
         };
-
 
         public OpCodeDefinition OpCode { get; set; }
         public ushort OpCodeAddress;
@@ -144,7 +146,16 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         public void Cycle() {
             if (_cyclesRemainingCurrentInstruction == 0) {
-                Step();
+
+                if (nonMaskableInterruptWaiting) {
+                    DoNonMaskableInterrupt();
+
+                } else if (interruptWaiting) {
+                    DoInterrupt();
+
+                } else {
+                    Step();
+                }
 
             } else {
                 _cyclesRemainingCurrentInstruction--;
@@ -156,8 +167,6 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         /// <param name="ignoreCycles"></param>
         public void Step(bool ignoreCycles = false) {
-            TotalInstructions += 1;
-
             OpCode = OpCodeCache[Memory[PC]];
             OpCodeAddress = PC;
             PC++;
@@ -170,6 +179,7 @@ namespace MicroProcessor.Cpu6502 {
                 OpCode.GetAddress();
             }
             OpCode.Run();
+            TotalInstructions += 1;
 
             // Count total cycles
             // This doesn't account for extra cycles caused by memory operations crossing pages
@@ -188,8 +198,8 @@ namespace MicroProcessor.Cpu6502 {
 
             // SP should be 0xFD, I used to initialize it directly, but `-= 3` on a `byte` becomes 0xFD after roll over
             // I'm not sure if this is correct on multiple resets yet
-            SP -= 3;
-            //SP = 0xFD;
+            //SP -= 3;
+            SP = 0xFD;
 
             SR.IrqDisable = true;
 
@@ -200,26 +210,22 @@ namespace MicroProcessor.Cpu6502 {
             TotalCycles += 8;
         }
 
-        public void Interrupt() { // IRQ
-            // From https://youtu.be/8XmxKPJDGU0?t=3362
-
-            if (SR.IrqDisable) return;
-
-            PushStack((byte)(PC >> 8));
-            PushStack((byte)(PC & 0x00FF));
-
-            PushStack((byte)((SR.Register | (byte)ProcessorStatusFlags.Reserved) & (byte)~ProcessorStatusFlags.BreakCommand));
-
-            SR.IrqDisable = true;
-
-            var irqVectorAddress = 0xFFFE;
-            PC = (ushort)((Memory[irqVectorAddress + 1] << 8) | Memory[irqVectorAddress + 0]);
-
-            // IRQ takes 7 cycles
-            TotalCycles += 7;
+        /// <summary>
+        /// Triggers a non maskable interrupt (NMI) before executing the next instruction.
+        /// </summary>
+        public void NonMaskableInterrupt() {
+            nonMaskableInterruptWaiting = true;
         }
 
-        public void NonMaskableInterrupt() { // NMI
+        /// <summary>
+        /// Triggers an interrupt (IRQ) before executing the next instruction.
+        /// </summary>
+        public void Interrupt() {
+            if (SR.IrqDisable) return;
+            interruptWaiting = true;
+        }
+
+        public void DoNonMaskableInterrupt() {
             // From https://youtu.be/8XmxKPJDGU0?t=3362
 
             PushStack((byte)(PC >> 8));
@@ -233,6 +239,29 @@ namespace MicroProcessor.Cpu6502 {
 
             // NMI takes 8 cycles
             TotalCycles += 8;
+            _cyclesRemainingCurrentInstruction += 8;
+
+            nonMaskableInterruptWaiting = false;
+        }
+
+        private void DoInterrupt() {
+            // From https://youtu.be/8XmxKPJDGU0?t=3362
+
+            PushStack((byte)(PC >> 8));
+            PushStack((byte)(PC & 0x00FF));
+
+            PushStack((byte)((SR.Register | (byte)ProcessorStatusFlags.Reserved) & (byte)~ProcessorStatusFlags.BreakCommand));
+
+            SR.IrqDisable = true;
+
+            var irqVectorAddress = 0xFFFE;
+            PC = (ushort)((Memory[irqVectorAddress + 1] << 8) | Memory[irqVectorAddress + 0]);
+
+            // IRQ takes 7 cycles
+            TotalCycles += 7;
+            _cyclesRemainingCurrentInstruction += 7;
+
+            interruptWaiting = false;
         }
 
         /// <summary>
