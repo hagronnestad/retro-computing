@@ -3,12 +3,17 @@ using Extensions.Enums;
 using Hardware.Memory;
 using MicroProcessor.Cpu6502.Attributes;
 using MicroProcessor.Cpu6502.Enums;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroProcessor.Cpu6502 {
     public class Cpu {
+
+        public const ushort NMI_VECTOR_ADDRESS = 0xFFFA;
+        public const ushort RESET_VECTOR_ADDRESS = 0xFFFC;
+        public const ushort IRQ_VECTOR_ADDRESS = 0xFFFE;
+        public const ushort BRK_VECTOR_ADDRESS = 0xFFFE;
+
 
         /// <summary>
         /// Keeps track of the remaining cycles to finish the current instruction.
@@ -203,8 +208,7 @@ namespace MicroProcessor.Cpu6502 {
 
             SR.IrqDisable = true;
 
-            var resetVectorAddress = 0xFFFC;
-            PC = (ushort)((Memory[resetVectorAddress + 1] << 8) | Memory[resetVectorAddress + 0]);
+            PC = (ushort)((Memory[RESET_VECTOR_ADDRESS + 1] << 8) | Memory[RESET_VECTOR_ADDRESS]);
 
             // Reset takes 8 cycles
             TotalCycles += 8;
@@ -234,8 +238,7 @@ namespace MicroProcessor.Cpu6502 {
             PushStack((byte)((SR.Register | (byte)ProcessorStatusFlags.Reserved) & (byte)~ProcessorStatusFlags.BreakCommand));
             SR.IrqDisable = true;
 
-            var nmiVectorAddress = 0xFFFA;
-            PC = (ushort)((Memory[nmiVectorAddress + 1] << 8) | Memory[nmiVectorAddress + 0]);
+            PC = (ushort)((Memory[NMI_VECTOR_ADDRESS + 1] << 8) | Memory[NMI_VECTOR_ADDRESS]);
 
             // NMI takes 8 cycles
             TotalCycles += 8;
@@ -254,8 +257,7 @@ namespace MicroProcessor.Cpu6502 {
 
             SR.IrqDisable = true;
 
-            var irqVectorAddress = 0xFFFE;
-            PC = (ushort)((Memory[irqVectorAddress + 1] << 8) | Memory[irqVectorAddress + 0]);
+            PC = (ushort)((Memory[IRQ_VECTOR_ADDRESS + 1] << 8) | Memory[IRQ_VECTOR_ADDRESS]);
 
             // IRQ takes 7 cycles
             TotalCycles += 7;
@@ -762,7 +764,7 @@ namespace MicroProcessor.Cpu6502 {
 
             SR.IrqDisable = true;
 
-            PC = BitConverter.ToUInt16(new byte[] { Memory[0xFFFE], Memory[0xFFFF] }, 0); // BRK interrupt vector
+            PC = (ushort)((Memory[BRK_VECTOR_ADDRESS + 1] << 8) | Memory[BRK_VECTOR_ADDRESS]);
         }
 
         [OpCode(Name = nameof(NOP), Code = 0xEA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied)]
