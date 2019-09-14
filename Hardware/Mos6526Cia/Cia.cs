@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Timers;
 
 namespace Hardware.Mos6526Cia {
@@ -62,6 +62,14 @@ namespace Hardware.Mos6526Cia {
             }
 
             return ret;
+        }
+
+        public byte DataPortA { get; set; }
+        public byte DataPortB { get; set; }
+        public byte DataDirectionA { get; set; }
+        public byte DataDirectionB { get; set; }
+
+        public void Clock() {
         }
     }
 
