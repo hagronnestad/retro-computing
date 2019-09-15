@@ -1,4 +1,4 @@
-﻿using MicroProcessor.Cpu6502;
+using MicroProcessor.Cpu6502;
 using System.Diagnostics;
 using System.Threading;
 
@@ -52,7 +52,7 @@ namespace Commodore64 {
 
                 }
 
-            }).Start();
+            }) { ApartmentState = ApartmentState.STA }.Start();
         }
 
     }
