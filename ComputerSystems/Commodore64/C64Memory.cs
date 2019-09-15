@@ -86,6 +86,10 @@ namespace Commodore64 {
                             return _cia.TimeOfDayHoursBcd;
 
                         default:
+                            // The CIA class has its own indexer which makes it easy to map
+                            // addresses into the CIA. The `% 0x10` makes sure that the
+                            // 16 registers available in the CIA are mirrored all the way up to
+                            // 0xDCFF.
                             return _cia[(address - 0xDC00) % 0x10];
                     }
 
@@ -129,7 +133,12 @@ namespace Commodore64 {
 
             // CIA 1
             if (address >= 0xDC00 && address <= 0xDCFF) {
+                // The CIA class has its own indexer which makes it easy to map
+                // addresses into the CIA. The `% 0x10` makes sure that the
+                // 16 registers available in the CIA are mirrored all the way up to
+                // 0xDCFF.
                 _cia[(address - 0xDC00) % 0x10] = value;
+                return;
             }
 
             base.Write(address, value);
