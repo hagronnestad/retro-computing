@@ -1,4 +1,5 @@
 ﻿using Extensions.Enums;
+using System.Collections.Generic;
 
 namespace Extensions.Byte {
 
@@ -13,6 +14,16 @@ namespace Extensions.Byte {
 
         public static bool IsBitSet(this byte i, BitFlag flag) {
             return (i & (byte)flag) == (byte)flag;
+        }
+
+        public static List<byte> GetSetBitsIndexes(this byte b) {
+            var indexes = new List<byte>();
+
+            for (byte i = 0; i < 8; i++) {
+                if (b.IsBitSet((BitIndex)i)) indexes.Add(i);
+            }
+
+            return indexes;
         }
     }
 }
