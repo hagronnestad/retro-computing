@@ -1,11 +1,21 @@
-using System;
+﻿using System;
 using System.Timers;
 
 namespace Hardware.Mos6526Cia {
 
     public class Cia {
+        
         private DateTime _timeOfDay;
         private Timer _timer;
+
+        public event EventHandler ReadDataPortA;
+        public event EventHandler ReadDataPortB;
+
+        public byte DataPortA { get; set; }
+        public byte DataPortB { get; set; }
+        public byte DataDirectionA { get; set; }
+        public byte DataDirectionB { get; set; }
+
 
         public byte TimeOfDayHoursBcd {
             get {
@@ -64,12 +74,58 @@ namespace Hardware.Mos6526Cia {
             return ret;
         }
 
-        public byte DataPortA { get; set; }
-        public byte DataPortB { get; set; }
-        public byte DataDirectionA { get; set; }
-        public byte DataDirectionB { get; set; }
+
+        public byte this[int index] {
+            get {
+                switch (index) {
+                    case 0:
+                        ReadDataPortA?.Invoke(this, null);
+                        return DataPortA;
+
+                    case 1:
+                        ReadDataPortB?.Invoke(this, null);
+                        return DataPortB;
+
+                    case 2:
+                        return DataDirectionA;
+
+                    case 3:
+                        return DataDirectionB;
+
+                    default:
+                        // TODO: Implement all registers
+                        //throw new IndexOutOfRangeException();
+                        return 0;
+                }
+            }
+            set {
+                switch (index) {
+                    case 0:
+                        DataPortA = value;
+                        break;
+
+                    case 1:
+                        DataPortB = value;
+                        break;
+
+                    case 2:
+                        DataDirectionA = value;
+                        break;
+
+                    case 3:
+                        DataDirectionB = value;
+                        break;
+                        
+                    default:
+                        // TODO: Implement all registers
+                        //throw new IndexOutOfRangeException();
+                        break;
+                }
+            }
+        }
 
         public void Clock() {
+            
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using Hardware.Memory;
 using Hardware.Mos6526Cia;
+using System.Diagnostics;
 using System.IO;
 
 namespace Commodore64 {
@@ -10,12 +11,14 @@ namespace Commodore64 {
         public MemoryBase<byte> _romCharacter;
         private MemoryBase<byte> _romKernal;
 
-        public Cia Cia { get; set; } = new Cia();
+        private Cia _cia;
 
-        public C64Memory() : base(0x10000) {
+        public C64Memory(Cia cia) : base(0x10000) {
             _romBasic = new MemoryBase<byte>(File.ReadAllBytes("basic.rom")) { IsReadOnly = true };
             _romCharacter = new MemoryBase<byte>(File.ReadAllBytes("char.rom")) { IsReadOnly = true };
             _romKernal = new MemoryBase<byte>(File.ReadAllBytes("kernal.rom")) { IsReadOnly = true };
+
+            _cia = cia;
 
             // Intialize processor addressing mode with default values
             // http://sta.c64.org/cbm64mem.html
@@ -76,11 +79,14 @@ namespace Commodore64 {
 
                     switch (address) {
                         case 0xDC09:
-                            return Cia.TimeOfDaySecondsBcd;
+                            return _cia.TimeOfDaySecondsBcd;
                         case 0xDC0A:
-                            return Cia.TimeOfDayMinutesBcd;
+                            return _cia.TimeOfDayMinutesBcd;
                         case 0xDC0B:
-                            return Cia.TimeOfDayHoursBcd;
+                            return _cia.TimeOfDayHoursBcd;
+
+                        default:
+                            return _cia[(address - 0xDC00) % 0x10];
                     }
 
                 }
@@ -114,6 +120,18 @@ namespace Commodore64 {
         }
 
         public override void Write(int address, byte value) {
+            if (address == 0x0801) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
+            if (address == 0x0801) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
+
+            if (address == 0x0281) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
+            if (address == 0x0282) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
+
+
+            // CIA 1
+            if (address >= 0xDC00 && address <= 0xDCFF) {
+                _cia[(address - 0xDC00) % 0x10] = value;
+            }
+
             base.Write(address, value);
         }
     }
