@@ -1,5 +1,6 @@
 ﻿using Extensions.Enums;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace Extensions.Byte {
 
@@ -24,6 +25,11 @@ namespace Extensions.Byte {
             }
 
             return indexes;
+        }
+
+        public static void FillWithRandomData(this byte[] b) {
+            var r = new RNGCryptoServiceProvider();
+            r.GetBytes(b);
         }
     }
 }
