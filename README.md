@@ -45,9 +45,9 @@ One of the main goals was to be able to run the **C64 KERNAL-** and **BASIC-ROM*
 - [x] Boots into **COMMODORE 64 BASIC V2**
 - [x] Simple character buffer view (with limited input possibilities)
 - [x] Able to input BASIC program and run
-- [/] Proper input/keyboard mapping
+- [x] Proper input/keyboard mapping
 - [x] Real character mode output by using the CHARACTER GENERATOR ROM
-- [ ] Character mode output with char color data
+- [x] Character mode output with char color data
 - [ ] VIC-II emulation? (probably never)
 - [ ] SID emulation? (hopefully)
 
