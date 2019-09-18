@@ -133,7 +133,6 @@ namespace ComputerSystem.Commodore64 {
 
         private void PScreen_Paint(object sender, PaintEventArgs e) {
             if (C64.Cpu.Memory[C64MemoryLocations.CURRENT_OUTPUT_DEVICE] != C64MemoryValues.CURRENT_OUTPUT_DEVICE_SCREEN) {
-                Text = "Screen disabled!";
                 return;
             }
 
@@ -155,7 +154,7 @@ namespace ComputerSystem.Commodore64 {
             _stopWatch.Stop();
 
             _fpsActual = 1000f / _stopWatch.Elapsed.TotalMilliseconds;
-            Text = $"{_fpsActual:F1} fps";
+            lblFps.Text = $"{_fpsActual:F1} fps";
 
             _stopWatch.Restart();
         }

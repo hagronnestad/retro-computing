@@ -27,8 +27,11 @@ namespace ComputerSystem.Commodore64 {
             this.mnuSystem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuReset = new System.Windows.Forms.ToolStripMenuItem();
             this.pScreen = new System.Windows.Forms.PictureBox();
+            this.statusMain = new System.Windows.Forms.StatusStrip();
+            this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnuMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
+            this.statusMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuMain
@@ -66,11 +69,28 @@ namespace ComputerSystem.Commodore64 {
             this.pScreen.TabStop = false;
             this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
             // 
+            // statusMain
+            // 
+            this.statusMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblFps});
+            this.statusMain.Location = new System.Drawing.Point(0, 443);
+            this.statusMain.Name = "statusMain";
+            this.statusMain.Size = new System.Drawing.Size(656, 22);
+            this.statusMain.TabIndex = 2;
+            this.statusMain.Text = "statusStrip1";
+            // 
+            // lblFps
+            // 
+            this.lblFps.Name = "lblFps";
+            this.lblFps.Size = new System.Drawing.Size(32, 17);
+            this.lblFps.Text = "0 fps";
+            // 
             // FormC64Screen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(656, 465);
+            this.Controls.Add(this.statusMain);
             this.Controls.Add(this.pScreen);
             this.Controls.Add(this.mnuMain);
             this.DoubleBuffered = true;
@@ -83,6 +103,8 @@ namespace ComputerSystem.Commodore64 {
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).EndInit();
+            this.statusMain.ResumeLayout(false);
+            this.statusMain.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -94,5 +116,7 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripMenuItem mnuSystem;
         private System.Windows.Forms.ToolStripMenuItem mnuReset;
         private System.Windows.Forms.PictureBox pScreen;
+        private System.Windows.Forms.StatusStrip statusMain;
+        private System.Windows.Forms.ToolStripStatusLabel lblFps;
     }
 }
