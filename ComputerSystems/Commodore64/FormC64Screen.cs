@@ -1,4 +1,4 @@
-﻿using Commodore64;
+using Commodore64;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -121,15 +121,6 @@ namespace ComputerSystem.Commodore64 {
         private void FormC64Screen_Resize(object sender, EventArgs e) {
             penScanLine.Width = (int)(ClientRectangle.Height * 0.005);
             penScanLine2.Width = (int)(ClientRectangle.Width * 0.0025);
-        }
-
-        private void FormC64Screen_DoubleClick(object sender, EventArgs e) {
-            var file = File.ReadAllBytes(@"C:\Users\heina\Downloads\bas clock simple.prg");
-            var data = file.Skip(2).ToArray();
-
-            for (int i = 0; i < data.Length; i++) {
-                C64.Memory[0x0801 + i] = data[i];
-            }
         }
 
         private void FormC64Screen_KeyDown(object sender, KeyEventArgs e) {
