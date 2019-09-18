@@ -96,7 +96,7 @@ namespace ComputerSystem.Commodore64 {
             this.DoubleBuffered = true;
             this.MainMenuStrip = this.mnuMain;
             this.Name = "FormC64Screen";
-            this.Text = "FormC64Screen";
+            this.Text = "Retrocomputing.NET - Commodore 64";
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
             this.Resize += new System.EventHandler(this.FormC64Screen_Resize);
             this.mnuMain.ResumeLayout(false);
