@@ -135,15 +135,15 @@ namespace ComputerSystem.Commodore64 {
             Update();
 
             e.Graphics.InterpolationMode = InterpolationMode.Low;
-            e.Graphics.DrawImage(bBuffer, 0, 0, ClientRectangle.Width, ClientRectangle.Height);
+            e.Graphics.DrawImage(bBuffer, 0, 0, pScreen.Width, pScreen.Height);
 
             // Let's make some fake scanlines for fun 😎
-            for (int i = 0; i < ClientRectangle.Width; i += (int)(penScanLine2.Width * 2)) {
-                e.Graphics.DrawLine(penScanLine2, i, 0, i, ClientRectangle.Height);
+            for (int i = 0; i < pScreen.Width; i += (int)(penScanLine2.Width * 2)) {
+                e.Graphics.DrawLine(penScanLine2, i, 0, i, pScreen.Height);
             }
 
-            for (int i = 0; i < ClientRectangle.Height; i += (int)(penScanLine.Width * 2)) {
-                e.Graphics.DrawLine(penScanLine, 0, i, ClientRectangle.Width, i);
+            for (int i = 0; i < pScreen.Height; i += (int)(penScanLine.Width * 2)) {
+                e.Graphics.DrawLine(penScanLine, 0, i, pScreen.Width, i);
             }
 
 

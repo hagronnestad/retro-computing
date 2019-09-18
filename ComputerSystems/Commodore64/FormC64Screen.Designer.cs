@@ -61,10 +61,13 @@ namespace ComputerSystem.Commodore64 {
             // 
             // pScreen
             // 
-            this.pScreen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pScreen.Location = new System.Drawing.Point(0, 24);
+            this.pScreen.Margin = new System.Windows.Forms.Padding(0);
             this.pScreen.Name = "pScreen";
-            this.pScreen.Size = new System.Drawing.Size(656, 441);
+            this.pScreen.Size = new System.Drawing.Size(656, 419);
             this.pScreen.TabIndex = 1;
             this.pScreen.TabStop = false;
             this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
