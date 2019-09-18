@@ -98,7 +98,6 @@ namespace ComputerSystem.Commodore64 {
             this.Name = "FormC64Screen";
             this.Text = "FormC64Screen";
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyDown);
             this.Resize += new System.EventHandler(this.FormC64Screen_Resize);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();

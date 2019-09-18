@@ -123,10 +123,6 @@ namespace ComputerSystem.Commodore64 {
             penScanLine2.Width = (int)(ClientRectangle.Width * 0.0025);
         }
 
-        private void FormC64Screen_KeyDown(object sender, KeyEventArgs e) {
-
-        }
-
         private void MnuReset_Click(object sender, EventArgs e) {
             C64.Cpu.Reset();
         }
