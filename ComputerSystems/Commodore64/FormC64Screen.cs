@@ -8,6 +8,8 @@ using System.Threading;
 using System.Windows.Forms;
 using Extensions.Byte;
 using Extensions.Enums;
+using System.IO;
+using System.Linq;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -43,7 +45,7 @@ namespace ComputerSystem.Commodore64 {
                         continue;
                     }
 
-                    Invoke(new Action(() => { Invalidate(); }));
+                    Invoke(new Action(() => { pScreen.Invalidate(); }));
 
                     Thread.Sleep((int)_screenRefreshRate);
                 }   
@@ -53,33 +55,7 @@ namespace ComputerSystem.Commodore64 {
         }
 
         protected override void OnPaintBackground(PaintEventArgs e) {
-            if (C64.Cpu.Memory[C64MemoryLocations.CURRENT_OUTPUT_DEVICE] != C64MemoryValues.CURRENT_OUTPUT_DEVICE_SCREEN) {
-                base.OnPaintBackground(e);
-                Text = "Screen disabled!";
-                return;
-            }
-
-            Update();
-
-            e.Graphics.InterpolationMode = InterpolationMode.Low;
-            e.Graphics.DrawImage(bBuffer, 0, 0, ClientRectangle.Width, ClientRectangle.Height);
-
-            // Let's make some fake scanlines for fun 😎
-            for (int i = 0; i < ClientRectangle.Width; i += (int)(penScanLine2.Width * 2)) {
-                e.Graphics.DrawLine(penScanLine2, i, 0, i, ClientRectangle.Height);
-            }
-
-            for (int i = 0; i < ClientRectangle.Height; i += (int)(penScanLine.Width * 2)) {
-                e.Graphics.DrawLine(penScanLine, 0, i, ClientRectangle.Width, i);
-            }
-
-
-            _stopWatch.Stop();
-
-            _fpsActual = 1000f / _stopWatch.Elapsed.TotalMilliseconds;
-            Text = $"{_fpsActual:F1} fps";
-
-            _stopWatch.Restart();
+            
         }
         
         public new void Update() {
@@ -145,6 +121,52 @@ namespace ComputerSystem.Commodore64 {
         private void FormC64Screen_Resize(object sender, EventArgs e) {
             penScanLine.Width = (int)(ClientRectangle.Height * 0.005);
             penScanLine2.Width = (int)(ClientRectangle.Width * 0.0025);
+        }
+
+        private void FormC64Screen_DoubleClick(object sender, EventArgs e) {
+            var file = File.ReadAllBytes(@"C:\Users\heina\Downloads\bas clock simple.prg");
+            var data = file.Skip(2).ToArray();
+
+            for (int i = 0; i < data.Length; i++) {
+                C64.Memory[0x0801 + i] = data[i];
+            }
+        }
+
+        private void FormC64Screen_KeyDown(object sender, KeyEventArgs e) {
+
+        }
+
+        private void MnuReset_Click(object sender, EventArgs e) {
+            C64.Cpu.Reset();
+        }
+
+        private void PScreen_Paint(object sender, PaintEventArgs e) {
+            if (C64.Cpu.Memory[C64MemoryLocations.CURRENT_OUTPUT_DEVICE] != C64MemoryValues.CURRENT_OUTPUT_DEVICE_SCREEN) {
+                Text = "Screen disabled!";
+                return;
+            }
+
+            Update();
+
+            e.Graphics.InterpolationMode = InterpolationMode.Low;
+            e.Graphics.DrawImage(bBuffer, 0, 0, ClientRectangle.Width, ClientRectangle.Height);
+
+            // Let's make some fake scanlines for fun 😎
+            for (int i = 0; i < ClientRectangle.Width; i += (int)(penScanLine2.Width * 2)) {
+                e.Graphics.DrawLine(penScanLine2, i, 0, i, ClientRectangle.Height);
+            }
+
+            for (int i = 0; i < ClientRectangle.Height; i += (int)(penScanLine.Width * 2)) {
+                e.Graphics.DrawLine(penScanLine, 0, i, ClientRectangle.Width, i);
+            }
+
+
+            _stopWatch.Stop();
+
+            _fpsActual = 1000f / _stopWatch.Elapsed.TotalMilliseconds;
+            Text = $"{_fpsActual:F1} fps";
+
+            _stopWatch.Restart();
         }
     }
 }
