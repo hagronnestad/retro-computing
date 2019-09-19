@@ -2,14 +2,11 @@ using Commodore64;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows.Forms;
 using Extensions.Byte;
 using Extensions.Enums;
-using System.IO;
-using System.Linq;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -21,49 +18,58 @@ namespace ComputerSystem.Commodore64 {
         private double _fpsActual = 0.0f;
         private double _screenRefreshRate = 1000.0f / 60.0f; // 60 fps
 
-        private readonly Bitmap bBuffer;
-        readonly Color[] screenBufferPixels;
-        private readonly Pen penScanLine;
-        private readonly Pen penScanLine2;
+        private readonly Bitmap _bC64ScreenBuffer;
+
+        private Bitmap _bC64ScreenOutputBuffer;
+        private Graphics _gC64ScreenOutputBuffer;
+
+        private readonly Color[] _screenBufferPixels;
+        private readonly Pen _penScanLine;
+        private readonly Pen _penScanLine2;
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
 
             C64 = c64;
 
-            bBuffer = new Bitmap(320, 200, PixelFormat.Format24bppRgb);
-            screenBufferPixels = new Color[bBuffer.Width * bBuffer.Height];
-            penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
-            penScanLine2 = new Pen(Color.FromArgb(20, 127, 127, 127));
+            _bC64ScreenBuffer = new Bitmap(320, 200, PixelFormat.Format24bppRgb);
+            _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
+            _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
+            _screenBufferPixels = new Color[_bC64ScreenBuffer.Width * _bC64ScreenBuffer.Height];
+            _penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
+            _penScanLine2 = new Pen(Color.FromArgb(20, 127, 127, 127));
         }
 
         private void FormC64Screen_Load(object sender, EventArgs e) {
-            new Thread(() => {
-                while (true) {
-                    if (!Visible || WindowState == FormWindowState.Minimized) {
-                        Thread.Sleep(1000);
-                        continue;
-                    }
-
-                    Invoke(new Action(() => { pScreen.Invalidate(); }));
-
-                    Thread.Sleep((int)_screenRefreshRate);
-                }   
-            }).Start();
-
-            OnResize(null);
+            new Thread(InvalidateScreen).Start();
         }
 
-        protected override void OnPaintBackground(PaintEventArgs e) {
-            
+        private void InvalidateScreen() {
+            while (true) {
+                if (!Visible || WindowState == FormWindowState.Minimized) {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+
+                try {
+                    Invoke(new Action(() => {
+                        pScreen.Invalidate();
+                    }));
+
+                } catch (Exception) {
+                    return;
+                }
+
+                Thread.Sleep((int)_screenRefreshRate);
+            }
         }
-        
-        public new void Update() {
-            var bgColor = Colors.FromByte((byte) (C64.Memory[C64MemoryLocations.SCREEN_BACKGROUND_COLOR] & 0b00001111));
+
+        public void UpdateScreenBuffer() {
+            var bgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryLocations.SCREEN_BACKGROUND_COLOR] & 0b00001111));
 
             for (var i = 0; i < 1000; i++) {
                 var petsciiCode = C64.Memory[C64MemoryOffsets.SCREEN_BUFFER + i];
-                var fgColor = Colors.FromByte((byte) (C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
+                var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
 
                 var line = (i / 40);
                 var characterInLine = i % 40;
@@ -75,19 +81,30 @@ namespace ComputerSystem.Commodore64 {
                     // TODO: Don't read directly from the character ROM, needs some CIA logic for it to work I think
                     //var charRow = C64.Memory.Read(0xD000 + (petsciiCode * 8) + row);
 
-                    var indexRowOffset = indexLineOffset + (320 * row) ;
+                    var indexRowOffset = indexLineOffset + (320 * row);
 
                     for (int col = 0; col <= 7; col++) {
                         var indexPixelOffset = indexRowOffset + col;
 
-                        screenBufferPixels[indexPixelOffset] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                        _screenBufferPixels[indexPixelOffset] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
                     }
 
                 }
 
             }
 
-            SetPixels(bBuffer, screenBufferPixels);
+            SetPixels(_bC64ScreenBuffer, _screenBufferPixels);
+            _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
+        }
+
+        public void ApplyCrtFilter() {
+            for (int i = 0; i < _bC64ScreenOutputBuffer.Width; i += (int)(_penScanLine2.Width * 2)) {
+                _gC64ScreenOutputBuffer.DrawLine(_penScanLine2, i, 0, i, _bC64ScreenOutputBuffer.Height);
+            }
+
+            for (int i = 0; i < _bC64ScreenOutputBuffer.Height; i += (int)(_penScanLine.Width * 2)) {
+                _gC64ScreenOutputBuffer.DrawLine(_penScanLine, 0, i, _bC64ScreenOutputBuffer.Width, i);
+            }
         }
 
         public void SetPixels(Bitmap b, Color[] pixels) {
@@ -118,34 +135,11 @@ namespace ComputerSystem.Commodore64 {
             b.UnlockBits(data);
         }
 
-        private void FormC64Screen_Resize(object sender, EventArgs e) {
-            penScanLine.Width = (int)(ClientRectangle.Height * 0.005);
-            penScanLine2.Width = (int)(ClientRectangle.Width * 0.0025);
-        }
-
-        private void MnuReset_Click(object sender, EventArgs e) {
-            C64.Cpu.Reset();
-        }
-
         private void PScreen_Paint(object sender, PaintEventArgs e) {
-            if (C64.Cpu.Memory[C64MemoryLocations.CURRENT_OUTPUT_DEVICE] != C64MemoryValues.CURRENT_OUTPUT_DEVICE_SCREEN) {
-                return;
-            }
+            UpdateScreenBuffer();
+            if (btnUseCrtFilter.Checked) ApplyCrtFilter();
 
-            Update();
-
-            e.Graphics.InterpolationMode = InterpolationMode.Low;
-            e.Graphics.DrawImage(bBuffer, 0, 0, pScreen.Width, pScreen.Height);
-
-            // Let's make some fake scanlines for fun 😎
-            for (int i = 0; i < pScreen.Width; i += (int)(penScanLine2.Width * 2)) {
-                e.Graphics.DrawLine(penScanLine2, i, 0, i, pScreen.Height);
-            }
-
-            for (int i = 0; i < pScreen.Height; i += (int)(penScanLine.Width * 2)) {
-                e.Graphics.DrawLine(penScanLine, 0, i, pScreen.Width, i);
-            }
-
+            e.Graphics.DrawImage(_bC64ScreenOutputBuffer, 0, 0, pScreen.Width, pScreen.Height);
 
             _stopWatch.Stop();
 
@@ -153,6 +147,43 @@ namespace ComputerSystem.Commodore64 {
             lblFps.Text = $"{_fpsActual:F1} fps";
 
             _stopWatch.Restart();
+        }
+
+        private void PScreen_Resize(object sender, EventArgs e) {
+            if (WindowState == FormWindowState.Minimized) return;
+
+            _penScanLine.Width = (int)(pScreen.Height * 0.005);
+            _penScanLine2.Width = (int)(pScreen.Width * 0.0025);
+
+            _bC64ScreenOutputBuffer.Dispose();
+            _gC64ScreenOutputBuffer.Dispose();
+            _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
+            _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
+        }
+
+        private void FormC64Screen_FormClosing(object sender, FormClosingEventArgs e) {
+            _bC64ScreenBuffer.Dispose();
+            _gC64ScreenOutputBuffer.Dispose();
+            _bC64ScreenOutputBuffer.Dispose();
+
+            C64.Stop();
+        }
+
+        private async void BtnRestart_Click(object sender, EventArgs e) {
+            var res = await C64.Stop();
+
+            if (res) {
+                C64 = new C64();
+                C64.Run();
+            }
+        }
+
+        private void BtnCopyScreenBuffer_Click(object sender, EventArgs e) {
+            Clipboard.SetImage(_bC64ScreenBuffer);
+        }
+
+        private void BtnCopyScaledScreenBuffer_Click(object sender, EventArgs e) {
+            Clipboard.SetImage(_bC64ScreenOutputBuffer);
         }
     }
 }

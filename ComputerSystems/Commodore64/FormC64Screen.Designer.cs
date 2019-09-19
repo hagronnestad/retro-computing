@@ -1,4 +1,4 @@
-namespace ComputerSystem.Commodore64 {
+﻿namespace ComputerSystem.Commodore64 {
     partial class FormC64Screen {
         /// <summary>
         /// Required designer variable.
@@ -23,62 +23,40 @@ namespace ComputerSystem.Commodore64 {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.mnuMain = new System.Windows.Forms.MenuStrip();
-            this.mnuSystem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuReset = new System.Windows.Forms.ToolStripMenuItem();
             this.pScreen = new System.Windows.Forms.PictureBox();
             this.statusMain = new System.Windows.Forms.StatusStrip();
             this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
-            this.mnuMain.SuspendLayout();
+            this.toolMain = new System.Windows.Forms.ToolStrip();
+            this.btnCopyScreenBuffer = new System.Windows.Forms.ToolStripButton();
+            this.btnCopyScaledScreenBuffer = new System.Windows.Forms.ToolStripButton();
+            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
+            this.btnRestart = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
+            this.toolMain.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // mnuMain
-            // 
-            this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuSystem});
-            this.mnuMain.Location = new System.Drawing.Point(0, 0);
-            this.mnuMain.Name = "mnuMain";
-            this.mnuMain.Size = new System.Drawing.Size(656, 24);
-            this.mnuMain.TabIndex = 0;
-            this.mnuMain.Text = "menuStrip1";
-            // 
-            // mnuSystem
-            // 
-            this.mnuSystem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuReset});
-            this.mnuSystem.Name = "mnuSystem";
-            this.mnuSystem.Size = new System.Drawing.Size(57, 20);
-            this.mnuSystem.Text = "System";
-            // 
-            // mnuReset
-            // 
-            this.mnuReset.Name = "mnuReset";
-            this.mnuReset.Size = new System.Drawing.Size(180, 22);
-            this.mnuReset.Text = "Reset";
-            this.mnuReset.Click += new System.EventHandler(this.MnuReset_Click);
             // 
             // pScreen
             // 
             this.pScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pScreen.Location = new System.Drawing.Point(0, 24);
+            this.pScreen.Location = new System.Drawing.Point(0, 25);
             this.pScreen.Margin = new System.Windows.Forms.Padding(0);
             this.pScreen.Name = "pScreen";
-            this.pScreen.Size = new System.Drawing.Size(656, 419);
+            this.pScreen.Size = new System.Drawing.Size(640, 400);
             this.pScreen.TabIndex = 1;
             this.pScreen.TabStop = false;
             this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
+            this.pScreen.Resize += new System.EventHandler(this.PScreen_Resize);
             // 
             // statusMain
             // 
             this.statusMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblFps});
-            this.statusMain.Location = new System.Drawing.Point(0, 443);
+            this.statusMain.Location = new System.Drawing.Point(0, 425);
             this.statusMain.Name = "statusMain";
-            this.statusMain.Size = new System.Drawing.Size(656, 22);
+            this.statusMain.Size = new System.Drawing.Size(640, 22);
             this.statusMain.TabIndex = 2;
             this.statusMain.Text = "statusStrip1";
             // 
@@ -88,37 +66,88 @@ namespace ComputerSystem.Commodore64 {
             this.lblFps.Size = new System.Drawing.Size(32, 17);
             this.lblFps.Text = "0 fps";
             // 
+            // toolMain
+            // 
+            this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnRestart,
+            this.btnUseCrtFilter,
+            this.btnCopyScreenBuffer,
+            this.btnCopyScaledScreenBuffer});
+            this.toolMain.Location = new System.Drawing.Point(0, 0);
+            this.toolMain.Name = "toolMain";
+            this.toolMain.Size = new System.Drawing.Size(640, 25);
+            this.toolMain.TabIndex = 0;
+            this.toolMain.Text = "toolStrip1";
+            // 
+            // btnCopyScreenBuffer
+            // 
+            this.btnCopyScreenBuffer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnCopyScreenBuffer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCopyScreenBuffer.Name = "btnCopyScreenBuffer";
+            this.btnCopyScreenBuffer.Size = new System.Drawing.Size(76, 22);
+            this.btnCopyScreenBuffer.Text = "Copy screen";
+            this.btnCopyScreenBuffer.Click += new System.EventHandler(this.BtnCopyScreenBuffer_Click);
+            // 
+            // btnCopyScaledScreenBuffer
+            // 
+            this.btnCopyScaledScreenBuffer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnCopyScaledScreenBuffer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCopyScaledScreenBuffer.Name = "btnCopyScaledScreenBuffer";
+            this.btnCopyScaledScreenBuffer.Size = new System.Drawing.Size(78, 22);
+            this.btnCopyScaledScreenBuffer.Text = "Copy output";
+            this.btnCopyScaledScreenBuffer.Click += new System.EventHandler(this.BtnCopyScaledScreenBuffer_Click);
+            // 
+            // btnUseCrtFilter
+            // 
+            this.btnUseCrtFilter.Checked = true;
+            this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(58, 22);
+            this.btnUseCrtFilter.Text = "CRT filter";
+            // 
+            // btnRestart
+            // 
+            this.btnRestart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnRestart.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRestart.Name = "btnRestart";
+            this.btnRestart.Size = new System.Drawing.Size(47, 22);
+            this.btnRestart.Text = "Restart";
+            this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
+            // 
             // FormC64Screen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(656, 465);
+            this.ClientSize = new System.Drawing.Size(640, 447);
+            this.Controls.Add(this.toolMain);
             this.Controls.Add(this.statusMain);
             this.Controls.Add(this.pScreen);
-            this.Controls.Add(this.mnuMain);
             this.DoubleBuffered = true;
-            this.MainMenuStrip = this.mnuMain;
             this.Name = "FormC64Screen";
             this.Text = "Retrocomputing.NET - Commodore 64";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormC64Screen_FormClosing);
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
-            this.Resize += new System.EventHandler(this.FormC64Screen_Resize);
-            this.mnuMain.ResumeLayout(false);
-            this.mnuMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).EndInit();
             this.statusMain.ResumeLayout(false);
             this.statusMain.PerformLayout();
+            this.toolMain.ResumeLayout(false);
+            this.toolMain.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.MenuStrip mnuMain;
-        private System.Windows.Forms.ToolStripMenuItem mnuSystem;
-        private System.Windows.Forms.ToolStripMenuItem mnuReset;
         private System.Windows.Forms.PictureBox pScreen;
         private System.Windows.Forms.StatusStrip statusMain;
         private System.Windows.Forms.ToolStripStatusLabel lblFps;
+        private System.Windows.Forms.ToolStrip toolMain;
+        private System.Windows.Forms.ToolStripButton btnCopyScreenBuffer;
+        private System.Windows.Forms.ToolStripButton btnCopyScaledScreenBuffer;
+        private System.Windows.Forms.ToolStripButton btnUseCrtFilter;
+        private System.Windows.Forms.ToolStripButton btnRestart;
     }
 }
