@@ -29,17 +29,17 @@ I implemented the 6502 in about a weeks worth of late nights, including testing 
 
 ---
 
-### Commodore 64 "Emulator"
+## Commodore 64 "Emulator"
 
 One of the main goals was to be able to run the **C64 KERNAL-** and **BASIC-ROM** on the **6502**. **BASIC** was one of my first introductions to programming and seeing that **`READY.`** prompt on my own C64 emulator so many years later was extremely pleasing. 😁
 
 
-***Preview of the second version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output is using the CHARACTER ROM which is why it looks more like the real thing. Keyboard mapping is also improved in this version. And memory mapping is working as expected too, as we can tell from the `38911 BASIC BYTES FREE`-message!***
+***06 - I'm currently working on the UI. I added a tool bar with some commands and moved the fps-counter into a status bar. In this screenshot I have opened the `color_bars.prg` program and executed it.***
 
-![](Gifs/03-character-rom-output.gif)
+![](Screenshots/06-color-bars.png)
 
 
-#### Features
+### Features
 
 - [x] Loads the **KERNAL-**, **CHARACTER-** and **BASIC-ROM**
 - [x] Boots into **COMMODORE 64 BASIC V2**
@@ -51,24 +51,29 @@ One of the main goals was to be able to run the **C64 KERNAL-** and **BASIC-ROM*
 - [ ] VIC-II emulation? (probably never)
 - [ ] SID emulation? (hopefully)
 
-#### Screenshots
+### Progress Screenshots
+*Most recent screenshots first*.
 
-***BASIC Program to print color bars on screen.***
+***05 - Preview of the second version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output is using the CHARACTER ROM which is why it looks more like the real thing. Keyboard mapping is also improved in this version. And memory mapping is working as expected too, as we can tell from the `38911 BASIC BYTES FREE`-message!***
+
+![](Gifs/03-character-rom-output.gif)
+
+
+***04 - BASIC Program to print color bars on screen.***
 
 ![](Screenshots/03-foreground-color-bars-basic.png)
 
 
-***Output of BASIC program above.***
+***03 - Output of BASIC program above.***
 
 ![](Screenshots/04-foreground-color-bars.png)
 
 
-***Preview of setting another background color by using the `POKE 53281,2` command.***
+***02 - Preview of setting another background color by using the `POKE 53281,2` command.***
 
 ![](Screenshots/05-background-color.png)
 
 
-***Preview of the first version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output isn't using the CHARACTER ROM.***
+***01 - Preview of the first version of the C64 emulator running **COMMODORE 64 BASIC V2** and a simple BASIC program. This video output isn't using the CHARACTER ROM.***
 
 ![](Gifs/01-simple-character-buffer-output.gif)
-
