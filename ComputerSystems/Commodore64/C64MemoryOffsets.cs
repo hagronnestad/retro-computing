@@ -17,5 +17,8 @@
         /// 0x0277 - 0x0280
         /// </summary>
         public const ushort KEYBOARD_BUFFER = 0x0277;
+
+        public const ushort DEFAULT_BASIC_AREA_START = 0x0801;
+        public const ushort DEFAULT_BASIC_AREA_END = 0x9FFF;
     }
 }

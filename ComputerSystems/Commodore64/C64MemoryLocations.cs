@@ -33,5 +33,8 @@
         /// Write: Raster line to generate interrupt at (bits #0-#7)
         /// </summary>
         public const ushort CURRENT_RASTER_LINE = 0xD012;
+
+        public const ushort POINTER_TO_BEGINNING_OF_BASIC_AREA_LO = 0x002B;
+        public const ushort POINTER_TO_BEGINNING_OF_BASIC_AREA_HI = 0x002C;
     }
 }

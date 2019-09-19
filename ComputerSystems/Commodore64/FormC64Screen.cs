@@ -7,6 +7,9 @@ using System.Threading;
 using System.Windows.Forms;
 using Extensions.Byte;
 using Extensions.Enums;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -184,6 +187,43 @@ namespace ComputerSystem.Commodore64 {
 
         private void BtnCopyScaledScreenBuffer_Click(object sender, EventArgs e) {
             Clipboard.SetImage(_bC64ScreenOutputBuffer);
+        }
+
+        private void BtnOpen_Click(object sender, EventArgs e) {
+            if (ofd.ShowDialog() == DialogResult.OK) {
+
+                var file = File.ReadAllBytes(ofd.FileName);
+
+                var address = BitConverter.ToUInt16(file, 0);
+                var data = file.Skip(2).ToArray();
+
+                for (int i = 0; i < data.Length; i++) {
+                    C64.Memory[address + i] = data[i];
+                }
+
+            }
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e) {
+            if (sfd.ShowDialog() == DialogResult.OK) {
+
+                var basicAreaLength = C64MemoryOffsets.DEFAULT_BASIC_AREA_END - C64MemoryOffsets.DEFAULT_BASIC_AREA_START;
+                var data = new List<byte>();
+
+                data.AddRange(BitConverter.GetBytes((ushort)0x0801));
+
+                for (int i = 0; i < basicAreaLength; i++) {
+                    data.Add(C64.Memory[C64MemoryOffsets.DEFAULT_BASIC_AREA_START + i]);
+
+                    // TODO: Fix this horrible check
+                    // The BASIC program ends with 3 NULL-bytes, so break when we find them
+                    if (data.Count >= 3 && data.Skip(data.Count - 3).Take(3).All(x => x == 0x00)) {
+                        break;
+                    }
+                }
+
+                File.WriteAllBytes(sfd.FileName, data.ToArray());
+            }
         }
     }
 }

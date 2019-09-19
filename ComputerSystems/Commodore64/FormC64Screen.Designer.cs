@@ -27,10 +27,14 @@
             this.statusMain = new System.Windows.Forms.StatusStrip();
             this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
+            this.btnRestart = new System.Windows.Forms.ToolStripButton();
+            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.btnCopyScreenBuffer = new System.Windows.Forms.ToolStripButton();
             this.btnCopyScaledScreenBuffer = new System.Windows.Forms.ToolStripButton();
-            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
-            this.btnRestart = new System.Windows.Forms.ToolStripButton();
+            this.btnOpen = new System.Windows.Forms.ToolStripButton();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.btnSave = new System.Windows.Forms.ToolStripButton();
+            this.sfd = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -72,12 +76,34 @@
             this.btnRestart,
             this.btnUseCrtFilter,
             this.btnCopyScreenBuffer,
-            this.btnCopyScaledScreenBuffer});
+            this.btnCopyScaledScreenBuffer,
+            this.btnOpen,
+            this.btnSave});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(640, 25);
             this.toolMain.TabIndex = 0;
             this.toolMain.Text = "toolStrip1";
+            // 
+            // btnRestart
+            // 
+            this.btnRestart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnRestart.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRestart.Name = "btnRestart";
+            this.btnRestart.Size = new System.Drawing.Size(47, 22);
+            this.btnRestart.Text = "Restart";
+            this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
+            // 
+            // btnUseCrtFilter
+            // 
+            this.btnUseCrtFilter.Checked = true;
+            this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(58, 22);
+            this.btnUseCrtFilter.Text = "CRT filter";
             // 
             // btnCopyScreenBuffer
             // 
@@ -97,25 +123,31 @@
             this.btnCopyScaledScreenBuffer.Text = "Copy output";
             this.btnCopyScaledScreenBuffer.Click += new System.EventHandler(this.BtnCopyScaledScreenBuffer_Click);
             // 
-            // btnUseCrtFilter
+            // btnOpen
             // 
-            this.btnUseCrtFilter.Checked = true;
-            this.btnUseCrtFilter.CheckOnClick = true;
-            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(58, 22);
-            this.btnUseCrtFilter.Text = "CRT filter";
+            this.btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(40, 22);
+            this.btnOpen.Text = "Open";
+            this.btnOpen.Click += new System.EventHandler(this.BtnOpen_Click);
             // 
-            // btnRestart
+            // ofd
             // 
-            this.btnRestart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnRestart.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRestart.Name = "btnRestart";
-            this.btnRestart.Size = new System.Drawing.Size(47, 22);
-            this.btnRestart.Text = "Restart";
-            this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
+            this.ofd.Filter = "PRG-files|*.prg";
+            // 
+            // btnSave
+            // 
+            this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(35, 22);
+            this.btnSave.Text = "Save";
+            this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
+            // 
+            // sfd
+            // 
+            this.sfd.Filter = "PRG-files|*.prg";
             // 
             // FormC64Screen
             // 
@@ -149,5 +181,9 @@
         private System.Windows.Forms.ToolStripButton btnCopyScaledScreenBuffer;
         private System.Windows.Forms.ToolStripButton btnUseCrtFilter;
         private System.Windows.Forms.ToolStripButton btnRestart;
+        private System.Windows.Forms.ToolStripButton btnOpen;
+        private System.Windows.Forms.OpenFileDialog ofd;
+        private System.Windows.Forms.ToolStripButton btnSave;
+        private System.Windows.Forms.SaveFileDialog sfd;
     }
 }
