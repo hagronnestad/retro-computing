@@ -4,15 +4,18 @@ using System.Threading;
 using Extensions.Byte;
 using System.Windows.Input;
 using Hardware.Mos6526Cia;
+using System.Threading.Tasks;
 
 namespace Commodore64 {
     public class C64 {
+
+        private bool _isRunnning = false;
+        private TaskCompletionSource<bool> _tcsStop;
 
         public const int CLOCK_PAL = 985248;
         public const int CLOCK_NTSC = 1022727;
         public const int CLOCK_VICII_PAL = 7881984;
         public const int CLOCK_VICII_NTSC = 8181816;
-
 
         public Cia Cia { get; private set; }
         public C64Memory Memory { get; private set; }
@@ -32,13 +35,18 @@ namespace Commodore64 {
         }
 
         public void Run() {
+            if (_isRunnning) return;
+
+            _isRunnning = true;
+            _tcsStop = new TaskCompletionSource<bool>();
+
             var cpuClockSpeedPal = 1.0f / CLOCK_PAL;
             var swCpuClock = Stopwatch.StartNew();
             var swCiaInterrupt = Stopwatch.StartNew();
 
 
             new Thread(() => {
-                while (true) {
+                while (_isRunnning) {
 
                     // CPU clock
                     if (swCpuClock.Elapsed.TotalMilliseconds > cpuClockSpeedPal) {
@@ -64,8 +72,15 @@ namespace Commodore64 {
 
                 }
 
+                _tcsStop.SetResult(true);
+
             }) { ApartmentState = ApartmentState.STA }.Start();
 
+        }
+
+        public Task<bool> Stop() {
+            _isRunnning = false;
+            return _tcsStop.Task;
         }
 
 
