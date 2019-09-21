@@ -10,6 +10,7 @@ using Extensions.Enums;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using Commodore64.Properties;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -170,6 +171,8 @@ namespace ComputerSystem.Commodore64 {
             _bC64ScreenOutputBuffer.Dispose();
 
             C64.Stop();
+
+            Settings.Default.Save();
         }
 
         private async void BtnRestart_Click(object sender, EventArgs e) {

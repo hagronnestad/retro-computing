@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="FormC64Screen.resx">
       <DependentUpon>FormC64Screen.cs</DependentUpon>
     </EmbeddedResource>

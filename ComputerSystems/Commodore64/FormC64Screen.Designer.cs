@@ -28,13 +28,13 @@
             this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
-            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.btnCopyScreenBuffer = new System.Windows.Forms.ToolStripButton();
             this.btnCopyScaledScreenBuffer = new System.Windows.Forms.ToolStripButton();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
+            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -94,17 +94,6 @@
             this.btnRestart.Text = "Restart";
             this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
             // 
-            // btnUseCrtFilter
-            // 
-            this.btnUseCrtFilter.Checked = true;
-            this.btnUseCrtFilter.CheckOnClick = true;
-            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(58, 22);
-            this.btnUseCrtFilter.Text = "CRT filter";
-            // 
             // btnCopyScreenBuffer
             // 
             this.btnCopyScreenBuffer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -148,6 +137,16 @@
             // sfd
             // 
             this.sfd.Filter = "PRG-files|*.prg";
+            // 
+            // btnUseCrtFilter
+            // 
+            this.btnUseCrtFilter.Checked = global::Commodore64.Properties.Settings.Default.ApplyCrtFilter;
+            this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(58, 22);
+            this.btnUseCrtFilter.Text = "CRT filter";
             // 
             // FormC64Screen
             // 
