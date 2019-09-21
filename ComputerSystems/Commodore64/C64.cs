@@ -65,7 +65,7 @@ namespace Commodore64 {
                     }
 
                     // CIA interrupt
-                    if (swCiaInterrupt.Elapsed.TotalMilliseconds > (1000 / 60)) {
+                    if (swCiaInterrupt.Elapsed.TotalMilliseconds > (1000 / 50)) {
                         Cpu.Interrupt();
                         swCiaInterrupt.Restart();
                     }
