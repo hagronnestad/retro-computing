@@ -126,10 +126,11 @@
             // 
             // btnOpen
             // 
-            this.btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnOpen.Image = ((System.Drawing.Image)(resources.GetObject("btnOpen.Image")));
             this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(40, 22);
+            this.btnOpen.Size = new System.Drawing.Size(23, 22);
             this.btnOpen.Text = "Open";
             this.btnOpen.Click += new System.EventHandler(this.BtnOpen_Click);
             // 

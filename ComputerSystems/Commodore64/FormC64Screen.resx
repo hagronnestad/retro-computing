@@ -124,6 +124,18 @@
     <value>232, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnOpen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFwSURBVDhPY4CC/3x8fP8FBQUxMC8v73+QPA7MwHDgwAGw
+        5gcPHvzHBk6dOoVNIxiD9IIN4Ofn///x40eoFlRw7949rJpBGG4AOzv7/5ycnP/19fUYOCEhAatmEIYb
+        gC7BxMQE9r+Ojs5/XV1dMBskhq4OpwEgDdHR0f+PHDkCxjExMWAxdHVgvTKq0f8pwWADpKEcadUouIS0
+        CoKNjkOiW+BsJBdg12BomQWmZ8/fBqZ///4DpkEARGN4AWRzee1cMPvR41dgGqYYRp89fwtM65ql/2fQ
+        MkoFc3bvO4dV8YePX8B0W/cKMK2snQCmYRjsgu8/foI5ME1rNxwG025+lXCFMJyWM/H/9Nlb/h86chls
+        ONwLIAkYW8ck5X9AWPX/+JTa/+s37v5/4ODR/+fPX/h/9epVOH7x4sX/Gzdu/GdoaJ7x38oxF6wRZvLp
+        02fAcYwPHz58GEyDE9K5c+fApsEwKAMhK8aHwQaQjw/8BwDx3TXRIIzpRQAAAABJRU5ErkJggg==
+</value>
+  </data>
   <data name="btnSave.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
