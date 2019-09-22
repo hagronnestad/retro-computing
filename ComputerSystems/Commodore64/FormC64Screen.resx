@@ -123,6 +123,17 @@
   <metadata name="toolMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>232, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnSave.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADFSURBVDhPrY4xCoQwFETTaWUhiLVY2ngNCw/hFWzTWXk7
+        b+IVZjOfbLHJKIL74cH4Mj/RhcFLHI7jwNXwLFlIcbF6PclCyh/+4CW5LIoCXddhmiaDmU51A7nkwrZt
+        OM/TYKZT3UAu+SoXv8NMp7qBXN5dMI5j2v/5MPq+x77vtkiY6Xj26IKyLG2BrxJmOtUNSGkLwzAYN8tE
+        StR1jWVZDGbViUiJtm3hvTeYVSciJZqmwbquBrPqRKREVVWY59lgVh3nHD7lsoUmbWADAgAAAABJRU5E
+        rkJggg==
+</value>
+  </data>
   <metadata name="ofd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>333, 17</value>
   </metadata>
