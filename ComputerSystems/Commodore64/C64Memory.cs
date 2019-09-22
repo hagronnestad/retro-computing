@@ -2,7 +2,6 @@
 using Hardware.Mos6526Cia;
 using System.Diagnostics;
 using System.IO;
-using Extensions.Byte;
 using System;
 
 namespace Commodore64 {
