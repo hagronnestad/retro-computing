@@ -100,10 +100,11 @@
             this.btnUseCrtFilter.Checked = global::Commodore64.Properties.Settings.Default.ApplyCrtFilter;
             this.btnUseCrtFilter.CheckOnClick = true;
             this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
             this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(58, 22);
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
             this.btnUseCrtFilter.Text = "CRT filter";
             // 
             // btnCopyScreenBuffer
