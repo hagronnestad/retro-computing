@@ -135,17 +135,6 @@
         TkSuQmCC
 </value>
   </data>
-  <data name="btnUseCrtFilter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEWSURBVDhPYxg8oLKy8r+3t/d/AwMDvBikBqQWqg0CQAL2
-        jj7/SxpP/2+c9Op/16xf/1umff/fNfv3/9bpvyH0tB9g2ilw6X8bW8evKIaATHUOP/U/JO//f++0f2Da
-        J/0/Vtoz5df/6JQpP0F6oNoZGEBOA9nUM/f///aZ/6D0fzQaJP4XSP/9X99zE+wdqHaIASCT8dnskfz1
-        f2D2LzAf5EoMAxAuQLcZ2QX/wHwQJtkFMBpkO5kuQNAgTLYLQDSKC/T19QVAnMK601hshPgZVfzf/8Kq
-        zWADQHrBhoA4ZubW/z1jT4FdEpz7D2xTcO5fMD8g6xuYBsWCtffi/1ZWVpheIAdDtRNnwIEDBzDYUO2U
-        uICBAQC7dNGbO8ZCZgAAAABJRU5ErkJggg==
-</value>
-  </data>
   <data name="btnOpen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -166,6 +155,17 @@
         OM/TYKZT3UAu+SoXv8NMp7qBXN5dMI5j2v/5MPq+x77vtkiY6Xj26IKyLG2BrxJmOtUNSGkLwzAYN8tE
         StR1jWVZDGbViUiJtm3hvTeYVSciJZqmwbquBrPqRKREVVWY59lgVh3nHD7lsoUmbWADAgAAAABJRU5E
         rkJggg==
+</value>
+  </data>
+  <data name="btnUseCrtFilter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEWSURBVDhPYxg8oLKy8r+3t/d/AwMDvBikBqQWqg0CQAL2
+        jj7/SxpP/2+c9Op/16xf/1umff/fNfv3/9bpvyH0tB9g2ilw6X8bW8evKIaATHUOP/U/JO//f++0f2Da
+        J/0/Vtoz5df/6JQpP0F6oNoZGEBOA9nUM/f///aZ/6D0fzQaJP4XSP/9X99zE+wdqHaIASCT8dnskfz1
+        f2D2LzAf5EoMAxAuQLcZ2QX/wHwQJtkFMBpkO5kuQNAgTLYLQDSKC/T19QVAnMK601hshPgZVfzf/8Kq
+        zWADQHrBhoA4ZubW/z1jT4FdEpz7D2xTcO5fMD8g6xuYBsWCtffi/1ZWVpheIAdDtRNnwIEDBzDYUO2U
+        uICBAQC7dNGbO8ZCZgAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="btnCopyOutput.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

@@ -36,6 +36,9 @@
             this.sfd = new System.Windows.Forms.SaveFileDialog();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
+            this.separator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.separator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -75,9 +78,12 @@
             // 
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRestart,
-            this.btnUseCrtFilter,
+            this.separator1,
             this.btnOpen,
             this.btnSave,
+            this.separator2,
+            this.btnUseCrtFilter,
+            this.separator3,
             this.btnCopyOutput});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
@@ -156,6 +162,21 @@
             this.btnCopyRawOutput.ToolTipText = "Copy raw screen";
             this.btnCopyRawOutput.Click += new System.EventHandler(this.BtnCopyRawOutput_Click);
             // 
+            // separator1
+            // 
+            this.separator1.Name = "separator1";
+            this.separator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // separator2
+            // 
+            this.separator2.Name = "separator2";
+            this.separator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // separator3
+            // 
+            this.separator3.Name = "separator3";
+            this.separator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // FormC64Screen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -192,5 +213,8 @@
         private System.Windows.Forms.SaveFileDialog sfd;
         private System.Windows.Forms.ToolStripSplitButton btnCopyOutput;
         private System.Windows.Forms.ToolStripMenuItem btnCopyRawOutput;
+        private System.Windows.Forms.ToolStripSeparator separator1;
+        private System.Windows.Forms.ToolStripSeparator separator2;
+        private System.Windows.Forms.ToolStripSeparator separator3;
     }
 }
