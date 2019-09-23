@@ -124,6 +124,17 @@
     <value>232, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnRestart.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEDSURBVDhPnZMhDsJAEEUrkRyAA3AABBKJQCAQCA6BQCLw
+        HIFDIDgCEsExEAgkCBL4r8w0w7ILCS/5me5v+zM721Y/6EtHq3+xkh5WYWr1KwNp+br8COB6J3XqVcJY
+        Okg8tMYQacBFYn2SmpCWxD654ZpIkAbw0l7Co5OGrkSqB3h6GgDc806amYwkArbSGcPIBcBCwt+waEt3
+        M2BoFUoBPQmfrdczuJlBWKQUwHP413olfIgkR+YSPjXy1gGwFwz2FqE7jpcaeZsBzCQMppv9SALZUwDO
+        FZNzLoXgZ78D4CZH6J3QJntlYFTW2S8xgumdlFT8FyLMhAExZY6Kyjr5G6vqCd75W94rGs+HAAAAAElF
+        TkSuQmCC
+</value>
+  </data>
   <data name="btnUseCrtFilter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
