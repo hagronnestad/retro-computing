@@ -168,6 +168,16 @@
         rkJggg==
 </value>
   </data>
+  <data name="btnCopyOutput.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADgSURBVDhP3VIxCoNAELRImZdcoz+w8ROCVv7AykcIgh/x
+        EensEwKKnJIikiIBi5SXm2UPhNMkIKTIwMCyOzOud+f8KTzPyzQnTcVEnfH4M1zXfc7MRPR4bMP3/Z0W
+        FZrzr64RmgIettPKMKsgCFSapsQoilSe50TUpg8NBxVsp4AJg6Zp5DAMCuy67rhUQ8MhE9spgNKNqO/7
+        MUmSS13XdzCO4xt6Zg4tPGy3A6qqOpRleVYM1Oj9LgDrYm3zC2EYPqSU13cB1iG2bXtaqtcOcds1CiH2
+        HPL1Q4KH7VvgOC+PbGWoLidypgAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="ofd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>333, 17</value>
   </metadata>

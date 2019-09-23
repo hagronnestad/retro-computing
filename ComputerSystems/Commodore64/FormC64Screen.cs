@@ -186,14 +186,6 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        private void BtnCopyScreenBuffer_Click(object sender, EventArgs e) {
-            Clipboard.SetImage(_bC64ScreenBuffer);
-        }
-
-        private void BtnCopyScaledScreenBuffer_Click(object sender, EventArgs e) {
-            Clipboard.SetImage(_bC64ScreenOutputBuffer);
-        }
-
         private void BtnOpen_Click(object sender, EventArgs e) {
             if (ofd.ShowDialog() == DialogResult.OK) {
 
@@ -229,6 +221,14 @@ namespace ComputerSystem.Commodore64 {
 
                 File.WriteAllBytes(sfd.FileName, data.ToArray());
             }
+        }
+
+        private void BtnCopyOutput_ButtonClick(object sender, EventArgs e) {
+            Clipboard.SetImage(_bC64ScreenOutputBuffer);
+        }
+
+        private void BtnCopyRawOutput_Click(object sender, EventArgs e) {
+            Clipboard.SetImage(_bC64ScreenBuffer);
         }
     }
 }

@@ -34,8 +34,8 @@
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.btnCopyScaledScreenBuffer = new System.Windows.Forms.ToolStripButton();
-            this.btnCopyScreenBuffer = new System.Windows.Forms.ToolStripButton();
+            this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
+            this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -76,10 +76,9 @@
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRestart,
             this.btnUseCrtFilter,
-            this.btnCopyScreenBuffer,
-            this.btnCopyScaledScreenBuffer,
             this.btnOpen,
-            this.btnSave});
+            this.btnSave,
+            this.btnCopyOutput});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(640, 25);
@@ -136,23 +135,26 @@
             // 
             this.sfd.Filter = "PRG-files|*.prg";
             // 
-            // btnCopyScaledScreenBuffer
+            // btnCopyOutput
             // 
-            this.btnCopyScaledScreenBuffer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnCopyScaledScreenBuffer.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCopyScaledScreenBuffer.Name = "btnCopyScaledScreenBuffer";
-            this.btnCopyScaledScreenBuffer.Size = new System.Drawing.Size(78, 22);
-            this.btnCopyScaledScreenBuffer.Text = "Copy output";
-            this.btnCopyScaledScreenBuffer.Click += new System.EventHandler(this.BtnCopyScaledScreenBuffer_Click);
+            this.btnCopyOutput.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCopyOutput.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnCopyRawOutput});
+            this.btnCopyOutput.Image = ((System.Drawing.Image)(resources.GetObject("btnCopyOutput.Image")));
+            this.btnCopyOutput.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCopyOutput.Name = "btnCopyOutput";
+            this.btnCopyOutput.Size = new System.Drawing.Size(32, 22);
+            this.btnCopyOutput.Text = "Copy";
+            this.btnCopyOutput.ToolTipText = "Copy screen";
+            this.btnCopyOutput.ButtonClick += new System.EventHandler(this.BtnCopyOutput_ButtonClick);
             // 
-            // btnCopyScreenBuffer
+            // btnCopyRawOutput
             // 
-            this.btnCopyScreenBuffer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnCopyScreenBuffer.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCopyScreenBuffer.Name = "btnCopyScreenBuffer";
-            this.btnCopyScreenBuffer.Size = new System.Drawing.Size(76, 22);
-            this.btnCopyScreenBuffer.Text = "Copy screen";
-            this.btnCopyScreenBuffer.Click += new System.EventHandler(this.BtnCopyScreenBuffer_Click);
+            this.btnCopyRawOutput.Name = "btnCopyRawOutput";
+            this.btnCopyRawOutput.Size = new System.Drawing.Size(180, 22);
+            this.btnCopyRawOutput.Text = "Copy raw";
+            this.btnCopyRawOutput.ToolTipText = "Copy raw screen";
+            this.btnCopyRawOutput.Click += new System.EventHandler(this.BtnCopyRawOutput_Click);
             // 
             // FormC64Screen
             // 
@@ -188,7 +190,7 @@
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.ToolStripButton btnSave;
         private System.Windows.Forms.SaveFileDialog sfd;
-        private System.Windows.Forms.ToolStripButton btnCopyScreenBuffer;
-        private System.Windows.Forms.ToolStripButton btnCopyScaledScreenBuffer;
+        private System.Windows.Forms.ToolStripSplitButton btnCopyOutput;
+        private System.Windows.Forms.ToolStripMenuItem btnCopyRawOutput;
     }
 }
