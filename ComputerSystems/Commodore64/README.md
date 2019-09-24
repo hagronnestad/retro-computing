@@ -2,6 +2,8 @@
 
 One of the main goals of this project was to be able to run the **C64 KERNAL-** and **BASIC-ROM** on the **6502**. **BASIC** was one of my first introductions to programming and seeing that **`READY.`** prompt on my own C64 emulator so many years later was extremely pleasing. 😁
 
+![](../../Screenshots/11-basic-prompt.png)
+
 ## Features / Roadmap
 
 - [x] Loads the **KERNAL-**, **CHARACTER-** and **BASIC-ROM**
