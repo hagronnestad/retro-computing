@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Commodore64.Properties;
+using Timer = System.Threading.Timer;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -31,6 +32,9 @@ namespace ComputerSystem.Commodore64 {
         private readonly Pen _penScanLine;
         private readonly Pen _penScanLine2;
 
+        private Timer _uiRefreshTimer;
+
+
         public FormC64Screen(C64 c64) {
             InitializeComponent();
 
@@ -42,6 +46,19 @@ namespace ComputerSystem.Commodore64 {
             _screenBufferPixels = new Color[_bC64ScreenBuffer.Width * _bC64ScreenBuffer.Height];
             _penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
             _penScanLine2 = new Pen(Color.FromArgb(20, 127, 127, 127));
+
+
+            _uiRefreshTimer = new Timer((e) => {
+
+                try {
+                    Invoke(new Action(() => {
+                        lblFps.Text = $"{_fpsActual:F0} fps";
+                        lblCycles.Text = $"{c64.Cpu.TotalCycles:N0} cycles";
+                        lblInstructions.Text = $"{c64.Cpu.TotalInstructions:N0} instructions";
+                    }));
+                } catch { }
+
+            }, null, TimeSpan.FromMilliseconds(1000), TimeSpan.FromMilliseconds(50));
         }
 
         private void FormC64Screen_Load(object sender, EventArgs e) {
@@ -150,7 +167,6 @@ namespace ComputerSystem.Commodore64 {
             _stopWatch.Stop();
 
             _fpsActual = 1000f / _stopWatch.Elapsed.TotalMilliseconds;
-            lblFps.Text = $"{_fpsActual:F1} fps";
 
             _stopWatch.Restart();
         }

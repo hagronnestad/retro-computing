@@ -161,21 +161,21 @@
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEYSURBVDhPY6AaqKys/O/t7f3fwMAALwapAamFaoMAkIC9
-        o8//ksbT/xsnvfrfNevX/5Zp3/93zf79v3X6bwg97QeYdgpc+t/G1vEriiEgU53DT/0Pyfv/3zvtH5j2
+        o8//ksbT/xsnvfrfNevX/5Zp3/93zf79v3X6bwg97QeYdgpc+t/G1uEriiEgU53DT/0Pyfv/3zvtH5j2
         Sf+PlfZM+fU/OmXKT5AeqHYGBpDTQDb1zP3/v33mPyj9H40Gif8F0n//1/fcBHsHqh1iAMhkfDZ7JH/9
         H5j9C8wHuRLDAIQL0G1GdsE/MB+ESXYBjAbZTqYLEDQIk+0CEI3iAn19fQEQp7DuNBYbIX5GFf/3v7Bq
         M9gAkF6wISCOmbn1f8/YU2CXBOf+A9sUnPsXzA/I+gamQbFg7b34v5WVFaYXyMFQ7cQZcODAAQw2VDsV
-        XEA+YGAAAPap0ZvuAuvgAAAAAElFTkSuQmCC
+        XEA+YGAAAPNS0ZryCg0NAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnCopyOutput.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADgSURBVDhPzVIxCoNAELRImZdcoz+w8ROCVv7AykcIgh/x
-        EensEwKKnJIikiIBi5SXm2UPhNMkEEgyMLDszozr3Tn/Cc/zMs1JUzFRZzx+Ddd17zMzET0e2/B9f6NF
-        heb8q2uEpoCH7bQyzCoIApWmKTGKIpXnORG16UPDQQXbKWDCoGkaOQyDAruu2y/V0HDIxHYKoHQj6vt+
-        TJLkVNf1FYzj+IKemUMLD9vtgKqqdmVZHhUDNXrfC8C6WNv8QhiGNynl+VmAdYht2x6W6rVD/OwahRBb
-        Dnn7IcHD9p/CcR5gWWWo/GR4iwAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADhSURBVDhPzVIxCoNAELRImZdcoz+w8ROCVv7AykcIgh/x
+        Eal8QEIQhVNSRFIkYJHycrPsgXCaBAJJBgaW3ZlxvTvnP+F5XqY5aSom6ozHr+G67n1mJqLHYxu+72+0
+        qNCcf3WN0BTwsJ1WhlkFQaDSNCVGUaTyPCeiNn1oOKhgOwVMGDRNI4dhUGDXdfulGhoOmdhOAZRuRH3f
+        j0mSnOq6voJxHF/QM3No4WG7HVBV1a4sy6NioEbvewFYF2ubXwjD8CalPD8LsA6xbdvDUr12iJ9doxBi
+        yyFvPyR42P5TOM4DJylliiuyxKwAAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="ofd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

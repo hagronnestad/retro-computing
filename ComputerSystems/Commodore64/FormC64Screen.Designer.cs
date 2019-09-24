@@ -29,16 +29,18 @@
             this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
-            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
+            this.separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
-            this.ofd = new System.Windows.Forms.OpenFileDialog();
-            this.sfd = new System.Windows.Forms.SaveFileDialog();
+            this.separator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
+            this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
-            this.separator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.separator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.separator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.sfd = new System.Windows.Forms.SaveFileDialog();
+            this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -61,17 +63,20 @@
             // statusMain
             // 
             this.statusMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblFps});
-            this.statusMain.Location = new System.Drawing.Point(0, 425);
+            this.lblFps,
+            this.lblCycles,
+            this.lblInstructions});
+            this.statusMain.Location = new System.Drawing.Point(0, 423);
             this.statusMain.Name = "statusMain";
-            this.statusMain.Size = new System.Drawing.Size(640, 22);
+            this.statusMain.Size = new System.Drawing.Size(640, 24);
             this.statusMain.TabIndex = 2;
             this.statusMain.Text = "statusStrip1";
             // 
             // lblFps
             // 
+            this.lblFps.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.lblFps.Name = "lblFps";
-            this.lblFps.Size = new System.Drawing.Size(32, 17);
+            this.lblFps.Size = new System.Drawing.Size(36, 19);
             this.lblFps.Text = "0 fps";
             // 
             // toolMain
@@ -101,17 +106,10 @@
             this.btnRestart.Text = "Restart";
             this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
             // 
-            // btnUseCrtFilter
+            // separator1
             // 
-            this.btnUseCrtFilter.Checked = global::Commodore64.Properties.Settings.Default.ApplyCrtFilter;
-            this.btnUseCrtFilter.CheckOnClick = true;
-            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
-            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
-            this.btnUseCrtFilter.Text = "CRT filter";
+            this.separator1.Name = "separator1";
+            this.separator1.Size = new System.Drawing.Size(6, 25);
             // 
             // btnOpen
             // 
@@ -133,13 +131,27 @@
             this.btnSave.Text = "Save";
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
-            // ofd
+            // separator2
             // 
-            this.ofd.Filter = "PRG-files|*.prg";
+            this.separator2.Name = "separator2";
+            this.separator2.Size = new System.Drawing.Size(6, 25);
             // 
-            // sfd
+            // btnUseCrtFilter
             // 
-            this.sfd.Filter = "PRG-files|*.prg";
+            this.btnUseCrtFilter.Checked = global::Commodore64.Properties.Settings.Default.ApplyCrtFilter;
+            this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
+            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
+            this.btnUseCrtFilter.Text = "CRT filter";
+            // 
+            // separator3
+            // 
+            this.separator3.Name = "separator3";
+            this.separator3.Size = new System.Drawing.Size(6, 25);
             // 
             // btnCopyOutput
             // 
@@ -157,25 +169,32 @@
             // btnCopyRawOutput
             // 
             this.btnCopyRawOutput.Name = "btnCopyRawOutput";
-            this.btnCopyRawOutput.Size = new System.Drawing.Size(180, 22);
+            this.btnCopyRawOutput.Size = new System.Drawing.Size(124, 22);
             this.btnCopyRawOutput.Text = "Copy raw";
             this.btnCopyRawOutput.ToolTipText = "Copy raw screen";
             this.btnCopyRawOutput.Click += new System.EventHandler(this.BtnCopyRawOutput_Click);
             // 
-            // separator1
+            // ofd
             // 
-            this.separator1.Name = "separator1";
-            this.separator1.Size = new System.Drawing.Size(6, 25);
+            this.ofd.Filter = "PRG-files|*.prg";
             // 
-            // separator2
+            // sfd
             // 
-            this.separator2.Name = "separator2";
-            this.separator2.Size = new System.Drawing.Size(6, 25);
+            this.sfd.Filter = "PRG-files|*.prg";
             // 
-            // separator3
+            // lblCycles
             // 
-            this.separator3.Name = "separator3";
-            this.separator3.Size = new System.Drawing.Size(6, 25);
+            this.lblCycles.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblCycles.Name = "lblCycles";
+            this.lblCycles.Size = new System.Drawing.Size(52, 19);
+            this.lblCycles.Text = "0 cycles";
+            // 
+            // lblInstructions
+            // 
+            this.lblInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblInstructions.Name = "lblInstructions";
+            this.lblInstructions.Size = new System.Drawing.Size(82, 19);
+            this.lblInstructions.Text = "0 instructions";
             // 
             // FormC64Screen
             // 
@@ -216,5 +235,7 @@
         private System.Windows.Forms.ToolStripSeparator separator1;
         private System.Windows.Forms.ToolStripSeparator separator2;
         private System.Windows.Forms.ToolStripSeparator separator3;
+        private System.Windows.Forms.ToolStripStatusLabel lblCycles;
+        private System.Windows.Forms.ToolStripStatusLabel lblInstructions;
     }
 }
