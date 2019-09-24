@@ -5,17 +5,20 @@ using Extensions.Byte;
 using System.Windows.Input;
 using Hardware.Mos6526Cia;
 using System.Threading.Tasks;
+using System;
 
 namespace Commodore64 {
     public class C64 {
-
-        private bool _isRunnning = false;
-        private TaskCompletionSource<bool> _tcsStop;
 
         public const int CLOCK_PAL = 985248;
         public const int CLOCK_NTSC = 1022727;
         public const int CLOCK_VICII_PAL = 7881984;
         public const int CLOCK_VICII_NTSC = 8181816;
+
+
+        private bool _isRunnning = false;
+        private TaskCompletionSource<bool> _tcsStop;
+
 
         public Cia Cia { get; private set; }
         public C64Memory Memory { get; private set; }
@@ -23,15 +26,20 @@ namespace Commodore64 {
 
         public C64() {
             Cia = new Cia();
-
-            Cia.ReadDataPortB += (object sender, System.EventArgs e) => {
-                if (Cia.DataDirectionA == 0xFF) ScanKeyboard();
-            };
-
             Memory = new C64Memory(Cia);
             Cpu = new Cpu(Memory);
 
+
             Cpu.Reset();
+
+
+            Cia.ReadDataPortB += (object sender, EventArgs e) => {
+                if (Cia.DataDirectionA == 0xFF) ScanKeyboard();
+            };
+
+            Cia.Interrupt += (object sender, EventArgs e) => {
+                Cpu.Interrupt();
+            };
         }
 
         public void Run() {
@@ -42,7 +50,6 @@ namespace Commodore64 {
 
             var cpuClockSpeedPal = 1.0f / CLOCK_PAL;
             var swCpuClock = Stopwatch.StartNew();
-            var swCiaInterrupt = Stopwatch.StartNew();
 
 
             new Thread(() => {
@@ -63,13 +70,6 @@ namespace Commodore64 {
 
                         swCpuClock.Restart();
                     }
-
-                    // CIA interrupt
-                    if (swCiaInterrupt.Elapsed.TotalMilliseconds > (1000 / 50)) {
-                        Cpu.Interrupt();
-                        swCiaInterrupt.Restart();
-                    }
-
                 }
 
                 _tcsStop.SetResult(true);

@@ -1,15 +1,24 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Timers;
 
 namespace Hardware.Mos6526Cia {
 
     public class Cia {
-        
+
+        private const double INTERRUPT_INTERVAL = 1000.0f / 60.0f;
+
+
         private DateTime _timeOfDay;
         private Timer _timer;
 
+        private Stopwatch _swInterrupt;
+
+
+        public event EventHandler Interrupt;
         public event EventHandler ReadDataPortA;
         public event EventHandler ReadDataPortB;
+
 
         public byte DataPortA { get; set; }
         public byte DataPortB { get; set; }
@@ -49,6 +58,8 @@ namespace Hardware.Mos6526Cia {
                 _timeOfDay = _timeOfDay.AddMilliseconds(_timer.Interval);
             };
             _timer.Start();
+
+            _swInterrupt = Stopwatch.StartNew();
         }
 
 
@@ -125,7 +136,13 @@ namespace Hardware.Mos6526Cia {
         }
 
         public void Clock() {
-            
+
+            // Should interrupt?
+            if (_swInterrupt.Elapsed.TotalMilliseconds > INTERRUPT_INTERVAL) {
+                Interrupt?.Invoke(this, null);
+                _swInterrupt.Restart();
+            }
+
         }
     }
 
