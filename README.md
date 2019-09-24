@@ -10,9 +10,9 @@ This hobby project contains software implementations of old microprocessors and 
 ## Contents
 
 ### Microprocessors
-- [MOS Technology 6502 8-bit microprocessor](MicroProcessor\Cpu6502\README.md)
+- [MOS Technology 6502 8-bit microprocessor](MicroProcessor/Cpu6502/README.md)
 
 
 ### Computer systems
-- [Commodore 64 Emulator](ComputerSystems\Commodore64\README.md)
+- [Commodore 64 Emulator](ComputerSystems/Commodore64/README.md)
 
