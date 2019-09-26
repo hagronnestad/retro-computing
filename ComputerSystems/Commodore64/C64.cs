@@ -47,9 +47,8 @@ namespace Commodore64 {
 
             var cpuClockSpeedPal = 1.0f / CLOCK_PAL;
             var swCpuClock = Stopwatch.StartNew();
-
-
-            new Thread(() => {
+            
+            var t = new Thread(() => {
                 while (_isRunnning) {
 
                     // CPU clock
@@ -71,8 +70,10 @@ namespace Commodore64 {
 
                 _tcsStop.SetResult(true);
 
-            }) { ApartmentState = ApartmentState.STA }.Start();
+            });
 
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
         }
 
         public Task<bool> Stop() {
