@@ -53,7 +53,7 @@
     <Compile Include="Attributes\PetsciiAttribute.cs" />
     <Compile Include="C64.cs" />
     <Compile Include="C64Keyboard.cs" />
-    <Compile Include="C64Memory.cs" />
+    <Compile Include="C64Bus.cs" />
     <Compile Include="C64MemoryLocations.cs" />
     <Compile Include="C64MemoryValues.cs" />
     <Compile Include="C64MemoryOffsets.cs" />

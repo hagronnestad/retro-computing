@@ -6,7 +6,7 @@ using System;
 
 namespace Commodore64 {
 
-    public class C64Memory : MemoryBase<byte> {
+    public class C64Bus : MemoryBase<byte> {
 
 
         // The bank switching technique in the C64 also handles external ROM in the form of a
@@ -35,7 +35,7 @@ namespace Commodore64 {
 
         private Cia _cia;
 
-        public C64Memory(Cia cia) : base(0x10000) {
+        public C64Bus(Cia cia) : base(0x10000) {
             //_memory.FillWithRandomData();
 
             _romBasic = new MemoryBase<byte>(File.ReadAllBytes("basic.rom")) { IsReadOnly = true };

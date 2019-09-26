@@ -21,12 +21,12 @@ namespace Commodore64 {
 
 
         public Cia Cia { get; private set; }
-        public C64Memory Memory { get; private set; }
+        public C64Bus Memory { get; private set; }
         public Cpu Cpu { get; private set; }
 
         public C64() {
             Cia = new Cia();
-            Memory = new C64Memory(Cia);
+            Memory = new C64Bus(Cia);
             Cpu = new Cpu(Memory);
 
 
