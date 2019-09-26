@@ -25,21 +25,18 @@ namespace Commodore64 {
         public Cpu Cpu { get; private set; }
 
         public C64() {
+            Initialize();
+        }
+
+        public void Initialize() {
+            RemoveEventHandlers();
+
             Cia = new Cia();
             Memory = new C64Bus(Cia);
             Cpu = new Cpu(Memory);
 
-
+            AddEventHandlers();
             Cpu.Reset();
-
-
-            Cia.ReadDataPortB += (object sender, EventArgs e) => {
-                if (Cia.DataDirectionA == 0xFF) ScanKeyboard();
-            };
-
-            Cia.Interrupt += (object sender, EventArgs e) => {
-                Cpu.Interrupt();
-            };
         }
 
         public void Run() {
@@ -79,8 +76,31 @@ namespace Commodore64 {
         }
 
         public Task<bool> Stop() {
+            if (_isRunnning == false) return Task.FromResult(true);
+
             _isRunnning = false;
             return _tcsStop.Task;
+        }
+
+
+        private void AddEventHandlers() {
+            Cia.ReadDataPortB += CiaReadDataPortB;
+            Cia.Interrupt += CiaInterrupt;
+        }
+
+        private void RemoveEventHandlers() {
+            if (Cia != null) {
+                Cia.ReadDataPortB -= CiaReadDataPortB;
+                Cia.Interrupt -= CiaInterrupt;
+            }
+        }
+
+        private void CiaReadDataPortB(object sender, EventArgs e) {
+            if (Cia.DataDirectionA == 0xFF) ScanKeyboard();
+        }
+
+        private void CiaInterrupt(object sender, EventArgs e) {
+            Cpu.Interrupt();
         }
 
 

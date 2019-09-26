@@ -12,13 +12,7 @@ namespace ComputerSystem.Commodore64 {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var c64 = new C64();
-
-            var form = new FormC64Screen(c64);
-            //var form = new FormSimpleCharacterBufferViewer(c64);
-
-            c64.Run();
-            Application.Run(form);
+            Application.Run(new FormC64Screen(new C64()));
         }
     }
 }
