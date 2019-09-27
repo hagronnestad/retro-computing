@@ -1,6 +1,12 @@
-﻿namespace Hardware.Memory {
+﻿using Memory;
+using System;
+
+namespace Hardware.Memory {
 
     public interface IMemory<TValue> {
+        event EventHandler<MemoryReadEventArgs<TValue>> OnRead;
+        event EventHandler<MemoryWriteEventArgs<TValue>> OnWrite;
+
         bool IsReadOnly { get; set; }
 
         TValue Read(int address);

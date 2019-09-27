@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Memory;
+using System;
 
 namespace Hardware.Memory {
 
     public class MemoryBase<TValue> : IMemory<TValue> {
+
+        public event EventHandler<MemoryReadEventArgs<TValue>> OnRead;
+        public event EventHandler<MemoryWriteEventArgs<TValue>> OnWrite;
 
         protected TValue[] _memory;
 
@@ -29,10 +33,21 @@ namespace Hardware.Memory {
 
 
         public virtual TValue Read(int address) {
+            var ea = new MemoryReadEventArgs<TValue>() {
+                Address = address
+            };
+            OnRead?.Invoke(this, ea);
+
             return _memory[address];
         }
 
         public virtual void Write(int address, TValue value) {
+            var ea = new MemoryWriteEventArgs<TValue>() {
+                Address = address,
+                Value = value
+            };
+            OnWrite?.Invoke(this, ea);
+
             if (IsReadOnly) throw new AccessViolationException("Memory area is read only.");
             _memory[address] = value;
         }
