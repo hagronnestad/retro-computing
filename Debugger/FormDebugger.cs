@@ -17,64 +17,38 @@ namespace Debugger {
         public FormDebugger() {
             InitializeComponent();
 
-            UpdateCurrentStateUi();
+            UpdateUi();
         }
 
-        private void FormDebugger_Load(object sender, System.EventArgs e) {
+        private void FormDebugger_Load(object sender, EventArgs e) {
             LoadWatches();
             UpdateMemoryWatch();
         }
 
-        private void BtnStep_Click(object sender, System.EventArgs e) {
-            UpdatePreviousStateUi();
+        private void BtnStep_Click(object sender, EventArgs e) {
             Cpu.Step();
-            UpdateCurrentStateUi();
+            UpdateUi();
         }
 
-        private void UpdatePreviousStateUi() {
-            //lblPreviousOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
-            lblPreviousAddressingMode.Text = Cpu.NextOpCode?.AddressingMode.ToString();
+        private void UpdateUi() {
+            lblAddressingMode.Text = Cpu.NextOpCode?.AddressingMode.ToString();
 
-            chkPreviousCarry.Checked = Cpu.SR.Carry;
-            chkPreviousZero.Checked = Cpu.SR.Zero;
-            chkPreviousIrqDisable.Checked = Cpu.SR.IrqDisable;
-            chkPreviousDecimalMode.Checked = Cpu.SR.DecimalMode;
-            chkPreviousBreakCommand.Checked = Cpu.SR.BreakCommand;
-            chkPreviousReserved.Checked = Cpu.SR.Reserved;
-            chkPreviousOverflow.Checked = Cpu.SR.Overflow;
-            chkPreviousNegative.Checked = Cpu.SR.Negative;
+            chkCarry.Checked = Cpu.SR.Carry;
+            chkZero.Checked = Cpu.SR.Zero;
+            chkIrqDisable.Checked = Cpu.SR.IrqDisable;
+            chkDecimalMode.Checked = Cpu.SR.DecimalMode;
+            chkBreakCommand.Checked = Cpu.SR.BreakCommand;
+            chkReserved.Checked = Cpu.SR.Reserved;
+            chkOverflow.Checked = Cpu.SR.Overflow;
+            chkNegative.Checked = Cpu.SR.Negative;
 
-            txtPreviousPC.Text = Cpu.PC.ToString("X2");
-            txtPreviousSP.Text = Cpu.SP.ToString("X2");
-            txtPreviousAR.Text = Cpu.AR.ToString("X2");
-            txtPreviousXR.Text = Cpu.XR.ToString("X2");
-            txtPreviousYR.Text = Cpu.YR.ToString("X2");
+            txtPC.Text = Cpu.PC.ToString("X2");
+            txtSP.Text = Cpu.SP.ToString("X2");
+            txtAR.Text = Cpu.AR.ToString("X2");
+            txtXR.Text = Cpu.XR.ToString("X2");
+            txtYR.Text = Cpu.YR.ToString("X2");
         }
 
-        private void UpdateCurrentStateUi() {
-            //lblCurrentOpCode.Text = $"{Cpu.NextOpCode?.Name} ({string.Join(" ", Cpu.Memory.Skip(Cpu.NextOpCodeAddress).Take(Cpu.NextOpCode?.Length ?? 0).Select(x => $"{x:X2}").ToList())})";
-            lblCurrentAddressingMode.Text = Cpu.NextOpCode?.AddressingMode.ToString();
-
-            chkCurrentCarry.Checked = Cpu.SR.Carry;
-            chkCurrentZero.Checked = Cpu.SR.Zero;
-            chkCurrentIrqDisable.Checked = Cpu.SR.IrqDisable;
-            chkCurrentDecimalMode.Checked = Cpu.SR.DecimalMode;
-            chkCurrentBreakCommand.Checked = Cpu.SR.BreakCommand;
-            chkCurrentReserved.Checked = Cpu.SR.Reserved;
-            chkCurrentOverflow.Checked = Cpu.SR.Overflow;
-            chkCurrentNegative.Checked = Cpu.SR.Negative;
-
-            txtCurrentPC.Text = Cpu.PC.ToString("X2");
-            txtCurrentSP.Text = Cpu.SP.ToString("X2");
-            txtCurrentAR.Text = Cpu.AR.ToString("X2");
-            txtCurrentXR.Text = Cpu.XR.ToString("X2");
-            txtCurrentYR.Text = Cpu.YR.ToString("X2");
-
-            lblSR.Text = $"{Cpu.SR.Register:X2} ({Convert.ToString(Cpu.SR.Register, 2).PadLeft(8, '0')})";
-
-            UpdateMemoryWatch();
-            //if (FormMemoryViewer.Visible) FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
-        }
 
         private void UpdateMemoryWatch() {
             for (int i = 0; i < dgWatch.Rows.Count; i++) {
@@ -105,7 +79,7 @@ namespace Debugger {
         }
 
         private int? StringToInt(string intString) {
-            int address = 0;
+            int address;
 
             if (intString.ToLower().StartsWith("0x") || intString.ToLower().StartsWith("&h")) {
                 if (int.TryParse(intString.Substring(2), NumberStyles.HexNumber, null, out address)) return address;
@@ -119,8 +93,7 @@ namespace Debugger {
 
         private void BtnReset_Click(object sender, System.EventArgs e) {
             Cpu.Reset();
-            UpdatePreviousStateUi();
-            UpdateCurrentStateUi();
+            UpdateUi();
         }
 
         private void DgWatch_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
@@ -143,7 +116,7 @@ namespace Debugger {
                     Cpu.Memory[address.Value] = (byte)value.Value;
 
                     UpdateMemoryWatch();
-                    UpdateCurrentStateUi();
+                    UpdateUi();
 
                     break;
 
@@ -191,23 +164,7 @@ namespace Debugger {
 
         private void BtnMemory_Click(object sender, System.EventArgs e) {
             FormMemoryViewer.Show();
-            //FormMemoryViewer.byteViewer.SetBytes(Cpu.Memory);
         }
 
-
-        void Work() {
-            Cpu.Step();
-
-            if (Cpu.TotalInstructions % 100000 == 0) {
-                Debug.WriteLine($"{Cpu.TotalInstructions}");
-                Debug.WriteLine($"{Cpu.PC:X2}");
-
-                try {
-                    Invoke(new Action(() => { UpdateCurrentStateUi(); }));
-
-                } catch (Exception) {
-                }
-            }
-        }
     }
 }
