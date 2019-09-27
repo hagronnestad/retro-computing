@@ -33,12 +33,15 @@ namespace Hardware.Memory {
 
 
         public virtual TValue Read(int address) {
+            var value = _memory[address];
+
             var ea = new MemoryReadEventArgs<TValue>() {
-                Address = address
+                Address = address,
+                Value = value
             };
             OnRead?.Invoke(this, ea);
 
-            return _memory[address];
+            return value;
         }
 
         public virtual void Write(int address, TValue value) {
