@@ -217,10 +217,6 @@ namespace MicroProcessor.Cpu6502 {
             OpCodeAddress = PC;
             PC++;
 
-            //var opCodeBytes = string.Join(" ", Memory.Skip(OpCodeAddress).Take(OpCode.Length).Select(x => $"{x:X2}")).PadRight(8);
-            //var logLine = $"{OpCodeAddress:X4}  {opCodeBytes}  {OpCode.Name}  A:{AR:X2} X:{XR:X2} Y:{YR:X2} P:{SR.Register:X2} SP:{SP:X2}\n";
-            //File.AppendAllText("log.txt", logLine);
-
             if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
                 OpCode.GetAddress();
             }
