@@ -24,6 +24,8 @@ namespace Commodore64 {
         public C64Bus Memory { get; private set; }
         public Cpu Cpu { get; private set; }
 
+        public bool KeyboardActivated { get; set; } = false;
+
         public C64() {
             Initialize();
         }
@@ -106,6 +108,8 @@ namespace Commodore64 {
 
 
         public void ScanKeyboard() {
+            if (!KeyboardActivated) return;
+
             // The BASIC keyboard scanning routine checks if any key is pressed at all.
             // This is done by checking all rows at once.
             if (Cia.DataPortA == 0) {

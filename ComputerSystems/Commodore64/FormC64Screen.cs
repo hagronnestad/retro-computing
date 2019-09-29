@@ -245,5 +245,13 @@ namespace ComputerSystem.Commodore64 {
         private void BtnCopyRawOutput_Click(object sender, EventArgs e) {
             Clipboard.SetImage(_bC64ScreenBuffer);
         }
+
+        private void FormC64Screen_Activated(object sender, EventArgs e) {
+            C64.KeyboardActivated = true;
+        }
+
+        private void FormC64Screen_Deactivate(object sender, EventArgs e) {
+            C64.KeyboardActivated = false;
+        }
     }
 }
