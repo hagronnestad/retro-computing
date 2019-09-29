@@ -57,6 +57,7 @@ namespace ComputerSystem.Commodore64 {
                         lblFps.Text = $"{_fpsActual:F0} fps";
                         lblCycles.Text = $"{c64.Cpu.TotalCycles:N0} cycles";
                         lblInstructions.Text = $"{c64.Cpu.TotalInstructions:N0} instructions";
+                        lblKeyboardDisabled.Visible = !c64.KeyboardActivated;
                     }));
                 } catch { }
 

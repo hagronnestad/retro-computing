@@ -43,6 +43,7 @@
             this.btnPause = new System.Windows.Forms.ToolStripButton();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
+            this.lblKeyboardDisabled = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -67,7 +68,8 @@
             this.statusMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblFps,
             this.lblCycles,
-            this.lblInstructions});
+            this.lblInstructions,
+            this.lblKeyboardDisabled});
             this.statusMain.Location = new System.Drawing.Point(0, 423);
             this.statusMain.Name = "statusMain";
             this.statusMain.Size = new System.Drawing.Size(640, 24);
@@ -221,6 +223,15 @@
             // 
             this.sfd.Filter = "PRG-files|*.prg";
             // 
+            // lblKeyboardDisabled
+            // 
+            this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
+            this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
+            this.lblKeyboardDisabled.Size = new System.Drawing.Size(455, 19);
+            this.lblKeyboardDisabled.Spring = true;
+            this.lblKeyboardDisabled.Text = "Keyboard Disabled";
+            this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // FormC64Screen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -266,5 +277,6 @@
         private System.Windows.Forms.ToolStripStatusLabel lblInstructions;
         private System.Windows.Forms.ToolStripButton btnMemoryWatch;
         private System.Windows.Forms.ToolStripButton btnPause;
+        private System.Windows.Forms.ToolStripStatusLabel lblKeyboardDisabled;
     }
 }
