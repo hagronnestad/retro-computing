@@ -51,7 +51,6 @@
             this.clmValueHex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmValueDecimal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnMemory = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).BeginInit();
             this.SuspendLayout();
@@ -349,24 +348,11 @@
             this.clmDescription.Name = "clmDescription";
             this.clmDescription.Width = 300;
             // 
-            // btnMemory
-            // 
-            this.btnMemory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMemory.Location = new System.Drawing.Point(524, 692);
-            this.btnMemory.Margin = new System.Windows.Forms.Padding(4);
-            this.btnMemory.Name = "btnMemory";
-            this.btnMemory.Size = new System.Drawing.Size(138, 32);
-            this.btnMemory.TabIndex = 7;
-            this.btnMemory.Text = "Show Memory";
-            this.btnMemory.UseVisualStyleBackColor = true;
-            this.btnMemory.Click += new System.EventHandler(this.BtnMemory_Click);
-            // 
             // FormDebugger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 737);
-            this.Controls.Add(this.btnMemory);
             this.Controls.Add(this.dgWatch);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.groupBox1);
@@ -413,7 +399,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn clmValueHex;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmValueDecimal;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmDescription;
-        private System.Windows.Forms.Button btnMemory;
         private System.Windows.Forms.CheckBox chkReserved;
     }
 }

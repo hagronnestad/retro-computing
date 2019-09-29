@@ -12,6 +12,8 @@ using System.Linq;
 using System.Collections.Generic;
 using Commodore64.Properties;
 using Timer = System.Threading.Timer;
+using Debugger;
+using System.Threading.Tasks;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -244,6 +246,23 @@ namespace ComputerSystem.Commodore64 {
 
         private void BtnCopyRawOutput_Click(object sender, EventArgs e) {
             Clipboard.SetImage(_bC64ScreenBuffer);
+        }
+
+        private void BtnMemoryWatch_Click(object sender, EventArgs e) {
+            var f = new FormDebugger(C64.Cpu, C64.Memory);
+            f.Show();
+        }
+
+        private async void BtnPause_ClickAsync(object sender, EventArgs e) {
+
+            if (btnPause.Checked) {
+                var r = await C64.Cpu.Pause();
+
+            } else {
+
+                C64.Cpu.Resume();
+            }
+
         }
 
         private void FormC64Screen_Activated(object sender, EventArgs e) {

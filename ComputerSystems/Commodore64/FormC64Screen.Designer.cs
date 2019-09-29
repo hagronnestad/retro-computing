@@ -27,6 +27,8 @@
             this.pScreen = new System.Windows.Forms.PictureBox();
             this.statusMain = new System.Windows.Forms.StatusStrip();
             this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
             this.separator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -37,10 +39,10 @@
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnMemoryWatch = new System.Windows.Forms.ToolStripButton();
+            this.btnPause = new System.Windows.Forms.ToolStripButton();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -79,6 +81,20 @@
             this.lblFps.Size = new System.Drawing.Size(36, 19);
             this.lblFps.Text = "0 fps";
             // 
+            // lblCycles
+            // 
+            this.lblCycles.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblCycles.Name = "lblCycles";
+            this.lblCycles.Size = new System.Drawing.Size(52, 19);
+            this.lblCycles.Text = "0 cycles";
+            // 
+            // lblInstructions
+            // 
+            this.lblInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblInstructions.Name = "lblInstructions";
+            this.lblInstructions.Size = new System.Drawing.Size(82, 19);
+            this.lblInstructions.Text = "0 instructions";
+            // 
             // toolMain
             // 
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -89,7 +105,9 @@
             this.separator2,
             this.btnUseCrtFilter,
             this.separator3,
-            this.btnCopyOutput});
+            this.btnCopyOutput,
+            this.btnMemoryWatch,
+            this.btnPause});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(640, 25);
@@ -174,6 +192,27 @@
             this.btnCopyRawOutput.ToolTipText = "Copy raw screen";
             this.btnCopyRawOutput.Click += new System.EventHandler(this.BtnCopyRawOutput_Click);
             // 
+            // btnMemoryWatch
+            // 
+            this.btnMemoryWatch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMemoryWatch.Image = ((System.Drawing.Image)(resources.GetObject("btnMemoryWatch.Image")));
+            this.btnMemoryWatch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMemoryWatch.Name = "btnMemoryWatch";
+            this.btnMemoryWatch.Size = new System.Drawing.Size(23, 22);
+            this.btnMemoryWatch.Text = "toolStripButton1";
+            this.btnMemoryWatch.Click += new System.EventHandler(this.BtnMemoryWatch_Click);
+            // 
+            // btnPause
+            // 
+            this.btnPause.CheckOnClick = true;
+            this.btnPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
+            this.btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(42, 22);
+            this.btnPause.Text = "Pause";
+            this.btnPause.Click += new System.EventHandler(this.BtnPause_ClickAsync);
+            // 
             // ofd
             // 
             this.ofd.Filter = "PRG-files|*.prg";
@@ -181,20 +220,6 @@
             // sfd
             // 
             this.sfd.Filter = "PRG-files|*.prg";
-            // 
-            // lblCycles
-            // 
-            this.lblCycles.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblCycles.Name = "lblCycles";
-            this.lblCycles.Size = new System.Drawing.Size(52, 19);
-            this.lblCycles.Text = "0 cycles";
-            // 
-            // lblInstructions
-            // 
-            this.lblInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblInstructions.Name = "lblInstructions";
-            this.lblInstructions.Size = new System.Drawing.Size(82, 19);
-            this.lblInstructions.Text = "0 instructions";
             // 
             // FormC64Screen
             // 
@@ -207,6 +232,8 @@
             this.DoubleBuffered = true;
             this.Name = "FormC64Screen";
             this.Text = "Retrocomputing.NET - Commodore 64";
+            this.Activated += new System.EventHandler(this.FormC64Screen_Activated);
+            this.Deactivate += new System.EventHandler(this.FormC64Screen_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormC64Screen_FormClosing);
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).EndInit();
@@ -237,5 +264,7 @@
         private System.Windows.Forms.ToolStripSeparator separator3;
         private System.Windows.Forms.ToolStripStatusLabel lblCycles;
         private System.Windows.Forms.ToolStripStatusLabel lblInstructions;
+        private System.Windows.Forms.ToolStripButton btnMemoryWatch;
+        private System.Windows.Forms.ToolStripButton btnPause;
     }
 }

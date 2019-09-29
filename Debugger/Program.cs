@@ -10,7 +10,7 @@ namespace Debugger {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormDebugger());
+            Application.Run(new FormDebugger(null, null));
         }
     }
 }

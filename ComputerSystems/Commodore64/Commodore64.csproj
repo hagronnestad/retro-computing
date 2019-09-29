@@ -103,6 +103,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Debugger\Debugger.csproj">
+      <Project>{5617D1B2-8228-4920-A35B-F1352B260E3E}</Project>
+      <Name>Debugger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Extensions\Extensions.csproj">
       <Project>{d7b20bab-e821-49c5-a5df-cf6accdc9002}</Project>
       <Name>Extensions</Name>
