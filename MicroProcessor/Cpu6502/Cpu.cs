@@ -5,6 +5,7 @@ using MicroProcessor.Cpu6502.Attributes;
 using MicroProcessor.Cpu6502.Enums;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MicroProcessor.Cpu6502 {
     public class Cpu {
@@ -20,6 +21,10 @@ namespace MicroProcessor.Cpu6502 {
         /// Gets decremented on every CPU cycle.
         /// </summary>
         private int _cyclesRemainingCurrentInstruction = 0;
+
+        private TaskCompletionSource<bool> _tcsPause;
+        private bool _isPaused = false;
+        private bool _pausedWaiting = false;
 
         private bool interruptWaiting = false;
         private bool nonMaskableInterruptWaiting = false;
@@ -146,11 +151,47 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         /// <summary>
+        /// Pauses the CPU cycling after finishing all cycles for the current instruction.
+        /// </summary>
+        /// <returns></returns>
+        public Task<bool> Pause() {
+            if (_pausedWaiting) return Task.FromResult(false);
+
+            _pausedWaiting = true;
+
+            _tcsPause = new TaskCompletionSource<bool>();
+            return _tcsPause.Task;
+        }
+
+        /// <summary>
+        /// Resumes the CPU cycling.
+        /// </summary>
+        public void Resume() {
+            if (_pausedWaiting) return;
+
+            _isPaused = false;
+        }
+
+        /// <summary>
         /// Cycles the CPU and makes sure to take up as many cycles as
         /// the current instruction is supposed to.
         /// </summary>
         public void Cycle() {
+            if (_isPaused) return;
+
+            DoCycle();
+        }
+
+        private void DoCycle() {
             if (_cyclesRemainingCurrentInstruction == 0) {
+
+                if (_pausedWaiting) {
+                    _pausedWaiting = false;
+                    _isPaused = true;
+
+                    _tcsPause.SetResult(true);
+                    return;
+                }
 
                 if (nonMaskableInterruptWaiting) {
                     DoNonMaskableInterrupt();
