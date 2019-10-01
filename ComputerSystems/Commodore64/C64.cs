@@ -41,8 +41,10 @@ namespace Commodore64 {
             Cpu.Reset();
         }
 
-        public void Run() {
+        public void PowerOn() {
             if (_isRunnning) return;
+
+            Initialize();
 
             _isRunnning = true;
             _tcsStop = new TaskCompletionSource<bool>();
@@ -52,7 +54,7 @@ namespace Commodore64 {
             
             var t = new Thread(() => {
                 while (_isRunnning) {
-
+                    
                     // CPU clock
                     if (swCpuClock.Elapsed.TotalMilliseconds > cpuClockSpeedPal) {
 
@@ -78,7 +80,7 @@ namespace Commodore64 {
             t.Start();
         }
 
-        public Task<bool> Stop() {
+        public Task<bool> PowerOff() {
             if (_isRunnning == false) return Task.FromResult(true);
 
             _isRunnning = false;

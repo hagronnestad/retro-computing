@@ -63,7 +63,7 @@ namespace ComputerSystem.Commodore64 {
 
             }, null, TimeSpan.FromMilliseconds(1000), TimeSpan.FromMilliseconds(50));
 
-            c64.Run();
+            c64.PowerOn();
         }
 
         private void FormC64Screen_Load(object sender, EventArgs e) {
@@ -193,15 +193,14 @@ namespace ComputerSystem.Commodore64 {
             _gC64ScreenOutputBuffer.Dispose();
             _bC64ScreenOutputBuffer.Dispose();
 
-            C64.Stop();
+            C64.PowerOff();
 
             Settings.Default.Save();
         }
 
         private async void BtnRestart_Click(object sender, EventArgs e) {
-            await C64.Stop();
-            C64.Initialize();
-            C64.Run();
+            await C64.PowerOff();
+            C64.PowerOn();
         }
 
         private void BtnOpen_Click(object sender, EventArgs e) {
