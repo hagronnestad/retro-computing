@@ -3,6 +3,7 @@ using Hardware.Mos6526Cia;
 using System.Diagnostics;
 using System.IO;
 using System;
+using Extensions.Byte;
 
 namespace Commodore64 {
 
@@ -36,7 +37,7 @@ namespace Commodore64 {
         private Cia _cia;
 
         public C64Bus(Cia cia) : base(0x10000) {
-            //_memory.FillWithRandomData();
+            _memory.FillWithRandomData();
 
             _romBasic = new MemoryBase<byte>(File.ReadAllBytes("basic.rom")) { IsReadOnly = true };
             _romCharacter = new MemoryBase<byte>(File.ReadAllBytes("char.rom")) { IsReadOnly = true };
