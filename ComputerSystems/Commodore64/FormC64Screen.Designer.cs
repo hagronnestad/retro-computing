@@ -101,6 +101,7 @@
             // 
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRestart,
+            this.btnPause,
             this.separator1,
             this.btnOpen,
             this.btnSave,
@@ -108,8 +109,7 @@
             this.btnUseCrtFilter,
             this.separator3,
             this.btnCopyOutput,
-            this.btnMemoryWatch,
-            this.btnPause});
+            this.btnMemoryWatch});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(640, 25);
@@ -207,11 +207,11 @@
             // btnPause
             // 
             this.btnPause.CheckOnClick = true;
-            this.btnPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
             this.btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(42, 22);
+            this.btnPause.Size = new System.Drawing.Size(23, 22);
             this.btnPause.Text = "Pause";
             this.btnPause.Click += new System.EventHandler(this.BtnPause_ClickAsync);
             // 
