@@ -27,7 +27,7 @@ namespace Commodore64 {
         public bool KeyboardActivated { get; set; } = false;
 
         public C64() {
-            Initialize();
+            
         }
 
         public void Initialize() {
