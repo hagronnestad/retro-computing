@@ -36,10 +36,6 @@ namespace Debugger {
 
         }
 
-        private void FormDebugger_Load(object sender, EventArgs e) {
-            //LoadWatches();
-        }
-
         private void BtnStep_Click(object sender, EventArgs e) {
             _cpu.Step();
             UpdateUi();
@@ -146,45 +142,6 @@ namespace Debugger {
                     break;
             }
         }
-
-        private void FormDebugger_FormClosing(object sender, FormClosingEventArgs e) {
-            //SaveWatches();
-        }
-
-        //private void SaveWatches() {
-        //    string[,] data = new string[dgWatch.Rows.Count, dgWatch.Columns.Count];
-
-        //    for (int i = 0; i < dgWatch.Rows.Count; i++) {
-
-        //        for (int j = 0; j < dgWatch.Rows[i].Cells.Count; j++) {
-
-        //            data[i, j] = (string)dgWatch.Rows[i].Cells[j].Value;
-
-        //        }
-
-        //    }
-
-        //    var json = JsonConvert.SerializeObject(data);
-        //    File.WriteAllText("watches.json", json);
-        //}
-
-        //private void LoadWatches() {
-        //    if (!File.Exists("watches.json")) return;
-
-        //    var json = File.ReadAllText("watches.json");
-        //    var data = JsonConvert.DeserializeObject<string[,]>(json);
-
-        //    for (int i = 0; i < data.GetLength(0); i++) {
-        //        var rowdata = new string[data.GetLength(1)];
-
-        //        for (int j = 0; j < data.GetLength(1); j++) {
-        //            rowdata[j] = data[i, j];
-        //        }
-
-        //        if (rowdata.All(x => string.IsNullOrWhiteSpace(x))) continue;
-        //        dgWatch.Rows.Add(rowdata);
-        //    }
-        //}
 
     }
 }
