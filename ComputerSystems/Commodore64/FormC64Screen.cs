@@ -272,5 +272,9 @@ namespace ComputerSystem.Commodore64 {
         private void FormC64Screen_Deactivate(object sender, EventArgs e) {
             C64.KeyboardActivated = false;
         }
+
+        private void BtnReset_Click(object sender, EventArgs e) {
+            C64.Cpu.Reset();
+        }
     }
 }

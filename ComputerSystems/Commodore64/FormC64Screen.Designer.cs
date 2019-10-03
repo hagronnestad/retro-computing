@@ -29,8 +29,10 @@
             this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblKeyboardDisabled = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
+            this.btnPause = new System.Windows.Forms.ToolStripButton();
             this.separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -40,10 +42,9 @@
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
             this.btnMemoryWatch = new System.Windows.Forms.ToolStripButton();
-            this.btnPause = new System.Windows.Forms.ToolStripButton();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.lblKeyboardDisabled = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnReset = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -97,10 +98,20 @@
             this.lblInstructions.Size = new System.Drawing.Size(82, 19);
             this.lblInstructions.Text = "0 instructions";
             // 
+            // lblKeyboardDisabled
+            // 
+            this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
+            this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
+            this.lblKeyboardDisabled.Size = new System.Drawing.Size(455, 19);
+            this.lblKeyboardDisabled.Spring = true;
+            this.lblKeyboardDisabled.Text = "Keyboard Disabled";
+            this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // toolMain
             // 
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRestart,
+            this.btnReset,
             this.btnPause,
             this.separator1,
             this.btnOpen,
@@ -125,6 +136,17 @@
             this.btnRestart.Size = new System.Drawing.Size(23, 22);
             this.btnRestart.Text = "Restart";
             this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
+            // 
+            // btnPause
+            // 
+            this.btnPause.CheckOnClick = true;
+            this.btnPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
+            this.btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(23, 22);
+            this.btnPause.Text = "Pause";
+            this.btnPause.Click += new System.EventHandler(this.BtnPause_ClickAsync);
             // 
             // separator1
             // 
@@ -204,17 +226,6 @@
             this.btnMemoryWatch.Text = "toolStripButton1";
             this.btnMemoryWatch.Click += new System.EventHandler(this.BtnMemoryWatch_Click);
             // 
-            // btnPause
-            // 
-            this.btnPause.CheckOnClick = true;
-            this.btnPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(23, 22);
-            this.btnPause.Text = "Pause";
-            this.btnPause.Click += new System.EventHandler(this.BtnPause_ClickAsync);
-            // 
             // ofd
             // 
             this.ofd.Filter = "PRG-files|*.prg";
@@ -223,14 +234,15 @@
             // 
             this.sfd.Filter = "PRG-files|*.prg";
             // 
-            // lblKeyboardDisabled
+            // btnReset
             // 
-            this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
-            this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(455, 19);
-            this.lblKeyboardDisabled.Spring = true;
-            this.lblKeyboardDisabled.Text = "Keyboard Disabled";
-            this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
+            this.btnReset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(23, 22);
+            this.btnReset.Text = "Reset";
+            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
             // 
             // FormC64Screen
             // 
@@ -278,5 +290,6 @@
         private System.Windows.Forms.ToolStripButton btnMemoryWatch;
         private System.Windows.Forms.ToolStripButton btnPause;
         private System.Windows.Forms.ToolStripStatusLabel lblKeyboardDisabled;
+        private System.Windows.Forms.ToolStripButton btnReset;
     }
 }
