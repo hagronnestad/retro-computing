@@ -4,7 +4,7 @@ using System;
 namespace MicroProcessor.Cpu6502.Attributes {
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class OpCodeAttribute : Attribute {
+    public class OpCodeDefinitionAttribute : Attribute {
         public byte Code { get; set; }
         public string Name { get; set; }
         public ushort Length { get; set; }
@@ -15,7 +15,7 @@ namespace MicroProcessor.Cpu6502.Attributes {
 
         public string Description { get; set; }
 
-        public OpCodeAttribute() {
+        public OpCodeDefinitionAttribute() {
 
         }
     }
