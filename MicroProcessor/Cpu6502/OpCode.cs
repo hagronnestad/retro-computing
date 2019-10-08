@@ -25,7 +25,7 @@ namespace MicroProcessor.Cpu6502 {
 
         public string ToString(bool showComments = false) {
             var operands = $"{string.Join(" ", Operands.Select(x => $"{x:X2}"))}";
-            var s = $"{OpCodeAddress:X4}\t{Code:X2}\t{operands.PadRight(5, ' ')}\t{Name}";
+            var s = $"{OpCodeAddress:X4}\t{Code:X2} {operands.PadRight(5, ' ')}\t{Name}";
 
             switch (AddressingMode) {
                 case Enums.AddressingMode.Accumulator:
