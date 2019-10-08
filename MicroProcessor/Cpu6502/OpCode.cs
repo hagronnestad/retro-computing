@@ -65,7 +65,7 @@ namespace MicroProcessor.Cpu6502 {
                     break;
 
                 case Enums.AddressingMode.Relative:
-                    s = $"{s} ${OpCodeAddress + Length + (Operands[0]):X2}";
+                    s = $"{s} ${(OpCodeAddress + Length + ((sbyte) Operands[0])):X2}";
                     break;
 
                 case Enums.AddressingMode.Zeropage:
