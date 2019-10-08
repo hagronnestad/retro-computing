@@ -21,16 +21,18 @@ namespace MicroProcessor.Cpu6502 {
 
         }
 
-        public Dictionary<int, OpCode> Disassemble(byte[] machineCode) {
+        public Dictionary<int, OpCode> Disassemble(byte[] machineCode, int start = 0, int? length = null) {
+            if (!length.HasValue) length = machineCode.Length;
+
             var disassembly = new Dictionary<int, OpCode>();
 
-            for (int i = 0; i < machineCode.Length; i++) {
+            for (int i = start; i < start + length; i++) {
 
                 if (!OpCodeCache.ContainsKey(machineCode[i])) continue;
 
                 var opCode = OpCode.FromOpCodeDefinitionAttribute(null, null, OpCodeCache[machineCode[i]]);
 
-                opCode.OpCodeAddress = i + 0xA000;
+                opCode.OpCodeAddress = i;
 
                 for (int j = 1; j < opCode.Length; j++) {
                     opCode.Operands.Add(machineCode[i + j]);
