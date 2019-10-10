@@ -143,12 +143,6 @@ namespace MicroProcessor.Cpu6502 {
             Reset();
         }
 
-        public void InitPC(ushort pc) {
-            PC = pc;
-
-            NextOpCode = OpCodeCache[Memory[PC]];
-            NextOpCodeAddress = PC;
-        }
 
         /// <summary>
         /// Pauses the CPU cycling after finishing all cycles for the current instruction.
