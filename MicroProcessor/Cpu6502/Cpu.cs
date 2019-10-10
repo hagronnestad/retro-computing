@@ -85,9 +85,6 @@ namespace MicroProcessor.Cpu6502 {
         public OpCode OpCode { get; set; }
         public ushort OpCodeAddress;
 
-        public OpCode NextOpCode { get; set; }
-        public ushort NextOpCodeAddress;
-
         /// <summary>
         /// The current Address after applying the current addressing mode.
         /// </summary>
@@ -224,9 +221,6 @@ namespace MicroProcessor.Cpu6502 {
             // Keeps track of needed cycles to complete the current instruction
             // ignoreCycles = true is used to step the CPU with a debugger
             if (!ignoreCycles) _cyclesRemainingCurrentInstruction += OpCode.Cycles;
-
-            NextOpCode = OpCodeCache[Memory[PC]];
-            NextOpCodeAddress = PC;
         }
 
         public void Reset() {
