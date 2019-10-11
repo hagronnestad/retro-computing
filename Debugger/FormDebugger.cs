@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 using System.Globalization;
 using System;
 using MicroProcessor.Cpu6502;
@@ -38,56 +38,7 @@ namespace Debugger {
 
         private void BtnStep_Click(object sender, EventArgs e) {
             _cpu.Step();
-            UpdateUi();
         }
-
-        private void UpdateUi() {
-            lblAddressingMode.Text = _cpu.NextOpCode?.AddressingMode.ToString();
-
-            chkCarry.Checked = _cpu.SR.Carry;
-            chkZero.Checked = _cpu.SR.Zero;
-            chkIrqDisable.Checked = _cpu.SR.IrqDisable;
-            chkDecimalMode.Checked = _cpu.SR.DecimalMode;
-            chkBreakCommand.Checked = _cpu.SR.BreakCommand;
-            chkReserved.Checked = _cpu.SR.Reserved;
-            chkOverflow.Checked = _cpu.SR.Overflow;
-            chkNegative.Checked = _cpu.SR.Negative;
-
-            txtPC.Text = _cpu.PC.ToString("X2");
-            txtSP.Text = _cpu.SP.ToString("X2");
-            txtAR.Text = _cpu.AR.ToString("X2");
-            txtXR.Text = _cpu.XR.ToString("X2");
-            txtYR.Text = _cpu.YR.ToString("X2");
-        }
-
-
-        //private void UpdateMemoryWatch(int a, byte v) {
-        //    for (int i = 0; i < dgWatch.Rows.Count; i++) {
-        //        var addressString = dgWatch.Rows[i].Cells[0].Value as string;
-        //        if (addressString == null || string.IsNullOrWhiteSpace(addressString)) continue;
-
-        //        var address = StringToInt(addressString);
-
-        //        if (address == null) {
-        //            dgWatch.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
-        //            continue;
-
-        //        } else {
-        //            dgWatch.Rows[i].DefaultCellStyle.BackColor = Color.White;
-        //        }
-
-        //        var valueHex = $"0x{_cpu.Memory[address.Value]:X2}";
-        //        var valueDec = $"{_cpu.Memory[address.Value]}";
-
-        //        var colorHex = !valueHex.Equals(dgWatch.Rows[i].Cells[1].Value) ? Color.Red : Color.Black;
-        //        dgWatch.Rows[i].Cells[1].Style.ForeColor = colorHex;
-        //        dgWatch.Rows[i].Cells[1].Value = valueHex;
-
-        //        var colorDec = !valueDec.Equals(dgWatch.Rows[i].Cells[2].Value) ? Color.Red : Color.Black;
-        //        dgWatch.Rows[i].Cells[2].Style.ForeColor = colorDec;
-        //        dgWatch.Rows[i].Cells[2].Value = valueDec;
-        //    }
-        //}
 
         private int? StringToInt(string intString) {
             int address;
@@ -102,9 +53,8 @@ namespace Debugger {
             return null;
         }
 
-        private void BtnReset_Click(object sender, System.EventArgs e) {
+        private void BtnReset_Click(object sender, EventArgs e) {
             _cpu.Reset();
-            UpdateUi();
         }
 
         private void DgWatch_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
