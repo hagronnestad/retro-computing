@@ -51,8 +51,11 @@
             this.clmValueHex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmValueDecimal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnStep
@@ -348,11 +351,29 @@
             this.clmDescription.Name = "clmDescription";
             this.clmDescription.Width = 300;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(432, 23);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(406, 25);
+            this.textBox1.TabIndex = 7;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(432, 80);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(483, 277);
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox1_Paint);
+            // 
             // FormDebugger
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 737);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dgWatch);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.groupBox1);
@@ -361,10 +382,13 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FormDebugger";
             this.Text = "Debugger";
+            this.Load += new System.EventHandler(this.FormDebugger_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgWatch)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -398,6 +422,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn clmValueDecimal;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmDescription;
         private System.Windows.Forms.CheckBox chkReserved;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

@@ -14,6 +14,7 @@ using Commodore64.Properties;
 using Timer = System.Threading.Timer;
 using Debugger;
 using System.Threading.Tasks;
+using MicroProcessor.Cpu6502;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {

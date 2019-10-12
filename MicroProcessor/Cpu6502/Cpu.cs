@@ -3,12 +3,15 @@ using Extensions.Enums;
 using Hardware.Memory;
 using MicroProcessor.Cpu6502.Attributes;
 using MicroProcessor.Cpu6502.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MicroProcessor.Cpu6502 {
     public class Cpu {
+
+        public event EventHandler<OpCode> OnStep;
 
         public const ushort NMI_VECTOR_ADDRESS = 0xFFFA;
         public const ushort RESET_VECTOR_ADDRESS = 0xFFFC;
@@ -205,13 +208,25 @@ namespace MicroProcessor.Cpu6502 {
         /// <param name="ignoreCycles"></param>
         public void Step(bool ignoreCycles = false) {
             OpCode = OpCodeCache[Memory[PC]];
-            OpCodeAddress = PC;
+            OpCode.OpCodeAddress = PC;
+
+            var o = OpCode.FromOpCodeDefinitionAttribute(null, null, OpCode);
+            o.OpCodeAddress = PC;
+
+            o.Operands.Clear();
+            for (int j = 1; j < o.Length; j++) {
+                o.Operands.Add(Memory[PC + j]);
+            }
+
+            OnStep?.Invoke(this, o);
+
             PC++;
 
             if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
                 OpCode.GetAddress();
             }
             OpCode.Run();
+
             TotalInstructions += 1;
 
             // Count total cycles

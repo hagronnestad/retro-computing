@@ -1,10 +1,13 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Globalization;
 using System;
 using MicroProcessor.Cpu6502;
 using Hardware.Memory;
 using Memory;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Threading;
 
 namespace Debugger {
     public partial class FormDebugger : Form {
@@ -14,6 +17,12 @@ namespace Debugger {
 
         private ConcurrentDictionary<int, WatchItem> _watchItems = new ConcurrentDictionary<int, WatchItem>();
 
+        private SynchronizedCollection<OpCode> lastOpCodes = new SynchronizedCollection<OpCode>();
+
+        private SolidBrush b = new SolidBrush(Color.Black);
+        private Font f = new Font("Consolas", 10);
+
+        private Thread t;
 
         public FormDebugger(Cpu cpu, IMemory<byte> memory) {
             InitializeComponent();
@@ -23,8 +32,11 @@ namespace Debugger {
 
             _memory.OnWrite += _memory_OnWrite;
             _memory.OnRead += _memory_OnRead;
+        }
 
-            UpdateUi();
+        private void _cpu_OnStep(object sender, OpCode e) {
+            lastOpCodes.Add(e);
+            if (lastOpCodes.Count > 10) lastOpCodes.RemoveAt(0);
         }
 
         private void _memory_OnWrite(object sender, MemoryWriteEventArgs<byte> e) {
@@ -93,5 +105,44 @@ namespace Debugger {
             }
         }
 
+        private void FormDebugger_Load(object sender, EventArgs e) {
+            _cpu.OnStep += _cpu_OnStep;
+
+            t = new Thread(InvalidateScreen);
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+        }
+
+        private void InvalidateScreen() {
+            while (true) {
+                if (!Visible || WindowState == FormWindowState.Minimized) {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+
+                try {
+                    pictureBox1.Invalidate();
+
+                    //Invoke(new Action(() => {
+                    //    pictureBox1.Invalidate();
+                    //}));
+
+                } catch (Exception) {
+                    return;
+                }
+
+                Thread.Sleep((int)(1000.0f / 60.0f));
+            }
+        }
+
+        private void PictureBox1_Paint(object sender, PaintEventArgs e) {
+            e.Graphics.Clear(pictureBox1.BackColor);
+
+            lock (lastOpCodes.SyncRoot) {
+                for (int i = 0; i < lastOpCodes.Count; i++) {
+                    e.Graphics.DrawString(lastOpCodes?[i]?.ToString() ?? "", f, b, 0, i * f.Height + 3);
+                }
+            }
+        }
     }
 }
