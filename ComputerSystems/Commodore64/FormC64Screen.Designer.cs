@@ -32,6 +32,7 @@
             this.lblKeyboardDisabled = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
+            this.btnReset = new System.Windows.Forms.ToolStripButton();
             this.btnPause = new System.Windows.Forms.ToolStripButton();
             this.separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
@@ -41,10 +42,10 @@
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnMemoryWatch = new System.Windows.Forms.ToolStripButton();
+            this.btnDebugger = new System.Windows.Forms.ToolStripButton();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.btnReset = new System.Windows.Forms.ToolStripButton();
+            this.separator4 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -120,7 +121,8 @@
             this.btnUseCrtFilter,
             this.separator3,
             this.btnCopyOutput,
-            this.btnMemoryWatch});
+            this.separator4,
+            this.btnDebugger});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(640, 25);
@@ -136,6 +138,16 @@
             this.btnRestart.Size = new System.Drawing.Size(23, 22);
             this.btnRestart.Text = "Restart";
             this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
+            // 
+            // btnReset
+            // 
+            this.btnReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
+            this.btnReset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(23, 22);
+            this.btnReset.Text = "Reset";
+            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
             // 
             // btnPause
             // 
@@ -216,15 +228,15 @@
             this.btnCopyRawOutput.ToolTipText = "Copy raw screen";
             this.btnCopyRawOutput.Click += new System.EventHandler(this.BtnCopyRawOutput_Click);
             // 
-            // btnMemoryWatch
+            // btnDebugger
             // 
-            this.btnMemoryWatch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMemoryWatch.Image = ((System.Drawing.Image)(resources.GetObject("btnMemoryWatch.Image")));
-            this.btnMemoryWatch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMemoryWatch.Name = "btnMemoryWatch";
-            this.btnMemoryWatch.Size = new System.Drawing.Size(23, 22);
-            this.btnMemoryWatch.Text = "toolStripButton1";
-            this.btnMemoryWatch.Click += new System.EventHandler(this.BtnMemoryWatch_Click);
+            this.btnDebugger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDebugger.Image = ((System.Drawing.Image)(resources.GetObject("btnDebugger.Image")));
+            this.btnDebugger.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDebugger.Name = "btnDebugger";
+            this.btnDebugger.Size = new System.Drawing.Size(23, 22);
+            this.btnDebugger.Text = "Debugger";
+            this.btnDebugger.Click += new System.EventHandler(this.BtnMemoryWatch_Click);
             // 
             // ofd
             // 
@@ -234,15 +246,10 @@
             // 
             this.sfd.Filter = "PRG-files|*.prg";
             // 
-            // btnReset
+            // separator4
             // 
-            this.btnReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
-            this.btnReset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(23, 22);
-            this.btnReset.Text = "Reset";
-            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
+            this.separator4.Name = "separator4";
+            this.separator4.Size = new System.Drawing.Size(6, 25);
             // 
             // FormC64Screen
             // 
@@ -287,9 +294,10 @@
         private System.Windows.Forms.ToolStripSeparator separator3;
         private System.Windows.Forms.ToolStripStatusLabel lblCycles;
         private System.Windows.Forms.ToolStripStatusLabel lblInstructions;
-        private System.Windows.Forms.ToolStripButton btnMemoryWatch;
+        private System.Windows.Forms.ToolStripButton btnDebugger;
         private System.Windows.Forms.ToolStripButton btnPause;
         private System.Windows.Forms.ToolStripStatusLabel lblKeyboardDisabled;
         private System.Windows.Forms.ToolStripButton btnReset;
+        private System.Windows.Forms.ToolStripSeparator separator4;
     }
 }
