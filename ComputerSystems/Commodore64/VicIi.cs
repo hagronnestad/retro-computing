@@ -1,8 +1,19 @@
-﻿using Hardware.Memory;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Commodore64 {
     public class VicIi {
+
+        private byte[] _registers = new byte[47];
+
+        public byte this[int index] {
+            get {
+                return _registers[index];
+            }
+            set {
+                _registers[index] = value;
+            }
+        }
+
 
         public enum TvSystem {
             NTSC,
@@ -28,14 +39,12 @@ namespace Commodore64 {
 
         public Color[] ScreenBufferPixels = new Color[USABLE_WIDTH_BORDER * USABLE_HEIGHT_BORDER];
 
-        public bool ScreenOn => (Read(0xD011) & 0b00010000) == 1;
+        public bool ScreenOn => (this[0x11] & 0b00010000) == 1;
 
+        //public bool IsInBorder =>
 
-        private readonly IMemory<byte> _bus;
+        public VicIi() {
 
-
-        public VicIi(IMemory<byte> bus) {
-            _bus = bus;
         }
 
         public void Cycle() {
@@ -48,7 +57,7 @@ namespace Commodore64 {
 
                 CurrentLine++;
 
-                if ((CurrentTvSystem == TvSystem.PAL && CurrentLine == FULL_HEIGHT_PAL) || 
+                if ((CurrentTvSystem == TvSystem.PAL && CurrentLine == FULL_HEIGHT_PAL) ||
                     (CurrentTvSystem == TvSystem.NTSC && CurrentLine == FULL_HEIGHT_NTSC)) {
 
                     CurrentLine = 0;
@@ -57,15 +66,14 @@ namespace Commodore64 {
 
             UpdateScreenBufferPixels();
 
+            // TODO: Implement this properly (Raster Counter)
+            this[0x12] = this[0x12] == 0 ? (byte)1 : (byte)0;
+
             TotalCycles++;
         }
 
         private void UpdateScreenBufferPixels() {
 
-        }
-
-        public byte Read(int address) {
-            return _bus[address];
         }
     }
 }

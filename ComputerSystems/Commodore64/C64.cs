@@ -21,6 +21,7 @@ namespace Commodore64 {
 
 
         public Cia Cia { get; private set; }
+        public VicIi Vic { get; private set; }
         public C64Bus Memory { get; private set; }
         public Cpu Cpu { get; private set; }
 
@@ -34,7 +35,8 @@ namespace Commodore64 {
             RemoveEventHandlers();
 
             Cia = new Cia();
-            Memory = new C64Bus(Cia);
+            Vic = new VicIi();
+            Memory = new C64Bus(Cia, Vic);
             Cpu = new Cpu(Memory);
 
             AddEventHandlers();
@@ -61,12 +63,11 @@ namespace Commodore64 {
                         // Clock CIA 1
                         Cia.Clock();
 
+                        // Cycle VIC-II
+                        Vic.Cycle();
+
                         // Cycle the CPU
                         Cpu.Cycle();
-
-                        // I have to work out how to properly time this
-                        Memory[C64MemoryLocations.CURRENT_RASTER_LINE] =
-                            Memory[C64MemoryLocations.CURRENT_RASTER_LINE] == 0 ? (byte)1 : (byte)0;
 
                         swCpuClock.Restart();
                     }

@@ -35,8 +35,9 @@ namespace Commodore64 {
         private MemoryBase<byte> _romKernal;
 
         private Cia _cia;
+        private readonly VicIi _vic;
 
-        public C64Bus(Cia cia) : base(0x10000) {
+        public C64Bus(Cia cia, VicIi vic) : base(0x10000) {
             _memory.FillWithRandomData();
 
             _romBasic = new MemoryBase<byte>(File.ReadAllBytes("basic.rom")) { IsReadOnly = true };
@@ -44,6 +45,7 @@ namespace Commodore64 {
             _romKernal = new MemoryBase<byte>(File.ReadAllBytes("kernal.rom")) { IsReadOnly = true };
 
             _cia = cia;
+            _vic = vic;
 
             // Intialize processor addressing mode with default values
             // http://sta.c64.org/cbm64mem.html
@@ -182,7 +184,49 @@ namespace Commodore64 {
 
                 // I/O
                 if (processorPortMemoryConfiguration == 0b101 || processorPortMemoryConfiguration == 0b111 || processorPortMemoryConfiguration == 0b110) {
-                    //Debug.WriteLine($"Trying to read unimplemented I/O at address: {address:X4}");
+
+                    // VIC-II (0xD000 - 0xD3FF, VIC-II register images repeated every $40, 64 bytes)
+                    if (address >= 0xD000 && address <= 0xD3FF) {
+
+                        // The VIC-II class has its own indexer which makes it easy to map
+                        // addresses into the VIC-II. The `% 0x40` makes sure that the
+                        // registers available in the VIC-II are mirrored all the way up to
+                        // 0xD3FF.
+                        return _vic[(address - 0xD000) % 0x40];
+
+                    }
+
+
+                    // CIA 1
+                    if (address >= 0xDC00 && address <= 0xDCFF) {
+
+                        switch (address) {
+                            case 0xDC09:
+                                return _cia.TimeOfDaySecondsBcd;
+                            case 0xDC0A:
+                                return _cia.TimeOfDayMinutesBcd;
+                            case 0xDC0B:
+                                return _cia.TimeOfDayHoursBcd;
+
+                            default:
+                                // The CIA class has its own indexer which makes it easy to map
+                                // addresses into the CIA. The `% 0x10` makes sure that the
+                                // 16 registers available in the CIA are mirrored all the way up to
+                                // 0xDCFF.
+                                return _cia[(address - 0xDC00) % 0x10];
+                        }
+
+                    }
+
+
+
+                    // CIA 2
+                    if (address >= 0xDD00 && address <= 0xDDFF) {
+                        return 0;
+                    }
+
+
+                    // throw new Exception($"Trying to read unimplemented I/O at address: {address:X4}");
                 }
 
 
@@ -236,27 +280,6 @@ namespace Commodore64 {
                 //}
 
                 //// Everything else is I/O
-
-                // CIA 1
-                if (address >= 0xDC00 && address <= 0xDCFF) {
-
-                    switch (address) {
-                        case 0xDC09:
-                            return _cia.TimeOfDaySecondsBcd;
-                        case 0xDC0A:
-                            return _cia.TimeOfDayMinutesBcd;
-                        case 0xDC0B:
-                            return _cia.TimeOfDayHoursBcd;
-
-                        default:
-                            // The CIA class has its own indexer which makes it easy to map
-                            // addresses into the CIA. The `% 0x10` makes sure that the
-                            // 16 registers available in the CIA are mirrored all the way up to
-                            // 0xDCFF.
-                            return _cia[(address - 0xDC00) % 0x10];
-                    }
-
-                }
 
                 //Debug.WriteLine($"Trying to read unimplemented I/O at address: {address:X4}");
             }
@@ -317,34 +340,35 @@ namespace Commodore64 {
         }
 
         public override void Write(int address, byte value) {
-            //if (address == 0x0801) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0802) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0803) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0804) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0805) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0806) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0807) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0808) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x0809) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x080A) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x080B) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x080C) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x080D) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x080E) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
-            //if (address == 0x080F) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
+            var processorPortMemoryConfiguration = _memory[1] & 0b00000111;
+                       
 
-            //if (address == 0x0001) Debug.WriteLine($"Value: 0x{value:X2} written to Address: 0x{address:X4}");
+            // I/O
+            if (processorPortMemoryConfiguration == 0b101 || processorPortMemoryConfiguration == 0b111 || processorPortMemoryConfiguration == 0b110) {
 
+                // VIC-II (0xD000 - 0xD3FF, VIC-II register images repeated every $40, 64 bytes)
+                if (address >= 0xD000 && address <= 0xD3FF) {
 
-            // CIA 1
-            if (address >= 0xDC00 && address <= 0xDCFF) {
-                // The CIA class has its own indexer which makes it easy to map
-                // addresses into the CIA. The `% 0x10` makes sure that the
-                // 16 registers available in the CIA are mirrored all the way up to
-                // 0xDCFF.
-                _cia[(address - 0xDC00) % 0x10] = value;
-                return;
+                    // The VIC-II class has its own indexer which makes it easy to map
+                    // addresses into the VIC-II. The `% 0x40` makes sure that the
+                    // registers available in the VIC-II are mirrored all the way up to
+                    // 0xD3FF.
+                    _vic[(address - 0xD000) % 0x40] = value;
+
+                }
+
+                // CIA 1
+                if (address >= 0xDC00 && address <= 0xDCFF) {
+                    // The CIA class has its own indexer which makes it easy to map
+                    // addresses into the CIA. The `% 0x10` makes sure that the
+                    // 16 registers available in the CIA are mirrored all the way up to
+                    // 0xDCFF.
+                    _cia[(address - 0xDC00) % 0x10] = value;
+                    return;
+                }
+
             }
+
 
             base.Write(address, value);
         }
