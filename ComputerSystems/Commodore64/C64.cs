@@ -92,12 +92,14 @@ namespace Commodore64 {
         private void AddEventHandlers() {
             Cia.ReadDataPortB += CiaReadDataPortB;
             Cia.Interrupt += CiaInterrupt;
+            Vic.OnGenerateRasterLineInterrupt += Vic_OnGenerateRasterLineInterrupt;
         }
 
         private void RemoveEventHandlers() {
             if (Cia != null) {
                 Cia.ReadDataPortB -= CiaReadDataPortB;
                 Cia.Interrupt -= CiaInterrupt;
+                Vic.OnGenerateRasterLineInterrupt -= Vic_OnGenerateRasterLineInterrupt;
             }
         }
 
@@ -106,6 +108,10 @@ namespace Commodore64 {
         }
 
         private void CiaInterrupt(object sender, EventArgs e) {
+            Cpu.Interrupt();
+        }
+
+        private void Vic_OnGenerateRasterLineInterrupt(object sender, EventArgs e) {
             Cpu.Interrupt();
         }
 
