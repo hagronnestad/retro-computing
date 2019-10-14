@@ -66,6 +66,8 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private void FormC64Screen_Load(object sender, EventArgs e) {
+            pScreen.AllowDrop = true;
+
             new Thread(InvalidateScreen).Start();
         }
 
@@ -302,18 +304,20 @@ namespace ComputerSystem.Commodore64 {
             C64.PowerOn();
         }
 
+        private void LoadPrg(string fileName) {
+            var file = File.ReadAllBytes(fileName);
+
+            var address = BitConverter.ToUInt16(file, 0);
+            var data = file.Skip(2).ToArray();
+
+            for (int i = 0; i < data.Length; i++) {
+                C64.Memory[address + i] = data[i];
+            }
+        }
+
         private void BtnOpen_Click(object sender, EventArgs e) {
             if (ofd.ShowDialog() == DialogResult.OK) {
-
-                var file = File.ReadAllBytes(ofd.FileName);
-
-                var address = BitConverter.ToUInt16(file, 0);
-                var data = file.Skip(2).ToArray();
-
-                for (int i = 0; i < data.Length; i++) {
-                    C64.Memory[address + i] = data[i];
-                }
-
+                LoadPrg(ofd.FileName);
             }
         }
 
@@ -374,6 +378,27 @@ namespace ComputerSystem.Commodore64 {
 
         private void BtnReset_Click(object sender, EventArgs e) {
             C64.Cpu.Reset();
+        }
+
+        private void pScreen_DragDropAsync(object sender, DragEventArgs e) {
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] d && d.Length > 0) {
+                if (!File.Exists(d.First())) return;
+
+                LoadPrg(d.First());
+            }
+
+            // TODO: Fix this hack
+            this.Focus();
+            SendKeys.SendWait("r");
+            SendKeys.SendWait("u");
+            SendKeys.SendWait("n");
+            SendKeys.SendWait("{ENTER}");
+        }
+
+        private void pScreen_DragEnter(object sender, DragEventArgs e) {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+                e.Effect = DragDropEffects.Copy;
+            }
         }
     }
 }

@@ -42,10 +42,10 @@
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
+            this.separator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnDebugger = new System.Windows.Forms.ToolStripButton();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.separator4 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -62,6 +62,8 @@
             this.pScreen.Size = new System.Drawing.Size(640, 400);
             this.pScreen.TabIndex = 1;
             this.pScreen.TabStop = false;
+            this.pScreen.DragDrop += new System.Windows.Forms.DragEventHandler(this.pScreen_DragDropAsync);
+            this.pScreen.DragEnter += new System.Windows.Forms.DragEventHandler(this.pScreen_DragEnter);
             this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
             this.pScreen.Resize += new System.EventHandler(this.PScreen_Resize);
             // 
@@ -228,6 +230,11 @@
             this.btnCopyRawOutput.ToolTipText = "Copy raw screen";
             this.btnCopyRawOutput.Click += new System.EventHandler(this.BtnCopyRawOutput_Click);
             // 
+            // separator4
+            // 
+            this.separator4.Name = "separator4";
+            this.separator4.Size = new System.Drawing.Size(6, 25);
+            // 
             // btnDebugger
             // 
             this.btnDebugger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -246,13 +253,9 @@
             // 
             this.sfd.Filter = "PRG-files|*.prg";
             // 
-            // separator4
-            // 
-            this.separator4.Name = "separator4";
-            this.separator4.Size = new System.Drawing.Size(6, 25);
-            // 
             // FormC64Screen
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(640, 447);
