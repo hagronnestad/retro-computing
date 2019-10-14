@@ -93,20 +93,21 @@ namespace ComputerSystem.Commodore64 {
             var bgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryLocations.SCREEN_BACKGROUND_COLOR] & 0b00001111));
 
             for (var i = 0; i < 1000; i++) {
-                var petsciiCode = C64.Memory[C64MemoryOffsets.SCREEN_BUFFER + i];
+                var petsciiCode = vicRead(0x400 + i);
                 var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
+                //var fgColor = Colors.FromByte((byte)(vicRead(0x0800 + i) & 0b00001111));
 
                 var line = (i / 40);
                 var characterInLine = i % 40;
                 var indexLineOffset = (2560 * line) + (8 * characterInLine);
 
                 for (int row = 0; row <= 7; row++) {
-                    var charRow = C64.Memory._romCharacter.Read((petsciiCode * 8) + row);
+                    //var charRow = C64.Memory._romCharacter.Read((petsciiCode * 8) + row);
 
                     // TODO: Don't read directly from the character ROM, needs some CIA logic for it to work I think
                     // We're in the context of the VIC-II here, so we have to keep in mind that the VIC sees other
                     // memory than the CPU.
-                    //var charRow = C64.Memory.Read(0xD000 + (petsciiCode * 8) + row);
+                    var charRow = vicRead(0x1000 + (petsciiCode * 8) + row);
 
                     var indexRowOffset = indexLineOffset + (320 * row);
 
@@ -122,6 +123,43 @@ namespace ComputerSystem.Commodore64 {
 
             SetPixels(_bC64ScreenBuffer, _screenBufferPixels);
             _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
+        }
+
+        public byte vicRead(int address) {
+
+            var vicBankOffset = 0;
+
+            switch (C64.Memory[0xDD00] & 0b00000011)
+            {
+                case 0b00000011:
+                    vicBankOffset = 0;
+
+                    if (address >= 0x1000 && address <= 0x1FFF) {
+                        return C64.Memory._romCharacter[address - 0x1000];
+                    }
+
+                    break;
+
+                case 0b00000010:
+                    vicBankOffset = 0x4000;
+                    break;
+
+                case 0b00000001:
+                    vicBankOffset = 0x8000;
+
+                    if (address >= 0x9000 && address <= 0x9FFF) {
+                        return C64.Memory._romCharacter[address - 0x9000];
+                    }
+
+                    break;
+
+                case 0b00000000:
+                    vicBankOffset = 0xC000;
+                    break;
+            }
+
+
+            return C64.Memory.Read(address + vicBankOffset);
         }
 
         public void ApplyCrtFilter() {
