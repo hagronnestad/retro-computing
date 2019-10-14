@@ -1,4 +1,4 @@
-﻿using Hardware.Memory;
+using Hardware.Memory;
 using Hardware.Mos6526Cia;
 using System.Diagnostics;
 using System.IO;
@@ -341,7 +341,10 @@ namespace Commodore64 {
 
         public override void Write(int address, byte value) {
             var processorPortMemoryConfiguration = _memory[1] & 0b00000111;
-                       
+
+            if (address == 0x0001) {
+                base.Write(address, (byte)(value | ((byte)(value & _memory[0x0000]))));
+            }
 
             // I/O
             if (processorPortMemoryConfiguration == 0b101 || processorPortMemoryConfiguration == 0b111 || processorPortMemoryConfiguration == 0b110) {
