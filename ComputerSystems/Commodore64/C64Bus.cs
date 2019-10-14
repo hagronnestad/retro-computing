@@ -222,7 +222,7 @@ namespace Commodore64 {
 
                     // CIA 2
                     if (address >= 0xDD00 && address <= 0xDDFF) {
-                        return 0;
+                        return base.Read(address);
                     }
 
 
