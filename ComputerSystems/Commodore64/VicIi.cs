@@ -8,7 +8,9 @@ namespace Commodore64 {
 
         public event EventHandler OnGenerateRasterLineInterrupt;
 
-        private byte[] _registers = new byte[47];
+        // VIC-II has 64 registers (47 in use, $D02F-$D03F Unusable (17 bytes), $D040-$D3FF VIC-II register images (repeated every $40, 64 bytes))
+        private byte[] _registers = new byte[0x40];
+
 
         private const byte REGISTER_SCREEN_CONTROL_0x11 = 0x11;
         private const byte REGISTER_CURRENT_RASTER_LINE_0x12 = 0x12;
