@@ -90,24 +90,19 @@ namespace ComputerSystem.Commodore64 {
         }
 
         public void UpdateScreenBuffer() {
-            var bgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryLocations.SCREEN_BACKGROUND_COLOR] & 0b00001111));
+            var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
 
             for (var i = 0; i < 1000; i++) {
-                var petsciiCode = vicRead(0x400 + i);
+                var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + i));
                 var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
-                //var fgColor = Colors.FromByte((byte)(vicRead(0x0800 + i) & 0b00001111));
+                //var fgColor = Colors.FromByte((byte)(vicRead((ushort)(0x0800 + i)) & 0b00001111));
 
                 var line = (i / 40);
                 var characterInLine = i % 40;
                 var indexLineOffset = (2560 * line) + (8 * characterInLine);
 
                 for (int row = 0; row <= 7; row++) {
-                    //var charRow = C64.Memory._romCharacter.Read((petsciiCode * 8) + row);
-
-                    // TODO: Don't read directly from the character ROM, needs some CIA logic for it to work I think
-                    // We're in the context of the VIC-II here, so we have to keep in mind that the VIC sees other
-                    // memory than the CPU.
-                    var charRow = vicRead(0x1000 + (petsciiCode * 8) + row);
+                    var charRow = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + row));
 
                     var indexRowOffset = indexLineOffset + (320 * row);
 
@@ -125,7 +120,74 @@ namespace ComputerSystem.Commodore64 {
             _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
         }
 
-        public byte vicRead(int address) {
+        public int getScreenMemoryPointer() {
+            var bit4to7 = (C64.Memory.Read(0xD018) >> 4) & 0b00001111;
+
+            switch (bit4to7) {
+                case 0b0000:
+                    return 0x0000;
+                case 0b0001:
+                    return 0x0400;
+                case 0b0010:
+                    return 0x0800;
+                case 0b0011:
+                    return 0x0C00;
+                case 0b0100:
+                    return 0x1000;
+                case 0b0101:
+                    return 0x1400;
+                case 0b0110:
+                    return 0x1800;
+                case 0b0111:
+                    return 0x1C00;
+                case 0b1000:
+                    return 0x2000;
+                case 0b1001:
+                    return 0x2400;
+                case 0b1010:
+                    return 0x2800;
+                case 0b1011:
+                    return 0x2C00;
+                case 0b1100:
+                    return 0x3000;
+                case 0b1101:
+                    return 0x3400;
+                case 0b1110:
+                    return 0x3800;
+                case 0b1111:
+                    return 0x3C00;
+
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public int getCharacterMemoryPointer() {
+            var bit1to3 = (C64.Memory.Read(0xD018) >> 1) & 0b00000111;
+
+            switch (bit1to3) {
+                case 0b000:
+                    return 0x0000;
+                case 0b001:
+                    return 0x0800;
+                case 0b010:
+                    return 0x1000;
+                case 0b011:
+                    return 0x1800;
+                case 0b100:
+                    return 0x2000;
+                case 0b101:
+                    return 0x2800;
+                case 0b110:
+                    return 0x3000;
+                case 0b111:
+                    return 0x38000;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public byte vicRead(ushort address) {
 
             var vicBankOffset = 0;
 
@@ -147,8 +209,8 @@ namespace ComputerSystem.Commodore64 {
                 case 0b00000001:
                     vicBankOffset = 0x8000;
 
-                    if (address >= 0x9000 && address <= 0x9FFF) {
-                        return C64.Memory._romCharacter[address - 0x9000];
+                    if (address >= 0x1000 && address <= 0x1FFF) {
+                        return C64.Memory._romCharacter[address - 0x1000];
                     }
 
                     break;
@@ -159,7 +221,7 @@ namespace ComputerSystem.Commodore64 {
             }
 
 
-            return C64.Memory.Read(address + vicBankOffset);
+            return C64.Memory.Read(vicBankOffset + address);
         }
 
         public void ApplyCrtFilter() {
