@@ -1,4 +1,4 @@
-using Hardware.Memory;
+﻿using Hardware.Memory;
 using Hardware.Mos6526Cia;
 using System.Diagnostics;
 using System.IO;
@@ -40,17 +40,17 @@ namespace Commodore64 {
         public C64Bus(Cia cia, VicIi vic) : base(0x10000) {
             _memory.FillWithRandomData();
 
+            // Intialize processor addressing mode with default values
+            // http://sta.c64.org/cbm64mem.html
+            _memory[0] = C64MemoryValues.PROCESSOR_PORT_DIRECTION_REGISTER_DEFAULT;
+            _memory[1] = C64MemoryValues.PROCESSOR_PORT_REGISTER_DEFAULT;
+
             _romBasic = new MemoryBase<byte>(File.ReadAllBytes("basic.rom")) { IsReadOnly = true };
             _romCharacter = new MemoryBase<byte>(File.ReadAllBytes("char.rom")) { IsReadOnly = true };
             _romKernal = new MemoryBase<byte>(File.ReadAllBytes("kernal.rom")) { IsReadOnly = true };
 
             _cia = cia;
             _vic = vic;
-
-            // Intialize processor addressing mode with default values
-            // http://sta.c64.org/cbm64mem.html
-            _memory[0] = C64MemoryValues.PROCESSOR_PORT_DIRECTION_REGISTER_DEFAULT;
-            _memory[1] = C64MemoryValues.PROCESSOR_PORT_REGISTER_DEFAULT;
         }
 
         public override byte Read(int address) {
