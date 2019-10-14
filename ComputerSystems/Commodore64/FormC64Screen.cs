@@ -380,19 +380,23 @@ namespace ComputerSystem.Commodore64 {
             C64.Cpu.Reset();
         }
 
-        private void pScreen_DragDropAsync(object sender, DragEventArgs e) {
+        private async void pScreen_DragDropAsync(object sender, DragEventArgs e) {
             if (e.Data.GetData(DataFormats.FileDrop) is string[] d && d.Length > 0) {
                 if (!File.Exists(d.First())) return;
 
+                await C64.Cpu.Pause();
                 LoadPrg(d.First());
-            }
+                C64.Cpu.Resume();
 
-            // TODO: Fix this hack
-            this.Focus();
-            SendKeys.SendWait("r");
-            SendKeys.SendWait("u");
-            SendKeys.SendWait("n");
-            SendKeys.SendWait("{ENTER}");
+                // TODO: Fix this RUN hack
+                while (!Focused) {
+                    Focus();
+                }
+                SendKeys.SendWait("r");
+                SendKeys.SendWait("u");
+                SendKeys.SendWait("n");
+                SendKeys.SendWait("{ENTER}");
+            }
         }
 
         private void pScreen_DragEnter(object sender, DragEventArgs e) {
