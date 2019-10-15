@@ -6,11 +6,18 @@ using Extensions.Enums;
 namespace Commodore64 {
     public class VicIi {
 
+        /// <summary>
+        /// http://www.zimmers.net/cbmpics/cbm/c64/vic-ii.txt
+        /// </summary>
+
         public event EventHandler OnGenerateRasterLineInterrupt;
+        public event EventHandler OnLastScanLine;
 
         // VIC-II has 64 registers (47 in use, $D02F-$D03F Unusable (17 bytes), $D040-$D3FF VIC-II register images (repeated every $40, 64 bytes))
         public byte[] _registers = new byte[0x40];
 
+        //TODO: Temporary dependency
+        public C64 C64;
 
         private const byte REGISTER_SCREEN_CONTROL_0x11 = 0x11;
         private const byte REGISTER_CURRENT_RASTER_LINE_0x12 = 0x12;
@@ -18,6 +25,8 @@ namespace Commodore64 {
 
         private const byte REGISTER_INTERRUPT_STATUS_0x19 = 0x19;
         private const byte REGISTER_INTERRUPT_CONTROL_0x1A = 0x1A;
+
+        public Color[] ScreenBufferPixels { get; } = new Color[320 * 200];
 
         private int _rasterLineToGenerateInterruptAt = 0;
 
@@ -89,9 +98,9 @@ namespace Commodore64 {
         public int CurrentLine = 0;
         public int CurrentLineCycle = 0;
 
-        public int TotalCycles = 0;
+        public bool InVerticalBlank => CurrentLine >= 300 || CurrentLine <= 15;
 
-        public Color[] ScreenBufferPixels = new Color[USABLE_WIDTH_BORDER * USABLE_HEIGHT_BORDER];
+        public int TotalCycles = 0;
 
         // Screen control register
         public bool ScreenControlRegisterScreenHeight => this[REGISTER_SCREEN_CONTROL_0x11].IsBitSet(BitFlag.BIT_3); // False = 24 rows, True = 25 rows
@@ -111,16 +120,18 @@ namespace Commodore64 {
 
         }
 
+
         public void Cycle() {
-
-
             CurrentLineCycle++;
 
+            // Every line takes 63 cycles
             if (CurrentLineCycle == 64) {
                 CurrentLineCycle = 0;
 
                 CurrentLine++;
 
+                // Generate raster interrupt if the current line equals interrupt line
+                // TODO: Implement the Interrupt latch register ($D019) !!!!!!!
                 if (InterruptControlRegisterRasterInterruptEnabled && (CurrentLine == _rasterLineToGenerateInterruptAt)) {
                     OnGenerateRasterLineInterrupt?.Invoke(this, null);
                 }
@@ -129,16 +140,146 @@ namespace Commodore64 {
                     (CurrentTvSystem == TvSystem.NTSC && CurrentLine == FULL_HEIGHT_NTSC)) {
 
                     CurrentLine = 0;
+
+                    OnLastScanLine?.Invoke(this, null);
+                    UpdateScreenBufferPixels();
                 }
             }
-
-            UpdateScreenBufferPixels();
 
             TotalCycles++;
         }
 
-        private void UpdateScreenBufferPixels() {
 
+        public void UpdateScreenBufferPixels() {
+            var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
+
+            for (var i = 0; i < 1000; i++) {
+                var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + i));
+                var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
+                //var fgColor = Colors.FromByte((byte)(vicRead((ushort)(0x0800 + i)) & 0b00001111));
+
+                var line = (i / 40);
+                var characterInLine = i % 40;
+                var indexLineOffset = (2560 * line) + (8 * characterInLine);
+
+                for (int row = 0; row <= 7; row++) {
+                    var charRow = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + row));
+
+                    var indexRowOffset = indexLineOffset + (320 * row);
+
+                    for (int col = 0; col <= 7; col++) {
+                        var indexPixelOffset = indexRowOffset + col;
+
+                        ScreenBufferPixels[indexPixelOffset] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                    }
+
+                }
+
+            }
         }
+
+        public int getScreenMemoryPointer() {
+            var bit4to7 = (C64.Memory.Read(0xD018) >> 4) & 0b00001111;
+
+            switch (bit4to7) {
+                case 0b0000:
+                    return 0x0000;
+                case 0b0001:
+                    return 0x0400;
+                case 0b0010:
+                    return 0x0800;
+                case 0b0011:
+                    return 0x0C00;
+                case 0b0100:
+                    return 0x1000;
+                case 0b0101:
+                    return 0x1400;
+                case 0b0110:
+                    return 0x1800;
+                case 0b0111:
+                    return 0x1C00;
+                case 0b1000:
+                    return 0x2000;
+                case 0b1001:
+                    return 0x2400;
+                case 0b1010:
+                    return 0x2800;
+                case 0b1011:
+                    return 0x2C00;
+                case 0b1100:
+                    return 0x3000;
+                case 0b1101:
+                    return 0x3400;
+                case 0b1110:
+                    return 0x3800;
+                case 0b1111:
+                    return 0x3C00;
+
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public int getCharacterMemoryPointer() {
+            var bit1to3 = (C64.Memory.Read(0xD018) >> 1) & 0b00000111;
+
+            switch (bit1to3) {
+                case 0b000:
+                    return 0x0000;
+                case 0b001:
+                    return 0x0800;
+                case 0b010:
+                    return 0x1000;
+                case 0b011:
+                    return 0x1800;
+                case 0b100:
+                    return 0x2000;
+                case 0b101:
+                    return 0x2800;
+                case 0b110:
+                    return 0x3000;
+                case 0b111:
+                    return 0x38000;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public byte vicRead(ushort address) {
+
+            var vicBankOffset = 0;
+
+            switch (C64.Memory[0xDD00] & 0b00000011) {
+                case 0b00000011:
+                    vicBankOffset = 0;
+
+                    if (address >= 0x1000 && address <= 0x1FFF) {
+                        return C64.Memory._romCharacter[address - 0x1000];
+                    }
+
+                    break;
+
+                case 0b00000010:
+                    vicBankOffset = 0x4000;
+                    break;
+
+                case 0b00000001:
+                    vicBankOffset = 0x8000;
+
+                    if (address >= 0x1000 && address <= 0x1FFF) {
+                        return C64.Memory._romCharacter[address - 0x1000];
+                    }
+
+                    break;
+
+                case 0b00000000:
+                    vicBankOffset = 0xC000;
+                    break;
+            }
+
+
+            return C64.Memory.Read(vicBankOffset + address);
+        }
+
     }
 }

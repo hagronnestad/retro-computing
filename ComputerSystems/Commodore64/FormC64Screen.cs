@@ -2,17 +2,15 @@ using Commodore64;
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Threading;
 using System.Windows.Forms;
-using Extensions.Byte;
-using Extensions.Enums;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Commodore64.Properties;
 using Timer = System.Threading.Timer;
 using Debugger;
+using System.Threading;
+using System.Drawing.Imaging;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -22,19 +20,16 @@ namespace ComputerSystem.Commodore64 {
         private readonly Stopwatch _stopWatch = new Stopwatch();
 
         private double _fpsActual = 0.0f;
+
         private double _screenRefreshRate = 1000.0f / 60.0f; // 60 fps
-
-        private readonly Bitmap _bC64ScreenBuffer;
-
         private Bitmap _bC64ScreenOutputBuffer;
         private Graphics _gC64ScreenOutputBuffer;
 
-        private readonly Color[] _screenBufferPixels;
         private readonly Pen _penScanLine;
         private readonly Pen _penScanLine2;
 
         private Timer _uiRefreshTimer;
-
+        private Bitmap _bC64ScreenBuffer;
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
@@ -44,7 +39,6 @@ namespace ComputerSystem.Commodore64 {
             _bC64ScreenBuffer = new Bitmap(320, 200, PixelFormat.Format24bppRgb);
             _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
-            _screenBufferPixels = new Color[_bC64ScreenBuffer.Width * _bC64ScreenBuffer.Height];
             _penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
             _penScanLine2 = new Pen(Color.FromArgb(20, 127, 127, 127));
 
@@ -53,10 +47,20 @@ namespace ComputerSystem.Commodore64 {
 
                 try {
                     Invoke(new Action(() => {
-                        lblFps.Text = $"{_fpsActual:F0} fps";
+                        lblClockSpeed.Text = $"{1 / c64.CpuClockSpeed:F0} Hz";
+
                         lblCycles.Text = $"{c64.Cpu.TotalCycles:N0} cycles";
                         lblInstructions.Text = $"{c64.Cpu.TotalInstructions:N0} instructions";
                         lblKeyboardDisabled.Visible = !c64.KeyboardActivated;
+
+                        lblFps.Text = $"{((int)_fpsActual):D3} fps";
+                        lblVicCycles.Text = $"{c64.Vic.TotalCycles:N0} cycles";
+
+                        lblVicCurrentLine.Text = $"Line: {c64.Vic.CurrentLine:D3}";
+                        lblVicCurrentLineCycle.Text = $"Pos: {c64.Vic.CurrentLineCycle:D2}";
+
+                        lblVicGraphicsMode.Text = C64.Vic.ScreenControlRegisterTextModeBitmapMode ? "Mode: Bitmap" : "Mode: Text";
+                        lblVicScreenOn.Text = C64.Vic.ScreenControlRegisterScreenOffOn ? "Screen: On" : "Screen: Off";
                     }));
                 } catch { }
 
@@ -68,8 +72,15 @@ namespace ComputerSystem.Commodore64 {
         private void FormC64Screen_Load(object sender, EventArgs e) {
             pScreen.AllowDrop = true;
 
+            C64.Vic.OnLastScanLine += Vic_OnLastScanLine;
+
             new Thread(InvalidateScreen).Start();
         }
+
+        private void Vic_OnLastScanLine(object sender, EventArgs e) {
+
+        }
+
 
         private void InvalidateScreen() {
             while (true) {
@@ -91,141 +102,6 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        public void UpdateScreenBuffer() {
-            var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
-
-            for (var i = 0; i < 1000; i++) {
-                var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + i));
-                var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
-                //var fgColor = Colors.FromByte((byte)(vicRead((ushort)(0x0800 + i)) & 0b00001111));
-
-                var line = (i / 40);
-                var characterInLine = i % 40;
-                var indexLineOffset = (2560 * line) + (8 * characterInLine);
-
-                for (int row = 0; row <= 7; row++) {
-                    var charRow = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + row));
-
-                    var indexRowOffset = indexLineOffset + (320 * row);
-
-                    for (int col = 0; col <= 7; col++) {
-                        var indexPixelOffset = indexRowOffset + col;
-
-                        _screenBufferPixels[indexPixelOffset] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
-                    }
-
-                }
-
-            }
-
-            SetPixels(_bC64ScreenBuffer, _screenBufferPixels);
-            _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
-        }
-
-        public int getScreenMemoryPointer() {
-            var bit4to7 = (C64.Memory.Read(0xD018) >> 4) & 0b00001111;
-
-            switch (bit4to7) {
-                case 0b0000:
-                    return 0x0000;
-                case 0b0001:
-                    return 0x0400;
-                case 0b0010:
-                    return 0x0800;
-                case 0b0011:
-                    return 0x0C00;
-                case 0b0100:
-                    return 0x1000;
-                case 0b0101:
-                    return 0x1400;
-                case 0b0110:
-                    return 0x1800;
-                case 0b0111:
-                    return 0x1C00;
-                case 0b1000:
-                    return 0x2000;
-                case 0b1001:
-                    return 0x2400;
-                case 0b1010:
-                    return 0x2800;
-                case 0b1011:
-                    return 0x2C00;
-                case 0b1100:
-                    return 0x3000;
-                case 0b1101:
-                    return 0x3400;
-                case 0b1110:
-                    return 0x3800;
-                case 0b1111:
-                    return 0x3C00;
-
-            }
-
-            throw new NotImplementedException();
-        }
-
-        public int getCharacterMemoryPointer() {
-            var bit1to3 = (C64.Memory.Read(0xD018) >> 1) & 0b00000111;
-
-            switch (bit1to3) {
-                case 0b000:
-                    return 0x0000;
-                case 0b001:
-                    return 0x0800;
-                case 0b010:
-                    return 0x1000;
-                case 0b011:
-                    return 0x1800;
-                case 0b100:
-                    return 0x2000;
-                case 0b101:
-                    return 0x2800;
-                case 0b110:
-                    return 0x3000;
-                case 0b111:
-                    return 0x38000;
-            }
-
-            throw new NotImplementedException();
-        }
-
-        public byte vicRead(ushort address) {
-
-            var vicBankOffset = 0;
-
-            switch (C64.Memory[0xDD00] & 0b00000011)
-            {
-                case 0b00000011:
-                    vicBankOffset = 0;
-
-                    if (address >= 0x1000 && address <= 0x1FFF) {
-                        return C64.Memory._romCharacter[address - 0x1000];
-                    }
-
-                    break;
-
-                case 0b00000010:
-                    vicBankOffset = 0x4000;
-                    break;
-
-                case 0b00000001:
-                    vicBankOffset = 0x8000;
-
-                    if (address >= 0x1000 && address <= 0x1FFF) {
-                        return C64.Memory._romCharacter[address - 0x1000];
-                    }
-
-                    break;
-
-                case 0b00000000:
-                    vicBankOffset = 0xC000;
-                    break;
-            }
-
-
-            return C64.Memory.Read(vicBankOffset + address);
-        }
-
         public void ApplyCrtFilter() {
             for (int i = 0; i < _bC64ScreenOutputBuffer.Width; i += (int)(_penScanLine2.Width * 2)) {
                 _gC64ScreenOutputBuffer.DrawLine(_penScanLine2, i, 0, i, _bC64ScreenOutputBuffer.Height);
@@ -236,36 +112,10 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        public void SetPixels(Bitmap b, Color[] pixels) {
-            var width = b.Width;
-            var height = b.Height;
-
-            BitmapData data = b.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
-
-            int stride = data.Stride;
-
-            unsafe {
-                byte* ptr = (byte*)data.Scan0;
-
-                for (int y = 0; y < height; y++) {
-
-                    for (int x = 0; x < width; x++) {
-
-                        var index = (y * width) + x;
-
-                        ptr[(x * 3) + y * stride] = pixels[index].B;
-                        ptr[(x * 3) + y * stride + 1] = pixels[index].G;
-                        ptr[(x * 3) + y * stride + 2] = pixels[index].R;
-                    }
-
-                }
-            }
-
-            b.UnlockBits(data);
-        }
-
         private void PScreen_Paint(object sender, PaintEventArgs e) {
-            UpdateScreenBuffer();
+            SetPixels(_bC64ScreenBuffer, C64.Vic.ScreenBufferPixels);
+            _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
+
             if (btnUseCrtFilter.Checked) ApplyCrtFilter();
 
             e.Graphics.DrawImage(_bC64ScreenOutputBuffer, 0, 0, pScreen.Width, pScreen.Height);
@@ -290,7 +140,6 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private void FormC64Screen_FormClosing(object sender, FormClosingEventArgs e) {
-            _bC64ScreenBuffer.Dispose();
             _gC64ScreenOutputBuffer.Dispose();
             _bC64ScreenOutputBuffer.Dispose();
 
@@ -403,6 +252,42 @@ namespace ComputerSystem.Commodore64 {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
                 e.Effect = DragDropEffects.Copy;
             }
+        }
+
+        public void SetPixels(Bitmap b, Color[] pixels) {
+            var width = b.Width;
+            var height = b.Height;
+
+            BitmapData data = b.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+            int stride = data.Stride;
+
+            unsafe {
+                byte* ptr = (byte*)data.Scan0;
+
+                for (int y = 0; y < height; y++) {
+
+                    for (int x = 0; x < width; x++) {
+
+                        var index = (y * width) + x;
+
+                        ptr[(x * 3) + y * stride] = pixels[index].B;
+                        ptr[(x * 3) + y * stride + 1] = pixels[index].G;
+                        ptr[(x * 3) + y * stride + 2] = pixels[index].R;
+                    }
+
+                }
+            }
+
+            b.UnlockBits(data);
+        }
+
+        private void btnSlowDown_Click(object sender, EventArgs e) {
+            C64.CpuClockSpeed *= 10.0d;
+        }
+
+        private void btnClockSpeedFaster_Click(object sender, EventArgs e) {
+            C64.CpuClockSpeed /= 10.0d;
         }
     }
 }

@@ -138,14 +138,14 @@
   <data name="btnReset.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGhSURBVDhPvVLJTgJBFJwP8ApD2MIOw8xA2LcAc9XEX/Du
-        F3gwGOPFg99hNNEvcYk3bxzUaOJB9KDGKJO2qmlUlOVmJR2G6vfqVb/3tH9FKBTaVJ+zEQgE1mKx2JH6
-        O4FWqyUMw7jRdd1U1DcikUivUqk8O44jMpnMiaInUK/X3UajIcrl8vuXiMfjWSoUCq9MHJ9oNLojL38B
-        SVY+n3+AkDBN80rR0rbTbDbdsYDP5zPU1R9QBAWH1WpVoCfbkoT9DQrYtn2Hd7qSnIN4PH5AgVQqda55
-        vV690+mIbrcreAnVdRk1B3C4TAE09FH2oN1uSwGKqZi5YBwaLorF4sgtuvpCF36/f1USC0AHFMC0BpKw
-        LOuSLpLJ5LEkFgA920dRkUgkTiWBxdmjAGbsBoNBW5IzwPnncrmPUqkkENtTtHRxy03DiAYclaInwGTY
-        vmcyfvuKHoFJaMoQ4xTosAt7h3jrChvGN9M2Kg9pHcv0NnVXWAG7cM1N46nVahSTh01jZYyuPzX5J8Lh
-        8G46nb7IZrNPqOhy3mjwGd68pUIUNO0THEmJ2NejSm4AAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGdSURBVDhPvVLJTgJBFJwP8ApD2MIOw8yEfQ8wV038Be9+
+        gQeDMV48+B1GE/0Sl3jzxkGNJh5ED2qMMmmrmkZFWW5W0mGofq+6uvpp/4pQKLSpPmcjEAisxWKxI/V3
+        Aq1WS2QymRtd101FfSMSifQqlcqz4zgsOlH0BOr1uttoNES5XH7/EvF4PEv5fP6VjeMVjUZ35OYvoMnK
+        5XIPEBKmaV4pWtp2ms2mOxbw+XyG2voDiuDAYbVaFchkW5Kwv0EB27bvcE9XknMQj8cPKJBKpc41r9er
+        dzod0e12BTehui6r5gAOlymArB5lBu12WwpQTNXMBesQuCgWiyO3SPWFLvx+/6okFoAOKJBOpweSsCzr
+        ki6SyeSxJBYAme3jUJFIJE4lgcHZowDe2A0Gg7YkZ4Dvj7A/SqWSQG1P0dLFLSetUCgM+FSKngCbEdw9
+        m/HbV/QIbELzEM8pkLALe4e46woD451pGycPaR3D9DZ1VpS9a04aV61Wo5hcDI0nG4bRn9r8E+FweBcJ
+        X2Sz2Sec6PK9EfAZ7rylShQ07RPvPYm98+6JJQAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="btnPause.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -215,5 +215,8 @@
   </metadata>
   <metadata name="sfd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>403, 17</value>
+  </metadata>
+  <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>587, 17</value>
   </metadata>
 </root>

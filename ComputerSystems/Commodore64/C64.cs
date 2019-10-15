@@ -19,6 +19,8 @@ namespace Commodore64 {
         private bool _isRunnning = false;
         private TaskCompletionSource<bool> _tcsStop;
 
+        public double CpuClockSpeed { get; set; } = 1.0f / CLOCK_PAL;
+
 
         public Cia Cia { get; private set; }
         public VicIi Vic { get; private set; }
@@ -36,6 +38,7 @@ namespace Commodore64 {
 
             Cia = new Cia();
             Vic = new VicIi();
+            Vic.C64 = this;
             Memory = new C64Bus(Cia, Vic);
             Cpu = new Cpu(Memory);
 
@@ -51,14 +54,13 @@ namespace Commodore64 {
             _isRunnning = true;
             _tcsStop = new TaskCompletionSource<bool>();
 
-            var cpuClockSpeedPal = 1.0f / CLOCK_PAL;
             var swCpuClock = Stopwatch.StartNew();
             
             var t = new Thread(() => {
                 while (_isRunnning) {
                     
                     // CPU clock
-                    if (swCpuClock.Elapsed.TotalMilliseconds > cpuClockSpeedPal) {
+                    if (swCpuClock.Elapsed.TotalMilliseconds > CpuClockSpeed) {
 
                         // Clock CIA 1
                         Cia.Clock();
