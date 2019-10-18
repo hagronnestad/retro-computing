@@ -95,10 +95,12 @@ namespace Commodore64 {
         public const int USABLE_HEIGHT = 200;
         public const int USABLE_HEIGHT_BORDER = 284;
 
+
         public int CurrentLine = 0;
         public int CurrentLineCycle = 0;
 
         public bool InVerticalBlank => CurrentLine >= 300 || CurrentLine <= 15;
+        public bool InBorder => (CurrentLineCycle >= 50 && CurrentLineCycle <= 92) || (CurrentLineCycle >= 412 && CurrentLineCycle <= 454);
 
         public int TotalCycles = 0;
 
@@ -120,8 +122,28 @@ namespace Commodore64 {
 
         }
 
+        public int X = 0;
+        public int Y = 0;
 
         public void Cycle() {
+
+            if (InBorder && CurrentLine >= 0 && CurrentLine <= 200) {
+                var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
+
+                for (int i = 0; i < 8; i++) {
+                    ScreenBufferPixels[Y * 320 + X + i] = bgColor;
+                }
+
+                X += 8;
+
+                if (X == 40) {
+                    X = 0;
+                    Y++;
+
+                    if (Y == 200) Y = 0;
+                }
+            }
+
             CurrentLineCycle++;
 
             // Every line takes 63 cycles
