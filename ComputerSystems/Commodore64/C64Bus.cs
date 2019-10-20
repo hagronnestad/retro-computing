@@ -38,7 +38,7 @@ namespace Commodore64 {
         private readonly VicIi _vic;
 
         public C64Bus(Cia cia, VicIi vic) : base(0x10000) {
-            _memory.FillWithRandomData();
+            //_memory.FillWithRandomData();
 
             // Intialize processor addressing mode with default values
             // http://sta.c64.org/cbm64mem.html
