@@ -26,7 +26,7 @@ namespace Commodore64 {
         private const byte REGISTER_INTERRUPT_STATUS_0x19 = 0x19;
         private const byte REGISTER_INTERRUPT_CONTROL_0x1A = 0x1A;
 
-        public Color[] ScreenBufferPixels { get; }
+        public Color[,] ScreenBufferPixels { get; }
 
         private readonly TvSystem _tvSystem;
         private int _rasterLineToGenerateInterruptAt = 0;
@@ -87,20 +87,23 @@ namespace Commodore64 {
 
         public const int FULL_WIDTH = 504;
         public const int FULL_WIDTH_CYCLES = 63;
-        public const int USABLE_WIDTH_BORDER = 320;
+        public const int USABLE_WIDTH_BORDER = 403;
         public const int USABLE_WIDTH = 320;
         public const int USABLE_WIDTH_CYCLES = 40;
 
         public const int FULL_HEIGHT_NTSC = 262;
         public const int FULL_HEIGHT_PAL = 312;
         public const int USABLE_HEIGHT = 200;
-        public const int USABLE_HEIGHT_BORDER = 200;
+        public const int USABLE_HEIGHT_BORDER = 284;
         
         public int CurrentLine = 0;
         public int CurrentLineCycle = 0;
 
         public bool InVerticalBlank => CurrentLine >= 300 || CurrentLine <= 15;
-        public bool InBorder => (CurrentLineCycle >= 50 && CurrentLineCycle <= 92) || (CurrentLineCycle >= 412 && CurrentLineCycle <= 454);
+
+        public bool InBorder =>
+            (CurrentLineCycle >= 50 && CurrentLineCycle <= 92) ||
+            (CurrentLineCycle >= 412 && CurrentLineCycle <= 454);
 
         public int TotalCycles = 0;
 
@@ -121,7 +124,7 @@ namespace Commodore64 {
         public VicIi(TvSystem tvSystem) {
             _tvSystem = tvSystem;
 
-            ScreenBufferPixels = new Color[USABLE_WIDTH_BORDER * USABLE_HEIGHT_BORDER];
+            ScreenBufferPixels = new Color[USABLE_HEIGHT_BORDER, USABLE_WIDTH_BORDER];
         }
 
         public int X = 0;
@@ -129,11 +132,13 @@ namespace Commodore64 {
 
         public void Cycle() {
 
+            // Every cycle draws 8 pixels to the screen
+
             //if (InBorder && CurrentLine >= 0 && CurrentLine <= 200) {
             //    var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
 
             //    for (int i = 0; i < 8; i++) {
-            //        ScreenBufferPixels[Y * 320 + X + i] = bgColor;
+            //        ScreenBufferPixels[Y, X + i] = bgColor;
             //    }
 
             //    X += 8;
@@ -166,6 +171,8 @@ namespace Commodore64 {
                     CurrentLine = 0;
 
                     OnLastScanLine?.Invoke(this, null);
+
+                    // Frame based character mode rendering
                     UpdateScreenBufferPixels();
                 }
             }
@@ -173,9 +180,20 @@ namespace Commodore64 {
             TotalCycles++;
         }
 
+        private void RenderBorder() {
+
+        }
+
+        private void RenderCharacterMode() {
+        
+        }
+
+
 
         public void UpdateScreenBufferPixels() {
             var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
+
+            var borderWidth = (USABLE_WIDTH_BORDER - USABLE_WIDTH) / 2;
 
             for (var i = 0; i < 1000; i++) {
                 var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + i));
@@ -184,17 +202,12 @@ namespace Commodore64 {
 
                 var line = (i / 40);
                 var characterInLine = i % 40;
-                var indexLineOffset = (2560 * line) + (8 * characterInLine);
 
                 for (int row = 0; row <= 7; row++) {
                     var charRow = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + row));
 
-                    var indexRowOffset = indexLineOffset + (USABLE_WIDTH_BORDER * row);
-
                     for (int col = 0; col <= 7; col++) {
-                        var indexPixelOffset = indexRowOffset + col;
-
-                        ScreenBufferPixels[indexPixelOffset] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                        ScreenBufferPixels[borderWidth + (line * 8) + row, borderWidth + (characterInLine * 8) + col] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
                     }
 
                 }

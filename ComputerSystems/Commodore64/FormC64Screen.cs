@@ -254,7 +254,7 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        public void SetPixels(Bitmap b, Color[] pixels) {
+        public void SetPixels(Bitmap b, Color[,] pixels) {
             var width = b.Width;
             var height = b.Height;
 
@@ -271,9 +271,9 @@ namespace ComputerSystem.Commodore64 {
 
                         var index = (y * width) + x;
 
-                        ptr[(x * 3) + y * stride] = pixels[index].B;
-                        ptr[(x * 3) + y * stride + 1] = pixels[index].G;
-                        ptr[(x * 3) + y * stride + 2] = pixels[index].R;
+                        ptr[(x * 3) + y * stride] = pixels[y, x].B;
+                        ptr[(x * 3) + y * stride + 1] = pixels[y, x].G;
+                        ptr[(x * 3) + y * stride + 2] = pixels[y, x].R;
                     }
 
                 }
