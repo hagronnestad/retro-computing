@@ -95,15 +95,16 @@ namespace Commodore64 {
         public const int FULL_HEIGHT_PAL = 312;
         public const int USABLE_HEIGHT = 200;
         public const int USABLE_HEIGHT_BORDER = 284;
-        
+
+
         public int CurrentLine = 0;
         public int CurrentLineCycle = 0;
 
         public bool InVerticalBlank => CurrentLine >= 300 || CurrentLine <= 15;
 
-        public bool InBorder =>
-            (CurrentLineCycle >= 50 && CurrentLineCycle <= 92) ||
-            (CurrentLineCycle >= 412 && CurrentLineCycle <= 454);
+        //public bool InBorder =>
+        //    (CurrentLine >= USABLE_HEIGHT + (USABLE_HEIGHT_BORDER / 2) && CurrentLine <= (USABLE_HEIGHT_BORDER / 2)) ||
+        //    (CurrentLineCycle >= USABLE_WIDTH + (USABLE_HEIGHT_BORDER / 2) && CurrentLineCycle <= (USABLE_HEIGHT_BORDER / 2));
 
         public int TotalCycles = 0;
 
@@ -119,37 +120,34 @@ namespace Commodore64 {
         public bool InterruptControlRegisterSpriteSpriteCollisionInterruptEnabled => this[REGISTER_INTERRUPT_CONTROL_0x1A].IsBitSet(BitFlag.BIT_2);
         public bool InterruptControlRegisterLightPenInterruptEnabled => this[REGISTER_INTERRUPT_CONTROL_0x1A].IsBitSet(BitFlag.BIT_3);
 
-        //public bool IsInBorder =>
+
+
+        public Rectangle FullFrame;
+        public Rectangle BorderFrame;
+        public Rectangle DisplayFrame;
+
 
         public VicIi(TvSystem tvSystem) {
             _tvSystem = tvSystem;
 
-            ScreenBufferPixels = new Color[USABLE_HEIGHT_BORDER, USABLE_WIDTH_BORDER];
-        }
+            var fullHeight = tvSystem == TvSystem.PAL ? FULL_HEIGHT_PAL : FULL_HEIGHT_NTSC;
 
-        public int X = 0;
-        public int Y = 0;
+            FullFrame = new Rectangle(0, 0, FULL_WIDTH, fullHeight);
+            BorderFrame = new Rectangle((FULL_WIDTH - USABLE_WIDTH_BORDER) / 2, (fullHeight - USABLE_HEIGHT_BORDER) / 2, USABLE_WIDTH_BORDER, USABLE_HEIGHT_BORDER);
+            DisplayFrame = new Rectangle(BorderFrame.X + 42, BorderFrame.Y + 42, USABLE_WIDTH, USABLE_HEIGHT);
+
+            ScreenBufferPixels = new Color[fullHeight, FULL_WIDTH];
+        }
 
         public void Cycle() {
 
             // Every cycle draws 8 pixels to the screen
 
-            //if (InBorder && CurrentLine >= 0 && CurrentLine <= 200) {
-            //    var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
+            var p = GetScanlinePoint();
+            if (IsInBorder(p)) {
+                RenderBorder(p);
+            }
 
-            //    for (int i = 0; i < 8; i++) {
-            //        ScreenBufferPixels[Y, X + i] = bgColor;
-            //    }
-
-            //    X += 8;
-
-            //    if (X == 40) {
-            //        X = 0;
-            //        Y++;
-
-            //        if (Y == 200) Y = 0;
-            //    }
-            //}
 
             CurrentLineCycle++;
 
@@ -177,12 +175,36 @@ namespace Commodore64 {
                 }
             }
 
+
             TotalCycles++;
         }
 
-        private void RenderBorder() {
+        private void RenderBorder(Point scanlinePoint) {
+
+            var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
+
+            for (int i = 0; i < 8; i++) {
+                ScreenBufferPixels[scanlinePoint.Y, scanlinePoint.X + i] = bgColor;
+            }
 
         }
+
+        private Point GetScanlinePoint() {
+            var p = new Point {
+                Y = CurrentLine,
+                X = CurrentLineCycle * 8
+            };
+
+            return p;
+        }
+
+        private bool IsInBorder(Point p) {
+            if (DisplayFrame.Contains(p)) return false;
+            return BorderFrame.Contains(p);
+        }
+
+
+
 
         private void RenderCharacterMode() {
         
@@ -192,8 +214,6 @@ namespace Commodore64 {
 
         public void UpdateScreenBufferPixels() {
             var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
-
-            var borderWidth = (USABLE_WIDTH_BORDER - USABLE_WIDTH) / 2;
 
             for (var i = 0; i < 1000; i++) {
                 var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + i));
@@ -207,7 +227,7 @@ namespace Commodore64 {
                     var charRow = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + row));
 
                     for (int col = 0; col <= 7; col++) {
-                        ScreenBufferPixels[borderWidth + (line * 8) + row, borderWidth + (characterInLine * 8) + col] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                        ScreenBufferPixels[DisplayFrame.Y + (line * 8) + row, DisplayFrame.X + (characterInLine * 8) + col] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
                     }
 
                 }

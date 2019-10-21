@@ -27,16 +27,19 @@ namespace ComputerSystem.Commodore64 {
 
         private readonly Pen _penScanLine;
         private readonly Pen _penScanLine2;
+        private readonly Pen _penWhite = new Pen(Color.White);
 
         private Timer _uiRefreshTimer;
         private Bitmap _bC64ScreenBuffer;
+        private Graphics _gC64ScreenBuffer;
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
 
             C64 = c64;
 
-            _bC64ScreenBuffer = new Bitmap(VicIi.USABLE_WIDTH_BORDER, VicIi.USABLE_HEIGHT_BORDER, PixelFormat.Format24bppRgb);
+            _bC64ScreenBuffer = new Bitmap(VicIi.FULL_WIDTH, VicIi.FULL_HEIGHT_PAL, PixelFormat.Format24bppRgb);
+            _gC64ScreenBuffer = Graphics.FromImage(_bC64ScreenBuffer);
             _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
             _penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
@@ -114,6 +117,11 @@ namespace ComputerSystem.Commodore64 {
 
         private void PScreen_Paint(object sender, PaintEventArgs e) {
             SetPixels(_bC64ScreenBuffer, C64.Vic.ScreenBufferPixels);
+
+            _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.FullFrame.X, (int)C64.Vic.FullFrame.Y, (int)C64.Vic.FullFrame.Width, (int)C64.Vic.FullFrame.Height);
+            _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.BorderFrame.X, (int)C64.Vic.BorderFrame.Y, (int)C64.Vic.BorderFrame.Width, (int)C64.Vic.BorderFrame.Height);
+            _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.DisplayFrame.X, (int)C64.Vic.DisplayFrame.Y, (int)C64.Vic.DisplayFrame.Width, (int)C64.Vic.DisplayFrame.Height);
+
             _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
 
             if (btnUseCrtFilter.Checked) ApplyCrtFilter();
