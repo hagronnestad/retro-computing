@@ -36,7 +36,7 @@ namespace ComputerSystem.Commodore64 {
 
             C64 = c64;
 
-            _bC64ScreenBuffer = new Bitmap(320, 200, PixelFormat.Format24bppRgb);
+            _bC64ScreenBuffer = new Bitmap(VicIi.USABLE_WIDTH_BORDER, VicIi.USABLE_HEIGHT_BORDER, PixelFormat.Format24bppRgb);
             _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
             _penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Hardware.Mos6526Cia;
 using System.Threading.Tasks;
 using System;
+using static Commodore64.VicIi;
 
 namespace Commodore64 {
     public class C64 {
@@ -37,8 +38,9 @@ namespace Commodore64 {
             RemoveEventHandlers();
 
             Cia = new Cia();
-            Vic = new VicIi();
-            Vic.C64 = this;
+            Vic = new VicIi(TvSystem.PAL) {
+                C64 = this
+            };
             Memory = new C64Bus(Cia, Vic);
             Cpu = new Cpu(Memory);
 

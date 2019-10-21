@@ -26,8 +26,9 @@ namespace Commodore64 {
         private const byte REGISTER_INTERRUPT_STATUS_0x19 = 0x19;
         private const byte REGISTER_INTERRUPT_CONTROL_0x1A = 0x1A;
 
-        public Color[] ScreenBufferPixels { get; } = new Color[320 * 200];
+        public Color[] ScreenBufferPixels { get; }
 
+        private readonly TvSystem _tvSystem;
         private int _rasterLineToGenerateInterruptAt = 0;
 
         public byte this[int index] {
@@ -86,16 +87,15 @@ namespace Commodore64 {
 
         public const int FULL_WIDTH = 504;
         public const int FULL_WIDTH_CYCLES = 63;
-        public const int USABLE_WIDTH_BORDER = 403;
+        public const int USABLE_WIDTH_BORDER = 320;
         public const int USABLE_WIDTH = 320;
         public const int USABLE_WIDTH_CYCLES = 40;
 
         public const int FULL_HEIGHT_NTSC = 262;
         public const int FULL_HEIGHT_PAL = 312;
         public const int USABLE_HEIGHT = 200;
-        public const int USABLE_HEIGHT_BORDER = 284;
-
-
+        public const int USABLE_HEIGHT_BORDER = 200;
+        
         public int CurrentLine = 0;
         public int CurrentLineCycle = 0;
 
@@ -118,8 +118,10 @@ namespace Commodore64 {
 
         //public bool IsInBorder =>
 
-        public VicIi() {
+        public VicIi(TvSystem tvSystem) {
+            _tvSystem = tvSystem;
 
+            ScreenBufferPixels = new Color[USABLE_WIDTH_BORDER * USABLE_HEIGHT_BORDER];
         }
 
         public int X = 0;
@@ -127,22 +129,22 @@ namespace Commodore64 {
 
         public void Cycle() {
 
-            if (InBorder && CurrentLine >= 0 && CurrentLine <= 200) {
-                var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
+            //if (InBorder && CurrentLine >= 0 && CurrentLine <= 200) {
+            //    var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
 
-                for (int i = 0; i < 8; i++) {
-                    ScreenBufferPixels[Y * 320 + X + i] = bgColor;
-                }
+            //    for (int i = 0; i < 8; i++) {
+            //        ScreenBufferPixels[Y * 320 + X + i] = bgColor;
+            //    }
 
-                X += 8;
+            //    X += 8;
 
-                if (X == 40) {
-                    X = 0;
-                    Y++;
+            //    if (X == 40) {
+            //        X = 0;
+            //        Y++;
 
-                    if (Y == 200) Y = 0;
-                }
-            }
+            //        if (Y == 200) Y = 0;
+            //    }
+            //}
 
             CurrentLineCycle++;
 
@@ -187,7 +189,7 @@ namespace Commodore64 {
                 for (int row = 0; row <= 7; row++) {
                     var charRow = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + row));
 
-                    var indexRowOffset = indexLineOffset + (320 * row);
+                    var indexRowOffset = indexLineOffset + (USABLE_WIDTH_BORDER * row);
 
                     for (int col = 0; col <= 7; col++) {
                         var indexPixelOffset = indexRowOffset + col;
