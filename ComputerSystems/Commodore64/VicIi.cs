@@ -29,6 +29,7 @@ namespace Commodore64 {
         public Color[,] ScreenBufferPixels { get; }
 
         private readonly TvSystem _tvSystem;
+        private readonly int _fullHeight;
         private int _rasterLineToGenerateInterruptAt = 0;
 
         public byte this[int index] {
@@ -129,49 +130,62 @@ namespace Commodore64 {
 
         public VicIi(TvSystem tvSystem) {
             _tvSystem = tvSystem;
+            _fullHeight = tvSystem == TvSystem.PAL ? FULL_HEIGHT_PAL : FULL_HEIGHT_NTSC;
 
             var fullHeight = tvSystem == TvSystem.PAL ? FULL_HEIGHT_PAL : FULL_HEIGHT_NTSC;
 
             FullFrame = new Rectangle(0, 0, FULL_WIDTH, fullHeight);
-            BorderFrame = new Rectangle((FULL_WIDTH - USABLE_WIDTH_BORDER) / 2, (fullHeight - USABLE_HEIGHT_BORDER) / 2, USABLE_WIDTH_BORDER, USABLE_HEIGHT_BORDER);
-            DisplayFrame = new Rectangle(BorderFrame.X + 42, BorderFrame.Y + 42, USABLE_WIDTH, USABLE_HEIGHT);
+            BorderFrame = new Rectangle(48, 14, 403, USABLE_HEIGHT_BORDER);
+            DisplayFrame = new Rectangle(88, 56, USABLE_WIDTH, USABLE_HEIGHT);
 
             ScreenBufferPixels = new Color[fullHeight, FULL_WIDTH];
         }
 
         public void Cycle() {
 
+            // Generate raster interrupt if the current line equals interrupt line
+            // TODO: Implement the Interrupt latch register ($D019) !!!!!!!
+            if (InterruptControlRegisterRasterInterruptEnabled && (CurrentLine == _rasterLineToGenerateInterruptAt)) {
+                OnGenerateRasterLineInterrupt?.Invoke(this, null);
+            }
+
+
+
             // Every cycle draws 8 pixels to the screen
 
+            //if (IsInDisplay()) {
+            //    RenderCharacterMode();
+            //}
+
             var p = GetScanlinePoint();
-            if (IsInBorder(p)) {
-                RenderBorder(p);
+
+            if (IsInDisplay(p) && ScreenControlRegisterScreenOffOn) {
+
+
+            } else {
+                
+                if (IsInBorder(p)) {
+                    RenderBorder();
+                }
+
             }
 
 
             CurrentLineCycle++;
 
             // Every line takes 63 cycles
-            if (CurrentLineCycle == 64) {
+            if (CurrentLineCycle == 63) {
                 CurrentLineCycle = 0;
 
                 CurrentLine++;
 
-                // Generate raster interrupt if the current line equals interrupt line
-                // TODO: Implement the Interrupt latch register ($D019) !!!!!!!
-                if (InterruptControlRegisterRasterInterruptEnabled && (CurrentLine == _rasterLineToGenerateInterruptAt)) {
-                    OnGenerateRasterLineInterrupt?.Invoke(this, null);
-                }
-
-                if ((CurrentTvSystem == TvSystem.PAL && CurrentLine == FULL_HEIGHT_PAL) ||
-                    (CurrentTvSystem == TvSystem.NTSC && CurrentLine == FULL_HEIGHT_NTSC)) {
-
+                if (CurrentLine == _fullHeight) {
                     CurrentLine = 0;
 
                     OnLastScanLine?.Invoke(this, null);
 
                     // Frame based character mode rendering
-                    UpdateScreenBufferPixels();
+                    if (ScreenControlRegisterScreenOffOn) UpdateScreenBufferPixels();
                 }
             }
 
@@ -179,37 +193,36 @@ namespace Commodore64 {
             TotalCycles++;
         }
 
-        private void RenderBorder(Point scanlinePoint) {
+        private void RenderBorder() {
 
             var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
 
             for (int i = 0; i < 8; i++) {
-                ScreenBufferPixels[scanlinePoint.Y, scanlinePoint.X + i] = bgColor;
+                ScreenBufferPixels[CurrentLine, (CurrentLineCycle * 8) + i] = bgColor;
             }
+
+        }
+
+        private void RenderCharacterMode() {
 
         }
 
         private Point GetScanlinePoint() {
             var p = new Point {
                 Y = CurrentLine,
-                X = CurrentLineCycle * 8
+                X = (CurrentLineCycle) * 8
             };
 
             return p;
         }
 
         private bool IsInBorder(Point p) {
-            if (DisplayFrame.Contains(p)) return false;
             return BorderFrame.Contains(p);
         }
 
-
-
-
-        private void RenderCharacterMode() {
-        
+        private bool IsInDisplay(Point p) {
+            return DisplayFrame.Contains(p);
         }
-
 
 
         public void UpdateScreenBufferPixels() {
