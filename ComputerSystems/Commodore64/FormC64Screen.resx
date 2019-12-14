@@ -210,6 +210,20 @@
         rkJggg==
 </value>
   </data>
+  <data name="btnClockSpeedSlower.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVDhPY6Am+I8DowOc8rgUowNsYmAwkg0ACcAwOkCW
+        Q8YjAWDzNwgTDbBpBuHhBxgYALN4LdNE7Fy1AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnClockSpeedFaster.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABBSURBVDhPY6Am+I8DowOc8rgUowNsYmAwkg0ACcAwOkCW
+        Q8b0AxTbSLYBMI3omGiATTMIkwzI1ggDFBtAADAwAAC/3DXLMXdefQAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="ofd.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>333, 17</value>
   </metadata>

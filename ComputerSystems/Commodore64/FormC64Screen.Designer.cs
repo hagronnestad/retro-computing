@@ -270,20 +270,22 @@
             // 
             // btnClockSpeedSlower
             // 
-            this.btnClockSpeedSlower.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnClockSpeedSlower.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnClockSpeedSlower.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedSlower.Image")));
             this.btnClockSpeedSlower.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClockSpeedSlower.Name = "btnClockSpeedSlower";
-            this.btnClockSpeedSlower.Size = new System.Drawing.Size(59, 22);
+            this.btnClockSpeedSlower.Size = new System.Drawing.Size(23, 22);
             this.btnClockSpeedSlower.Text = "Speed [-]";
             this.btnClockSpeedSlower.ToolTipText = "Clock Speed -";
             this.btnClockSpeedSlower.Click += new System.EventHandler(this.btnSlowDown_Click);
             // 
             // btnClockSpeedFaster
             // 
-            this.btnClockSpeedFaster.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnClockSpeedFaster.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnClockSpeedFaster.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedFaster.Image")));
             this.btnClockSpeedFaster.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClockSpeedFaster.Name = "btnClockSpeedFaster";
-            this.btnClockSpeedFaster.Size = new System.Drawing.Size(62, 22);
+            this.btnClockSpeedFaster.Size = new System.Drawing.Size(23, 22);
             this.btnClockSpeedFaster.Text = "Speed [+]";
             this.btnClockSpeedFaster.ToolTipText = "Clock Speed +";
             this.btnClockSpeedFaster.Click += new System.EventHandler(this.btnClockSpeedFaster_Click);
