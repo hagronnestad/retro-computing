@@ -1070,5 +1070,17 @@ namespace MicroProcessor.Cpu6502 {
         public void _NOP() {
 
         }
+
+        [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xA3, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "")]
+        [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xA7, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "")]
+        [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xAB, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "")]
+        [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xAF, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "")]
+        [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xB3, Length = 2, Cycles = 5, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.IndirectY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xB7, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xBF, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
+        public void _LAX() {
+            LDA();
+            LDX();
+        }
     }
 }
