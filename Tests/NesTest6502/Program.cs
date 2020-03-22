@@ -17,7 +17,7 @@ namespace NesTest6502 {
 
 
         static void Main(string[] args) {
-            Console.WriteLine("NES Test\n");
+            Console.WriteLine("NES Test");
 
             Cpu.OnStep += Cpu_OnStep;
 
@@ -35,14 +35,27 @@ namespace NesTest6502 {
             // Set PC start
             Cpu.PC = 0xC000;
 
-            Console.WriteLine("Running official op code test...");
-
             // Cycle CPU until all official op codes has been tested
+            Console.WriteLine("\nRunning official op code test...");
             while (Break == false && Cpu.PC != 0xC6BD) {
                 Cpu.Cycle();
             }
             Console.WriteLine("\nSUCCESS!\n");
 
+
+            // Cycle CPU until all unofficial op codes has been tested
+            Console.WriteLine("\nRunning unofficial op code test...");
+            while (Break == false && Cpu.PC != 0xC66E) {
+                try {
+                    Cpu.Cycle();
+
+                } catch (Exception) {
+                    Console.WriteLine($"MISSING OP CODE: 0x{Memory._memory[Cpu.PC]:X2}");
+
+                    Break = true;
+                }
+            }
+            if (!Break) Console.WriteLine("\nSUCCESS!\n");
         }
 
         private static void Cpu_OnStep(object sender, OpCode e) {
