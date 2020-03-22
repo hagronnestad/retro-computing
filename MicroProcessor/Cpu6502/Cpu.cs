@@ -1090,5 +1090,11 @@ namespace MicroProcessor.Cpu6502 {
         public void _SAX() {
             Value = (byte)(AR & XR);
         }
+
+        [OpCodeDefinition(Name = nameof(_SBC), IsIllegal = true, Code = 0xEB, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "")]
+        public void _SBC() {
+            SBC();
+        }
+
     }
 }
