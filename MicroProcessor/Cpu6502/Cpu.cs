@@ -1082,5 +1082,13 @@ namespace MicroProcessor.Cpu6502 {
             LDA();
             LDX();
         }
+
+        [OpCodeDefinition(Name = nameof(_SAX), IsIllegal = true, Code = 0x83, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SAX), IsIllegal = true, Code = 0x87, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SAX), IsIllegal = true, Code = 0x8F, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SAX), IsIllegal = true, Code = 0x97, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageY, Description = "")]
+        public void _SAX() {
+            Value = (byte)(AR & XR);
+        }
     }
 }
