@@ -15,6 +15,8 @@ namespace MicroProcessor.Cpu6502.Attributes {
 
         public string Description { get; set; }
 
+        public bool IsIllegal { get; set; } = false;
+
         public OpCodeDefinitionAttribute() {
 
         }
