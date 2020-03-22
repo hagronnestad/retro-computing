@@ -8,7 +8,7 @@ namespace Hardware.Memory {
         public event EventHandler<MemoryReadEventArgs<TValue>> OnRead;
         public event EventHandler<MemoryWriteEventArgs<TValue>> OnWrite;
 
-        protected TValue[] _memory;
+        public TValue[] _memory;
 
         public MemoryBase(int capacity) {
             _memory = new TValue[capacity];
