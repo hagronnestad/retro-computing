@@ -60,9 +60,9 @@ namespace NesTest6502 {
 
         private static void Cpu_OnStep(object sender, OpCode e) {
             var opCodeBytes = string.Join(" ", Memory._memory.Skip(e.OpCodeAddress).Take(e.Length).Select(x => $"{x:X2}")).PadRight(8);
-            var logLine = $"{e.OpCodeAddress:X4}  {opCodeBytes}  {e.Name}  A:{Cpu.AR:X2} X:{Cpu.XR:X2} Y:{Cpu.YR:X2} P:{Cpu.SR.Register:X2} SP:{Cpu.SP:X2}";
-            Console.WriteLine($"Current log line: {logLine}");
-            Console.CursorTop--;
+            var logLine = $"{e.OpCodeAddress:X4}  {opCodeBytes} {e.Name.Replace("_", "*").PadLeft(4)}  A:{Cpu.AR:X2} X:{Cpu.XR:X2} Y:{Cpu.YR:X2} P:{Cpu.SR.Register:X2} SP:{Cpu.SP:X2}";
+            //Console.WriteLine($"Current log line: {logLine}");
+            //Console.CursorTop--;
 
             if (logLine != GoldenLog[CurrentLogLine]) {
                 Console.WriteLine($"MISMATCH!!!");
