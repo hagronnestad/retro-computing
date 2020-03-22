@@ -1035,5 +1035,40 @@ namespace MicroProcessor.Cpu6502 {
             SR.Zero = r == 0;
             SR.Negative = ((r >> 7) & 1) == 1;
         }
+
+
+
+        // Illegal op codes
+
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x04, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x0C, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x14, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x1A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x1C, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x34, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x3A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x3C, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x44, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x54, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x5A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x5C, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x64, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x74, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x7A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x7C, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x80, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x82, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x89, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xC2, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xD4, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xDA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xDC, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xE2, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xF4, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xFA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
+        [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xFC, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteX, Description = "No Operation")]
+        public void _NOP() {
+
+        }
     }
 }
