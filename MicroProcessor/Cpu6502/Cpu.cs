@@ -1167,5 +1167,14 @@ namespace MicroProcessor.Cpu6502 {
             ROR();
             ADC();
         }
+
+
+        // This illegal op code is not covered by nestest.nes
+        [OpCodeDefinition(Name = nameof(_ANC), IsIllegal = true, Code = 0x0B, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "")]
+        [OpCodeDefinition(Name = nameof(_ANC), IsIllegal = true, Code = 0x2B, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "")]
+        public void _ANC() {
+            AND();
+            SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
+        }
     }
 }
