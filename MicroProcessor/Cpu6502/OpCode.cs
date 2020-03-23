@@ -100,7 +100,8 @@ namespace MicroProcessor.Cpu6502 {
                 Cycles = a.Cycles,
                 Description = a.Description,
                 Length = a.Length,
-                Name = a.Name
+                Name = a.Name,
+                IsIllegal = a.IsIllegal
             };
         }
 
