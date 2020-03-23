@@ -1155,5 +1155,17 @@ namespace MicroProcessor.Cpu6502 {
             LSR();
             EOR();
         }
+
+        [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x63, Length = 2, Cycles = 8, AddressingMode = AddressingMode.XIndirect, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x67, Length = 2, Cycles = 5, AddressingMode = AddressingMode.Zeropage, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x6F, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x73, Length = 2, Cycles = 8, AddressingMode = AddressingMode.IndirectY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x77, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x7B, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x7F, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
+        public void _RRA() {
+            ROR();
+            ADC();
+        }
     }
 }
