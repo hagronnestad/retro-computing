@@ -1107,5 +1107,17 @@ namespace MicroProcessor.Cpu6502 {
             DEC();
             CMP();
         }
+
+        [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xE3, Length = 2, Cycles = 8, AddressingMode = AddressingMode.XIndirect, Description = "")]
+        [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xE7, Length = 2, Cycles = 5, AddressingMode = AddressingMode.Zeropage, Description = "")]
+        [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xEF, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "")]
+        [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xF3, Length = 2, Cycles = 8, AddressingMode = AddressingMode.IndirectY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xF7, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
+        [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xFB, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xFF, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
+        public void _ISB() {
+            INC();
+            SBC();
+        }
     }
 }
