@@ -1143,5 +1143,17 @@ namespace MicroProcessor.Cpu6502 {
             ROL();
             AND();
         }
+
+        [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x43, Length = 2, Cycles = 8, AddressingMode = AddressingMode.XIndirect, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x47, Length = 2, Cycles = 5, AddressingMode = AddressingMode.Zeropage, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x4F, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x53, Length = 2, Cycles = 8, AddressingMode = AddressingMode.IndirectY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x57, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x5B, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x5F, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
+        public void _SRE() {
+            LSR();
+            EOR();
+        }
     }
 }
