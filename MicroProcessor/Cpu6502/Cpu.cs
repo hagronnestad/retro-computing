@@ -1131,5 +1131,17 @@ namespace MicroProcessor.Cpu6502 {
             ASL();
             ORA();
         }
+
+        [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x23, Length = 2, Cycles = 8, AddressingMode = AddressingMode.XIndirect, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x27, Length = 2, Cycles = 5, AddressingMode = AddressingMode.Zeropage, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x2F, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x33, Length = 2, Cycles = 8, AddressingMode = AddressingMode.IndirectY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x37, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x3B, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
+        [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x3F, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
+        public void _RLA() {
+            ROL();
+            AND();
+        }
     }
 }
