@@ -1038,7 +1038,8 @@ namespace MicroProcessor.Cpu6502 {
 
 
 
-        // Illegal op codes
+        // Illegal instructions
+        // Illegal op codes reference: http://www.oxyron.de/html/opcodes02.html
 
         [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x04, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "No Operation")]
         [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0x0C, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "No Operation")]
