@@ -41,6 +41,11 @@ namespace MicroProcessor.Cpu6502 {
         public long TotalInstructions { get; private set; }
 
         /// <summary>
+        /// The total number of executed illegal instructions.
+        /// </summary>
+        public long TotalIllegalInstructions { get; set; }
+
+        /// <summary>
         /// The total number of times the CPU has been cycled.
         /// </summary>
         public long TotalCycles { get; set; }
@@ -228,6 +233,7 @@ namespace MicroProcessor.Cpu6502 {
             OpCode.Run();
 
             TotalInstructions += 1;
+            if (OpCode.IsIllegal) TotalIllegalInstructions++;
 
             // Count total cycles
             // This doesn't account for extra cycles caused by memory operations crossing pages

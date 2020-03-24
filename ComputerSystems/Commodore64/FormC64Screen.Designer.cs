@@ -57,6 +57,7 @@
             this.lblVicCurrentLineCycle = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -86,6 +87,7 @@
             this.lblClockSpeed,
             this.lblCycles,
             this.lblInstructions,
+            this.lblIllegalInstructions,
             this.lblKeyboardDisabled});
             this.statusMain.Location = new System.Drawing.Point(0, 673);
             this.statusMain.Name = "statusMain";
@@ -126,7 +128,7 @@
             // 
             this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
             this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(791, 19);
+            this.lblKeyboardDisabled.Size = new System.Drawing.Size(678, 19);
             this.lblKeyboardDisabled.Spring = true;
             this.lblKeyboardDisabled.Text = "Keyboard Disabled";
             this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -364,6 +366,13 @@
             this.lblVicScreenOn.Size = new System.Drawing.Size(49, 19);
             this.lblVicScreenOn.Text = "Screen:";
             // 
+            // lblIllegalInstructions
+            // 
+            this.lblIllegalInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblIllegalInstructions.Name = "lblIllegalInstructions";
+            this.lblIllegalInstructions.Size = new System.Drawing.Size(82, 19);
+            this.lblIllegalInstructions.Text = "0 instructions";
+            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
@@ -427,5 +436,6 @@
         private System.Windows.Forms.ToolStripButton btnClockSpeedSlower;
         private System.Windows.Forms.ToolStripButton btnClockSpeedFaster;
         private System.Windows.Forms.ToolStripStatusLabel lblClockSpeed;
+        private System.Windows.Forms.ToolStripStatusLabel lblIllegalInstructions;
     }
 }

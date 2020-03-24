@@ -54,6 +54,7 @@ namespace ComputerSystem.Commodore64 {
 
                         lblCycles.Text = $"{c64.Cpu.TotalCycles:N0} cycles";
                         lblInstructions.Text = $"{c64.Cpu.TotalInstructions:N0} instructions";
+                        lblIllegalInstructions.Text = $"{c64.Cpu.TotalIllegalInstructions:N0} illegal instructions";
                         lblKeyboardDisabled.Visible = !c64.KeyboardActivated;
 
                         lblFps.Text = $"{((int)_fpsActual):D3} fps";
@@ -106,12 +107,17 @@ namespace ComputerSystem.Commodore64 {
         }
 
         public void ApplyCrtFilter() {
-            for (int i = 0; i < _bC64ScreenOutputBuffer.Width; i += (int)(_penScanLine2.Width * 2)) {
-                _gC64ScreenOutputBuffer.DrawLine(_penScanLine2, i, 0, i, _bC64ScreenOutputBuffer.Height);
+            var width = _bC64ScreenOutputBuffer.Width;
+            var height = _bC64ScreenOutputBuffer.Height;
+            var penWidth = (int)(_penScanLine.Width * 2);
+            var penWidth2 = (int)(_penScanLine2.Width * 2);
+
+            for (int i = 0; i < width; i += penWidth2) {
+                _gC64ScreenOutputBuffer.DrawLine(_penScanLine2, i, 0, i, height);
             }
 
-            for (int i = 0; i < _bC64ScreenOutputBuffer.Height; i += (int)(_penScanLine.Width * 2)) {
-                _gC64ScreenOutputBuffer.DrawLine(_penScanLine, 0, i, _bC64ScreenOutputBuffer.Width, i);
+            for (int i = 0; i < height; i += penWidth) {
+                _gC64ScreenOutputBuffer.DrawLine(_penScanLine, 0, i, width, i);
             }
         }
 
