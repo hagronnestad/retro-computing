@@ -309,7 +309,7 @@ namespace Commodore64 {
                 case 0b110:
                     return 0x3000;
                 case 0b111:
-                    return 0x38000;
+                    return 0x3800;
             }
 
             throw new NotImplementedException();
