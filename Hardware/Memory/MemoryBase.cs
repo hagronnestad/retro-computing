@@ -35,21 +35,19 @@ namespace Hardware.Memory {
         public virtual TValue Read(int address) {
             var value = _memory[address];
 
-            var ea = new MemoryReadEventArgs<TValue>() {
+            OnRead?.Invoke(this, new MemoryReadEventArgs<TValue>() {
                 Address = address,
                 Value = value
-            };
-            OnRead?.Invoke(this, ea);
+            });
 
             return value;
         }
 
         public virtual void Write(int address, TValue value) {
-            var ea = new MemoryWriteEventArgs<TValue>() {
+            OnWrite?.Invoke(this, new MemoryWriteEventArgs<TValue>() {
                 Address = address,
                 Value = value
-            };
-            OnWrite?.Invoke(this, ea);
+            });
 
             if (IsReadOnly) throw new AccessViolationException("Memory area is read only.");
             _memory[address] = value;
