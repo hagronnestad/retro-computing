@@ -232,7 +232,7 @@ namespace MicroProcessor.Cpu6502 {
             }
             OpCode.Run();
 
-            TotalInstructions += 1;
+            TotalInstructions++;
             if (OpCode.IsIllegal) TotalIllegalInstructions++;
 
             // Count total cycles
