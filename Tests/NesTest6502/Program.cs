@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Hardware.Memory;
 using MicroProcessor.Cpu6502;
 
@@ -39,16 +40,18 @@ namespace NesTest6502 {
             Console.WriteLine("\nRunning official op code test...");
             while (Break == false && Cpu.PC != 0xC6BD) {
                 Cpu.Cycle();
+                Thread.Sleep(TimeSpan.FromTicks(9000));
             }
             Console.WriteLine("\nSUCCESS!\n");
 
 
             // Cycle CPU until all unofficial op codes has been tested
             Console.WriteLine("\nRunning unofficial op code test...");
-            while (Break == false && Cpu.PC != 0xC66E) {
+            while (Break == false && Cpu.PC != 0x0001) {
                 try {
                     Cpu.Cycle();
-
+                    Thread.Sleep(TimeSpan.FromTicks(9000));
+                    
                 } catch (Exception) {
                     Console.WriteLine($"MISSING OP CODE: 0x{Memory._memory[Cpu.PC]:X2}");
 
@@ -56,13 +59,15 @@ namespace NesTest6502 {
                 }
             }
             if (!Break) Console.WriteLine("\nSUCCESS!\n");
+
+            Console.WriteLine($"PROGRESS: {CurrentLogLine}/{GoldenLog.Length} ({(CurrentLogLine * 100f / GoldenLog.Length):F1}%)");
         }
 
         private static void Cpu_OnStep(object sender, OpCode e) {
             var opCodeBytes = string.Join(" ", Memory._memory.Skip(e.OpCodeAddress).Take(e.Length).Select(x => $"{x:X2}")).PadRight(8);
             var logLine = $"{e.OpCodeAddress:X4}  {opCodeBytes} {e.Name.Replace("_", "*").PadLeft(4)}  A:{Cpu.AR:X2} X:{Cpu.XR:X2} Y:{Cpu.YR:X2} P:{Cpu.SR.Register:X2} SP:{Cpu.SP:X2}";
-            //Console.WriteLine($"Current log line: {logLine}");
-            //Console.CursorTop--;
+            Console.WriteLine($"Current log line: {logLine}");
+            Console.CursorTop--;
 
             if (logLine != GoldenLog[CurrentLogLine]) {
                 Console.WriteLine($"MISMATCH!!!");
