@@ -212,18 +212,21 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         /// <param name="ignoreCycles"></param>
         public void Step(bool ignoreCycles = false) {
+            
             OpCode = OpCodeCache[Memory[PC]];
             OpCode.OpCodeAddress = PC;
 
-            var o = OpCode.FromOpCodeDefinitionAttribute(null, null, OpCode);
-            o.OpCodeAddress = PC;
+            if (OnStep != null) {
+                var o = OpCode.FromOpCodeDefinitionAttribute(null, null, OpCode);
+                o.OpCodeAddress = PC;
 
-            o.Operands.Clear();
-            for (int j = 1; j < o.Length; j++) {
-                o.Operands.Add(Memory[PC + j]);
+                o.Operands.Clear();
+                for (int j = 1; j < o.Length; j++) {
+                    o.Operands.Add(Memory[PC + j]);
+                }
+
+                OnStep?.Invoke(this, o);
             }
-
-            OnStep?.Invoke(this, o);
 
             PC++;
 
