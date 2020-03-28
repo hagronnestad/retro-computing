@@ -107,7 +107,7 @@ namespace Commodore64 {
         //    (CurrentLine >= USABLE_HEIGHT + (USABLE_HEIGHT_BORDER / 2) && CurrentLine <= (USABLE_HEIGHT_BORDER / 2)) ||
         //    (CurrentLineCycle >= USABLE_WIDTH + (USABLE_HEIGHT_BORDER / 2) && CurrentLineCycle <= (USABLE_HEIGHT_BORDER / 2));
 
-        public int TotalCycles = 0;
+        public ulong TotalCycles = 0;
 
         // Screen control register
         public bool ScreenControlRegisterScreenHeight => this[REGISTER_SCREEN_CONTROL_0x11].IsBitSet(BitFlag.BIT_3); // False = 24 rows, True = 25 rows

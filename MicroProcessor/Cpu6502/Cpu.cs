@@ -38,17 +38,17 @@ namespace MicroProcessor.Cpu6502 {
         /// <summary>
         /// The total number of executed instructions.
         /// </summary>
-        public long TotalInstructions { get; private set; }
+        public ulong TotalInstructions { get; private set; }
 
         /// <summary>
         /// The total number of executed illegal instructions.
         /// </summary>
-        public long TotalIllegalInstructions { get; set; }
+        public ulong TotalIllegalInstructions { get; set; }
 
         /// <summary>
         /// The total number of times the CPU has been cycled.
         /// </summary>
-        public long TotalCycles { get; set; }
+        public ulong TotalCycles { get; set; }
 
         /// <summary>
         /// The memory available for the CPU.
