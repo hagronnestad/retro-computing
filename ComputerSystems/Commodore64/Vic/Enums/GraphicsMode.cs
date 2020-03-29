@@ -1,4 +1,4 @@
-﻿namespace Commodore64.Enums {
+﻿namespace Commodore64.Vic.Enums {
 
     /// <summary>
     /// GraphicsMode as defined by MCM (bit 4 in $D016), BMM (bit 5 in $D011) and ECM (bit 6 in $D011)

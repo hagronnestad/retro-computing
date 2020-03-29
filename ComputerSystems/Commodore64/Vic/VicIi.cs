@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using Commodore64.Enums;
+using Commodore64.Vic.Enums;
 using Extensions.Byte;
 using Extensions.Enums;
 
