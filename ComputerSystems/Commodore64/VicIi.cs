@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Commodore64.Enums;
 using Extensions.Byte;
 using Extensions.Enums;
 
@@ -19,7 +20,8 @@ namespace Commodore64 {
         //TODO: Temporary dependency
         public C64 C64;
 
-        private const byte REGISTER_SCREEN_CONTROL_0x11 = 0x11;
+        private const byte REGISTER_SCREEN_CONTROL_1_0x11 = 0x11;
+        private const byte REGISTER_SCREEN_CONTROL_2_0x16 = 0x16;
         private const byte REGISTER_CURRENT_RASTER_LINE_0x12 = 0x12;
         private const byte REGISTER_RASTER_LINE_IRQ_0x12 = 0x12;
 
@@ -36,8 +38,7 @@ namespace Commodore64 {
             get {
                 switch (index) {
 
-
-                    case REGISTER_SCREEN_CONTROL_0x11:
+                    case REGISTER_SCREEN_CONTROL_1_0x11:
                         // Bit #7 og 0x11 is set if current raster line > 255
                         _registers[index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
                         
@@ -55,7 +56,7 @@ namespace Commodore64 {
             set {
                 switch (index) {
 
-                    case REGISTER_SCREEN_CONTROL_0x11:
+                    case REGISTER_SCREEN_CONTROL_1_0x11:
                         _registers[index] = value;
                         UpdateRasterLineToGenerateInterruptAt();
                         break;
@@ -76,7 +77,7 @@ namespace Commodore64 {
 
         private void UpdateRasterLineToGenerateInterruptAt() {
             _rasterLineToGenerateInterruptAt = _registers[REGISTER_RASTER_LINE_IRQ_0x12];
-            if (_registers[REGISTER_SCREEN_CONTROL_0x11].IsBitSet(BitFlag.BIT_7)) _rasterLineToGenerateInterruptAt += 255;
+            if (_registers[REGISTER_SCREEN_CONTROL_1_0x11].IsBitSet(BitFlag.BIT_7)) _rasterLineToGenerateInterruptAt += 255;
         }
 
         public enum TvSystem {
@@ -110,10 +111,10 @@ namespace Commodore64 {
         public ulong TotalCycles = 0;
 
         // Screen control register
-        public bool ScreenControlRegisterScreenHeight => this[REGISTER_SCREEN_CONTROL_0x11].IsBitSet(BitFlag.BIT_3); // False = 24 rows, True = 25 rows
-        public bool ScreenControlRegisterScreenOffOn => this[REGISTER_SCREEN_CONTROL_0x11].IsBitSet(BitFlag.BIT_4);
-        public bool ScreenControlRegisterTextModeBitmapMode => this[REGISTER_SCREEN_CONTROL_0x11].IsBitSet(BitFlag.BIT_5); // False = Text mode, True = Bitmap mode
-        public bool ScreenControlRegisterExtendedBackgroundModeOn => this[REGISTER_SCREEN_CONTROL_0x11].IsBitSet(BitFlag.BIT_6); // True = Extended background mode on
+        public bool ScreenControlRegisterScreenHeight => this[REGISTER_SCREEN_CONTROL_1_0x11].IsBitSet(BitFlag.BIT_3); // False = 24 rows, True = 25 rows
+        public bool ScreenControlRegisterScreenOffOn => this[REGISTER_SCREEN_CONTROL_1_0x11].IsBitSet(BitFlag.BIT_4);
+        public bool ScreenControlRegisterTextModeBitmapMode => this[REGISTER_SCREEN_CONTROL_1_0x11].IsBitSet(BitFlag.BIT_5); // False = Text mode, True = Bitmap mode
+        public bool ScreenControlRegisterExtendedBackgroundModeOn => this[REGISTER_SCREEN_CONTROL_1_0x11].IsBitSet(BitFlag.BIT_6); // True = Extended background mode on
 
         // Interrupt control register
         public bool InterruptControlRegisterRasterInterruptEnabled => this[REGISTER_INTERRUPT_CONTROL_0x1A].IsBitSet(BitFlag.BIT_0);
@@ -161,6 +162,32 @@ namespace Commodore64 {
 
             if (IsInDisplay(p) && ScreenControlRegisterScreenOffOn) {
 
+                switch (GetCurrentGraphicsMode()) {
+                    case GraphicsMode.StandardCharacterMode:
+                        RenderCharacterMode();
+                        break;
+
+                    case GraphicsMode.MultiColorCharacterMode:
+                        break;
+
+                    case GraphicsMode.StandardBitmapMode:
+                        break;
+
+                    case GraphicsMode.MulticolorBitmapMode:
+                        break;
+
+                    case GraphicsMode.ExtendedBackgroundColorMode:
+                        break;
+
+                    case GraphicsMode.UNOFFICIAL_ExtendedBackgroundColorMulticolorCharacterMode:
+                        break;
+                    case GraphicsMode.UNOFFICIAL_ExtendedBackgroundColorStandardBitmapMode:
+                        break;
+                    case GraphicsMode.UNOFFICIAL_ExtendedBackgroundColorMulticolorBitmapMode:
+                        break;
+                    default:
+                        break;
+                }
 
             } else {
                 
@@ -185,12 +212,33 @@ namespace Commodore64 {
                     OnLastScanLine?.Invoke(this, null);
 
                     // Frame based character mode rendering
-                    if (ScreenControlRegisterScreenOffOn) UpdateScreenBufferPixels();
+                    //if (ScreenControlRegisterScreenOffOn) UpdateScreenBufferPixels();
                 }
             }
 
 
             TotalCycles++;
+        }
+
+        private void RenderCharacterMode() {
+            // 40 x 25 characters
+            var p = GetScanlinePoint();
+
+            var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
+
+            var charLine = (CurrentLine - DisplayFrame.Y) / 8;
+            var charNumberInLine = (p.X - DisplayFrame.X) / 8;
+            var charNumber = charLine * 40 + charNumberInLine;
+
+            var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + charNumber));
+            var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charNumber] & 0b00001111));
+
+            var charRow = (CurrentLine - DisplayFrame.Y) % 8;
+            var charRowData = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + charRow));
+
+            for (int col = 0; col <= 7; col++) {
+                ScreenBufferPixels[DisplayFrame.Y + (charLine * 8) + charRow, DisplayFrame.X + (charNumberInLine * 8) + col] = charRowData.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+            }
         }
 
         private void RenderBorder() {
@@ -203,14 +251,18 @@ namespace Commodore64 {
 
         }
 
-        private void RenderCharacterMode() {
+        public GraphicsMode GetCurrentGraphicsMode() {
+            var ecm_bmm_r0x11_b65 = (this[REGISTER_SCREEN_CONTROL_1_0x11] >> 5) & 0b00000011;
+            var mcm_r0x16_b4 = (this[REGISTER_SCREEN_CONTROL_2_0x16] >> 4) & 0b00000001;
 
+            var graphicsMode = mcm_r0x16_b4 | (ecm_bmm_r0x11_b65 << 1);
+            return (GraphicsMode)graphicsMode;
         }
 
         private Point GetScanlinePoint() {
             var p = new Point {
-                Y = CurrentLine,
-                X = (CurrentLineCycle) * 8
+                X = CurrentLineCycle * 8,
+                Y = CurrentLine
             };
 
             return p;
