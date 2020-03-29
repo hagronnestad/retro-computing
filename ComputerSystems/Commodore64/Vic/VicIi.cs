@@ -135,6 +135,7 @@ namespace Commodore64.Vic {
         }
 
         public void Cycle() {
+            // Every cycle draws 8 pixels to the screen
 
             // Generate raster interrupt if the current line equals interrupt line
             // TODO: Implement the Interrupt latch register ($D019) !!!!!!!
@@ -142,13 +143,6 @@ namespace Commodore64.Vic {
                 OnGenerateRasterLineInterrupt?.Invoke(this, null);
             }
 
-
-
-            // Every cycle draws 8 pixels to the screen
-
-            //if (IsInDisplay()) {
-            //    RenderCharacterMode();
-            //}
 
             var p = GetScanlinePoint();
 
@@ -202,46 +196,44 @@ namespace Commodore64.Vic {
                     CurrentLine = 0;
 
                     OnLastScanLine?.Invoke(this, null);
-
-                    // Frame based character mode rendering
-                    //if (ScreenControlRegisterScreenOffOn) UpdateScreenBufferPixels();
                 }
             }
-
 
             TotalCycles++;
         }
 
+        /// <summary>
+        /// Render 40x25 Standard Character Mode
+        /// </summary>
         private void RenderStandardCharacterMode() {
-            // 40 x 25 characters
-
             var p = GetScanlinePoint();
 
-            var bgColor = Colors.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
+            var line = (CurrentLine - DisplayFrame.Y) / 8;
+            var column = (p.X - DisplayFrame.X) / 8;
+            var charOffsetInMemory = line * 40 + column;
 
-            var charLine = (CurrentLine - DisplayFrame.Y) / 8;
-            var charNumberInLine = (p.X - DisplayFrame.X) / 8;
-            var charNumber = charLine * 40 + charNumberInLine;
-
-            var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + charNumber));
-            var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charNumber] & 0b00001111));
-
+            var charDataOffsetInMemory = vicRead((ushort)(getScreenMemoryPointer() + charOffsetInMemory));
             var charRow = (CurrentLine - DisplayFrame.Y) % 8;
-            var charRowData = vicRead((ushort)(getCharacterMemoryPointer() + petsciiCode * 8 + charRow));
+            var charRowData = vicRead((ushort)(getCharacterMemoryPointer() + charDataOffsetInMemory * 8 + charRow));
+            
+            var bgColor = Colors.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
+            var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111));
 
             for (int col = 0; col <= 7; col++) {
-                ScreenBufferPixels[DisplayFrame.Y + charLine * 8 + charRow, DisplayFrame.X + charNumberInLine * 8 + col] = charRowData.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                var pixel = charRowData.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col] = pixel;
             }
         }
 
+        /// <summary>
+        /// Render Border
+        /// </summary>
         private void RenderBorder() {
-
-            var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
+            var bgColor = Colors.FromByte((byte)(this[Register.REGISTER_0x20_BORDER_COLOR] & 0b00001111));
 
             for (int i = 0; i < 8; i++) {
                 ScreenBufferPixels[CurrentLine, CurrentLineCycle * 8 + i] = bgColor;
             }
-
         }
 
         public GraphicsMode GetCurrentGraphicsMode() {
