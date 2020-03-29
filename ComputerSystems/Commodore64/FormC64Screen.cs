@@ -64,7 +64,7 @@ namespace ComputerSystem.Commodore64 {
                         lblVicCurrentLine.Text = $"Line: {c64.Vic.CurrentLine:D3}";
                         lblVicCurrentLineCycle.Text = $"Pos: {c64.Vic.CurrentLineCycle:D2}";
 
-                        lblVicGraphicsMode.Text = C64.Vic.ScreenControlRegisterTextModeBitmapMode ? "Mode: Bitmap" : "Mode: Text";
+                        lblVicGraphicsMode.Text = "Mode: " + C64.Vic.GetCurrentGraphicsMode().ToString();
                         lblVicScreenOn.Text = C64.Vic.ScreenControlRegisterScreenOffOn ? "Screen: On" : "Screen: Off";
                     }));
                 } catch { }
