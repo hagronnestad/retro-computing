@@ -11,6 +11,7 @@ using Timer = System.Threading.Timer;
 using Debugger;
 using System.Threading;
 using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -27,7 +28,7 @@ namespace ComputerSystem.Commodore64 {
 
         private readonly Pen _penScanLine;
         private readonly Pen _penScanLine2;
-        private readonly Pen _penWhite = new Pen(Color.White);
+        private readonly Pen _penWhite = new Pen(Color.White) { DashStyle = DashStyle.Dot };
 
         private Timer _uiRefreshTimer;
         private Bitmap _bC64ScreenBuffer;
