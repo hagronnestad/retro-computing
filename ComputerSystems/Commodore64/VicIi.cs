@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Commodore64.Enums;
 using Extensions.Byte;
@@ -164,7 +164,7 @@ namespace Commodore64 {
 
                 switch (GetCurrentGraphicsMode()) {
                     case GraphicsMode.StandardCharacterMode:
-                        RenderCharacterMode();
+                        RenderStandardCharacterMode();
                         break;
 
                     case GraphicsMode.MultiColorCharacterMode:
@@ -220,8 +220,9 @@ namespace Commodore64 {
             TotalCycles++;
         }
 
-        private void RenderCharacterMode() {
+        private void RenderStandardCharacterMode() {
             // 40 x 25 characters
+
             var p = GetScanlinePoint();
 
             var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
