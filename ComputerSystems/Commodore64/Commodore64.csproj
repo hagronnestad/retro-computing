@@ -58,6 +58,7 @@
     <Compile Include="C64MemoryValues.cs" />
     <Compile Include="C64MemoryOffsets.cs" />
     <Compile Include="Colors.cs" />
+    <Compile Include="Enums\GraphicsMode.cs" />
     <Compile Include="Enums\PetsciiCode.cs" />
     <Compile Include="FormC64Screen.cs">
       <SubType>Form</SubType>
