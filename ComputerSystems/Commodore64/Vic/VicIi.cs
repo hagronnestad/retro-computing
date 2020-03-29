@@ -269,30 +269,6 @@ namespace Commodore64.Vic {
             return DisplayFrame.Contains(p);
         }
 
-
-        public void UpdateScreenBufferPixels() {
-            var bgColor = Colors.FromByte((byte)(C64.Vic._registers[0x21] & 0b00001111));
-
-            for (var i = 0; i < 1000; i++) {
-                var petsciiCode = vicRead((ushort)(getScreenMemoryPointer() + i));
-                var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
-                //var fgColor = Colors.FromByte((byte)(vicRead((ushort)(0x0800 + i)) & 0b00001111));
-
-                var line = i / 40;
-                var characterInLine = i % 40;
-
-                for (int row = 0; row <= 7; row++) {
-                    var charRow = vicRead((ushort)(getCharacterMemoryPointer() + petsciiCode * 8 + row));
-
-                    for (int col = 0; col <= 7; col++) {
-                        ScreenBufferPixels[DisplayFrame.Y + line * 8 + row, DisplayFrame.X + characterInLine * 8 + col] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
-                    }
-
-                }
-
-            }
-        }
-
         public int getScreenMemoryPointer() {
             var bit4to7 = C64.Memory.Read(0xD018) >> 4 & 0b00001111;
 
