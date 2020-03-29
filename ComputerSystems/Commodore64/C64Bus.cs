@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System;
 using Commodore64.Vic;
+using Commodore64.Vic.Enums;
 
 namespace Commodore64 {
 
@@ -192,7 +193,7 @@ namespace Commodore64 {
                         // addresses into the VIC-II. The `% 0x40` makes sure that the
                         // registers available in the VIC-II are mirrored all the way up to
                         // 0xD3FF.
-                        return _vic[(address - 0xD000) % 0x40];
+                        return _vic[(Register)((address - 0xD000) % 0x40)];
 
                     }
 
@@ -356,7 +357,7 @@ namespace Commodore64 {
                     // addresses into the VIC-II. The `% 0x40` makes sure that the
                     // registers available in the VIC-II are mirrored all the way up to
                     // 0xD3FF.
-                    _vic[(address - 0xD000) % 0x40] = value;
+                    _vic[(Register)((address - 0xD000) % 0x40)] = value;
 
                 }
 

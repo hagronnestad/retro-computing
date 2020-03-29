@@ -20,88 +20,56 @@ namespace Commodore64.Vic {
         //TODO: Temporary dependency
         public C64 C64;
 
-        // VIC-II REGISTER ADDRESSES 0xD0xx
-        //private const byte REGISTER_0x_ = 0x;
-
-        private const byte REGISTER_0x00_X_SPRITE_0 = 0x00;
-        private const byte REGISTER_0x01_Y_SPRITE_0 = 0x01;
-        private const byte REGISTER_0x02_X_SPRITE_1 = 0x02;
-        private const byte REGISTER_0x03_Y_SPRITE_1 = 0x03;
-        private const byte REGISTER_0x04_X_SPRITE_2 = 0x04;
-        private const byte REGISTER_0x05_Y_SPRITE_2 = 0x05;
-        private const byte REGISTER_0x06_X_SPRITE_3 = 0x06;
-        private const byte REGISTER_0x07_Y_SPRITE_3 = 0x07;
-        private const byte REGISTER_0x08_X_SPRITE_4 = 0x08;
-        private const byte REGISTER_0x09_Y_SPRITE_4 = 0x09;
-        private const byte REGISTER_0x0A_X_SPRITE_5 = 0x0A;
-        private const byte REGISTER_0x0B_Y_SPRITE_5 = 0x0B;
-        private const byte REGISTER_0x0C_X_SPRITE_6 = 0x0C;
-        private const byte REGISTER_0x0D_Y_SPRITE_6 = 0x0D;
-        private const byte REGISTER_0x0E_X_SPRITE_7 = 0x0E;
-        private const byte REGISTER_0x0F_Y_SPRITE_7 = 0x0F;
-        private const byte REGISTER_0x10_ = 0x10;
-        private const byte REGISTER_0x11_SCREEN_CONTROL_1 = 0x11;
-        private const byte REGISTER_0x12_RASTER_COUNTER = 0x12;
-        private const byte REGISTER_0x16_SCREEN_CONTROL_2 = 0x16;
-
-        private const byte REGISTER_0x19_INTERRUPT_STATUS = 0x19;
-        private const byte REGISTER_0x1A_INTERRUPT_CONTROL = 0x1A;
-
-        private const byte REGISTER_0x21_BACKGROUND_COLOR_0 = 0x21;
-        private const byte REGISTER_0x22_BACKGROUND_COLOR_1 = 0x22;
-        private const byte REGISTER_0x23_BACKGROUND_COLOR_2 = 0x23;
-        private const byte REGISTER_0x24_BACKGROUND_COLOR_3 = 0x24;
-
         public Color[,] ScreenBufferPixels { get; }
 
         private readonly TvSystem _tvSystem;
         private readonly int _fullHeight;
         private int _rasterLineToGenerateInterruptAt = 0;
 
-        public byte this[int index] {
+        public byte this[Register index] {
             get {
                 switch (index) {
 
-                    case REGISTER_0x11_SCREEN_CONTROL_1:
+                    case Register.REGISTER_0x11_SCREEN_CONTROL_1:
                         // Bit #7 og 0x11 is set if current raster line > 255
-                        _registers[index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
+                        _registers[(int)index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
 
-                        return _registers[index];
+                        return _registers[(int)index];
 
                     // Current raster line (bits #0-#7).
                     // There's an additional bit used (bit #7) in 0x11 for values > 255
-                    case REGISTER_0x12_RASTER_COUNTER:
+                    case Register.REGISTER_0x12_RASTER_COUNTER:
                         return CurrentLine > 255 ? (byte)(CurrentLine - 255) : (byte)CurrentLine;
 
                     default:
-                        return _registers[index];
+                        return _registers[(int)index];
                 }
             }
             set {
                 switch (index) {
 
-                    case REGISTER_0x11_SCREEN_CONTROL_1:
-                        _registers[index] = value;
+                    case Register.REGISTER_0x11_SCREEN_CONTROL_1:
+                        _registers[(int)index] = value;
                         UpdateRasterLineToGenerateInterruptAt();
                         break;
 
                     // Raster line to generate interrupt at (bits #0-#7).
                     // There's an additional bit used (bit #7) in 0x11 for values > 255
-                    case REGISTER_0x12_RASTER_COUNTER:
-                        _registers[index] = value;
+                    case Register.REGISTER_0x12_RASTER_COUNTER:
+                        _registers[(int)index] = value;
                         UpdateRasterLineToGenerateInterruptAt();
                         break;
 
                     default:
-                        _registers[index] = value;
+                        _registers[(int)index] = value;
                         break;
                 }
             }
         }
 
         private void UpdateRasterLineToGenerateInterruptAt() {
-            _rasterLineToGenerateInterruptAt = _registers[REGISTER_0x12_RASTER_COUNTER];
-            if (_registers[REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_7)) _rasterLineToGenerateInterruptAt += 255;
+            _rasterLineToGenerateInterruptAt = this[Register.REGISTER_0x12_RASTER_COUNTER];
+            if (this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_7)) _rasterLineToGenerateInterruptAt += 255;
         }
 
         public enum TvSystem {
@@ -135,16 +103,16 @@ namespace Commodore64.Vic {
         public ulong TotalCycles = 0;
 
         // Screen control register
-        public bool ScreenControlRegisterScreenHeight => this[REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_3); // False = 24 rows, True = 25 rows
-        public bool ScreenControlRegisterScreenOffOn => this[REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_4);
-        public bool ScreenControlRegisterTextModeBitmapMode => this[REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_5); // False = Text mode, True = Bitmap mode
-        public bool ScreenControlRegisterExtendedBackgroundModeOn => this[REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_6); // True = Extended background mode on
+        public bool ScreenControlRegisterScreenHeight => this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_3); // False = 24 rows, True = 25 rows
+        public bool ScreenControlRegisterScreenOffOn => this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_4);
+        public bool ScreenControlRegisterTextModeBitmapMode => this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_5); // False = Text mode, True = Bitmap mode
+        public bool ScreenControlRegisterExtendedBackgroundModeOn => this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_6); // True = Extended background mode on
 
         // Interrupt control register
-        public bool InterruptControlRegisterRasterInterruptEnabled => this[REGISTER_0x1A_INTERRUPT_CONTROL].IsBitSet(BitFlag.BIT_0);
-        public bool InterruptControlRegisterSpriteBackgroundCollisionInterruptEnabled => this[REGISTER_0x1A_INTERRUPT_CONTROL].IsBitSet(BitFlag.BIT_1);
-        public bool InterruptControlRegisterSpriteSpriteCollisionInterruptEnabled => this[REGISTER_0x1A_INTERRUPT_CONTROL].IsBitSet(BitFlag.BIT_2);
-        public bool InterruptControlRegisterLightPenInterruptEnabled => this[REGISTER_0x1A_INTERRUPT_CONTROL].IsBitSet(BitFlag.BIT_3);
+        public bool InterruptControlRegisterRasterInterruptEnabled => this[Register.REGISTER_0x1A_INTERRUPT_ENABLED].IsBitSet(BitFlag.BIT_0);
+        public bool InterruptControlRegisterSpriteBackgroundCollisionInterruptEnabled => this[Register.REGISTER_0x1A_INTERRUPT_ENABLED].IsBitSet(BitFlag.BIT_1);
+        public bool InterruptControlRegisterSpriteSpriteCollisionInterruptEnabled => this[Register.REGISTER_0x1A_INTERRUPT_ENABLED].IsBitSet(BitFlag.BIT_2);
+        public bool InterruptControlRegisterLightPenInterruptEnabled => this[Register.REGISTER_0x1A_INTERRUPT_ENABLED].IsBitSet(BitFlag.BIT_3);
 
 
 
@@ -249,7 +217,7 @@ namespace Commodore64.Vic {
 
             var p = GetScanlinePoint();
 
-            var bgColor = Colors.FromByte((byte)(this[REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
+            var bgColor = Colors.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
 
             var charLine = (CurrentLine - DisplayFrame.Y) / 8;
             var charNumberInLine = (p.X - DisplayFrame.X) / 8;
@@ -277,8 +245,8 @@ namespace Commodore64.Vic {
         }
 
         public GraphicsMode GetCurrentGraphicsMode() {
-            var ecm_bmm_r0x11_b65 = this[REGISTER_0x11_SCREEN_CONTROL_1] >> 5 & 0b00000011;
-            var mcm_r0x16_b4 = this[REGISTER_0x16_SCREEN_CONTROL_2] >> 4 & 0b00000001;
+            var ecm_bmm_r0x11_b65 = this[Register.REGISTER_0x11_SCREEN_CONTROL_1] >> 5 & 0b00000011;
+            var mcm_r0x16_b4 = this[Register.REGISTER_0x16_SCREEN_CONTROL_2] >> 4 & 0b00000001;
 
             var graphicsMode = mcm_r0x16_b4 | ecm_bmm_r0x11_b65 << 1;
             return (GraphicsMode)graphicsMode;
