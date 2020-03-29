@@ -12,6 +12,7 @@ using Debugger;
 using System.Threading;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
+using Commodore64.Vic;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {

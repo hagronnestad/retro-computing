@@ -4,7 +4,7 @@ using Commodore64.Enums;
 using Extensions.Byte;
 using Extensions.Enums;
 
-namespace Commodore64 {
+namespace Commodore64.Vic {
     public class VicIi {
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Commodore64 {
                     case REGISTER_0x11_SCREEN_CONTROL_1:
                         // Bit #7 og 0x11 is set if current raster line > 255
                         _registers[index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
-                        
+
                         return _registers[index];
 
                     // Current raster line (bits #0-#7).
@@ -170,7 +170,7 @@ namespace Commodore64 {
 
             // Generate raster interrupt if the current line equals interrupt line
             // TODO: Implement the Interrupt latch register ($D019) !!!!!!!
-            if (InterruptControlRegisterRasterInterruptEnabled && (CurrentLine == _rasterLineToGenerateInterruptAt)) {
+            if (InterruptControlRegisterRasterInterruptEnabled && CurrentLine == _rasterLineToGenerateInterruptAt) {
                 OnGenerateRasterLineInterrupt?.Invoke(this, null);
             }
 
@@ -214,7 +214,7 @@ namespace Commodore64 {
                 }
 
             } else {
-                
+
                 if (IsInBorder(p)) {
                     RenderBorder();
                 }
@@ -259,10 +259,10 @@ namespace Commodore64 {
             var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charNumber] & 0b00001111));
 
             var charRow = (CurrentLine - DisplayFrame.Y) % 8;
-            var charRowData = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + charRow));
+            var charRowData = vicRead((ushort)(getCharacterMemoryPointer() + petsciiCode * 8 + charRow));
 
             for (int col = 0; col <= 7; col++) {
-                ScreenBufferPixels[DisplayFrame.Y + (charLine * 8) + charRow, DisplayFrame.X + (charNumberInLine * 8) + col] = charRowData.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                ScreenBufferPixels[DisplayFrame.Y + charLine * 8 + charRow, DisplayFrame.X + charNumberInLine * 8 + col] = charRowData.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
             }
         }
 
@@ -271,16 +271,16 @@ namespace Commodore64 {
             var bgColor = Colors.FromByte((byte)(_registers[0x20] & 0b00001111));
 
             for (int i = 0; i < 8; i++) {
-                ScreenBufferPixels[CurrentLine, (CurrentLineCycle * 8) + i] = bgColor;
+                ScreenBufferPixels[CurrentLine, CurrentLineCycle * 8 + i] = bgColor;
             }
 
         }
 
         public GraphicsMode GetCurrentGraphicsMode() {
-            var ecm_bmm_r0x11_b65 = (this[REGISTER_0x11_SCREEN_CONTROL_1] >> 5) & 0b00000011;
-            var mcm_r0x16_b4 = (this[REGISTER_0x16_SCREEN_CONTROL_2] >> 4) & 0b00000001;
+            var ecm_bmm_r0x11_b65 = this[REGISTER_0x11_SCREEN_CONTROL_1] >> 5 & 0b00000011;
+            var mcm_r0x16_b4 = this[REGISTER_0x16_SCREEN_CONTROL_2] >> 4 & 0b00000001;
 
-            var graphicsMode = mcm_r0x16_b4 | (ecm_bmm_r0x11_b65 << 1);
+            var graphicsMode = mcm_r0x16_b4 | ecm_bmm_r0x11_b65 << 1;
             return (GraphicsMode)graphicsMode;
         }
 
@@ -310,14 +310,14 @@ namespace Commodore64 {
                 var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + i] & 0b00001111));
                 //var fgColor = Colors.FromByte((byte)(vicRead((ushort)(0x0800 + i)) & 0b00001111));
 
-                var line = (i / 40);
+                var line = i / 40;
                 var characterInLine = i % 40;
 
                 for (int row = 0; row <= 7; row++) {
-                    var charRow = vicRead((ushort)(getCharacterMemoryPointer() + (petsciiCode * 8) + row));
+                    var charRow = vicRead((ushort)(getCharacterMemoryPointer() + petsciiCode * 8 + row));
 
                     for (int col = 0; col <= 7; col++) {
-                        ScreenBufferPixels[DisplayFrame.Y + (line * 8) + row, DisplayFrame.X + (characterInLine * 8) + col] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
+                        ScreenBufferPixels[DisplayFrame.Y + line * 8 + row, DisplayFrame.X + characterInLine * 8 + col] = charRow.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
                     }
 
                 }
@@ -326,7 +326,7 @@ namespace Commodore64 {
         }
 
         public int getScreenMemoryPointer() {
-            var bit4to7 = (C64.Memory.Read(0xD018) >> 4) & 0b00001111;
+            var bit4to7 = C64.Memory.Read(0xD018) >> 4 & 0b00001111;
 
             switch (bit4to7) {
                 case 0b0000:
@@ -368,7 +368,7 @@ namespace Commodore64 {
         }
 
         public int getCharacterMemoryPointer() {
-            var bit1to3 = (C64.Memory.Read(0xD018) >> 1) & 0b00000111;
+            var bit1to3 = C64.Memory.Read(0xD018) >> 1 & 0b00000111;
 
             switch (bit1to3) {
                 case 0b000:

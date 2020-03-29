@@ -6,7 +6,8 @@ using System.Windows.Input;
 using Hardware.Mos6526Cia;
 using System.Threading.Tasks;
 using System;
-using static Commodore64.VicIi;
+using static Commodore64.Vic.VicIi;
+using Commodore64.Vic;
 
 namespace Commodore64 {
     public class C64 {
