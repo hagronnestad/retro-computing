@@ -26,6 +26,17 @@ namespace Commodore64.Vic {
         private readonly int _fullHeight;
         private int _rasterLineToGenerateInterruptAt = 0;
 
+        private bool _interruptLatchRasterLine = false;
+        private bool _interruptLatchSpriteBackgroundCollision = false;
+        private bool _interruptLatchSpriteSpriteCollision = false;
+        private bool _interruptLatchLightPenSignal = false;
+        private bool _interruptLatchAny =>
+            _interruptLatchRasterLine ||
+            _interruptLatchSpriteBackgroundCollision ||
+            _interruptLatchSpriteSpriteCollision ||
+            _interruptLatchLightPenSignal;
+
+
         public byte this[Register index] {
             get {
                 switch (index) {
@@ -33,13 +44,21 @@ namespace Commodore64.Vic {
                     case Register.REGISTER_0x11_SCREEN_CONTROL_1:
                         // Bit #7 og 0x11 is set if current raster line > 255
                         _registers[(int)index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
-
                         return _registers[(int)index];
 
                     // Current raster line (bits #0-#7).
                     // There's an additional bit used (bit #7) in 0x11 for values > 255
                     case Register.REGISTER_0x12_RASTER_COUNTER:
                         return CurrentLine > 255 ? (byte)(CurrentLine - 255) : (byte)CurrentLine;
+
+                    // Interrupt status register.
+                    case Register.REGISTER_0x19_INTERRUPT_REGISTER:
+                        _registers[(int)index].SetBit(BitFlag.BIT_0, _interruptLatchRasterLine);
+                        _registers[(int)index].SetBit(BitFlag.BIT_1, _interruptLatchSpriteBackgroundCollision);
+                        _registers[(int)index].SetBit(BitFlag.BIT_2, _interruptLatchSpriteSpriteCollision);
+                        _registers[(int)index].SetBit(BitFlag.BIT_3, _interruptLatchLightPenSignal);
+                        _registers[(int)index].SetBit(BitFlag.BIT_7, _interruptLatchAny);
+                        return _registers[(int)index];
 
                     default:
                         return _registers[(int)index];
@@ -48,16 +67,30 @@ namespace Commodore64.Vic {
             set {
                 switch (index) {
 
-                    case Register.REGISTER_0x11_SCREEN_CONTROL_1:
-                        _registers[(int)index] = value;
-                        UpdateRasterLineToGenerateInterruptAt();
-                        break;
-
                     // Raster line to generate interrupt at (bits #0-#7).
                     // There's an additional bit used (bit #7) in 0x11 for values > 255
                     case Register.REGISTER_0x12_RASTER_COUNTER:
                         _registers[(int)index] = value;
                         UpdateRasterLineToGenerateInterruptAt();
+                        break;
+
+                    // Raster line to generate interrupt at (bit #7).
+                    // Bit #7 in this register is used as the 8th bit for the raster counter
+                    // that's why we need to update the internal raster line variable if this
+                    // register is modified
+                    case Register.REGISTER_0x11_SCREEN_CONTROL_1:
+                        _registers[(int)index] = value;
+                        UpdateRasterLineToGenerateInterruptAt();
+                        break;
+
+                    // Interrupt status register.
+                    // Setting bit 0-3 to 1 acknowledges the respective interrupt latch
+                    case Register.REGISTER_0x19_INTERRUPT_REGISTER:
+                        if (value.IsBitSet(BitFlag.BIT_0)) _interruptLatchRasterLine = false;
+                        if (value.IsBitSet(BitFlag.BIT_1)) _interruptLatchSpriteBackgroundCollision = false;
+                        if (value.IsBitSet(BitFlag.BIT_2)) _interruptLatchSpriteSpriteCollision = false;
+                        if (value.IsBitSet(BitFlag.BIT_3)) _interruptLatchLightPenSignal = false;
+                        _registers[(int)index] = value;
                         break;
 
                     default:
@@ -138,8 +171,8 @@ namespace Commodore64.Vic {
             // Every cycle draws 8 pixels to the screen
 
             // Generate raster interrupt if the current line equals interrupt line
-            // TODO: Implement the Interrupt latch register ($D019) !!!!!!!
             if (InterruptControlRegisterRasterInterruptEnabled && CurrentLine == _rasterLineToGenerateInterruptAt) {
+                _interruptLatchRasterLine = true;
                 OnGenerateRasterLineInterrupt?.Invoke(this, null);
             }
 
