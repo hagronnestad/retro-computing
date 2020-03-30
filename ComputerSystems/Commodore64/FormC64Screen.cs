@@ -130,6 +130,9 @@ namespace ComputerSystem.Commodore64 {
             _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.BorderFrame.X, (int)C64.Vic.BorderFrame.Y, (int)C64.Vic.BorderFrame.Width, (int)C64.Vic.BorderFrame.Height);
             _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.DisplayFrame.X, (int)C64.Vic.DisplayFrame.Y, (int)C64.Vic.DisplayFrame.Width, (int)C64.Vic.DisplayFrame.Height);
 
+            var p = C64.Vic.GetScanlinePoint();
+            _gC64ScreenBuffer.DrawLine(_penWhite, p.X, p.Y, p.X + 8, p.Y);
+
             _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
 
             if (btnUseCrtFilter.Checked) ApplyCrtFilter();

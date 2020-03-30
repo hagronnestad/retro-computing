@@ -244,7 +244,7 @@ namespace Commodore64.Vic {
             return (GraphicsMode)graphicsMode;
         }
 
-        private Point GetScanlinePoint() {
+        public Point GetScanlinePoint() {
             var p = new Point {
                 X = CurrentLineCycle * 8,
                 Y = CurrentLine
