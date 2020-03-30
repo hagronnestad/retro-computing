@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Commodore64.Vic.Enums;
 using Extensions.Byte;
@@ -262,7 +262,7 @@ namespace Commodore64.Vic {
         }
 
         public int getScreenMemoryPointer() {
-            var bit4to7 = C64.Memory.Read(0xD018) >> 4 & 0b00001111;
+            var bit4to7 = this[Register.REGISTER_0x18_MEMORY_POINTERS] >> 4 & 0b00001111;
 
             switch (bit4to7) {
                 case 0b0000:
@@ -304,7 +304,7 @@ namespace Commodore64.Vic {
         }
 
         public int getCharacterMemoryPointer() {
-            var bit1to3 = C64.Memory.Read(0xD018) >> 1 & 0b00000111;
+            var bit1to3 = this[Register.REGISTER_0x18_MEMORY_POINTERS] >> 1 & 0b00000111;
 
             switch (bit1to3) {
                 case 0b000:
