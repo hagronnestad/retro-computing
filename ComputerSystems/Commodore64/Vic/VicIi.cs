@@ -187,6 +187,7 @@ namespace Commodore64.Vic {
                         break;
 
                     case GraphicsMode.MultiColorCharacterMode:
+                        RenderMultiColorCharacterMode();
                         break;
 
                     case GraphicsMode.StandardBitmapMode:
@@ -257,6 +258,75 @@ namespace Commodore64.Vic {
                 ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col] = pixel;
             }
         }
+
+
+
+        /// <summary>
+        /// Render MultiColorCharacterMode
+        /// </summary>
+        private void RenderMultiColorCharacterMode() {
+            var p = GetScanlinePoint();
+
+            var line = (CurrentLine - DisplayFrame.Y) / 8;
+            var column = (p.X - DisplayFrame.X) / 8;
+            var charOffsetInMemory = line * 40 + column;
+
+            var charRow = (CurrentLine - DisplayFrame.Y) % 8;
+
+            var screenPointer = getScreenMemoryPointer();
+            var characterPointer = getCharacterMemoryPointer();
+
+            //var charDataOffsetInMemory = C64.Memory.Read(screenPointer + charOffsetInMemory);
+            var charDataOffsetInMemory = vicRead((ushort)(screenPointer + charOffsetInMemory));
+
+            //var charRowData = C64.Memory.Read(characterPointer + charDataOffsetInMemory * 8 + charRow);
+            var charRowData = vicRead((ushort)(characterPointer + charDataOffsetInMemory * 8 + charRow));
+
+            var bgColor1 = Colors.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
+            var bgColor2 = Colors.FromByte((byte)(this[Register.REGISTER_0x22_BACKGROUND_COLOR_1] & 0b00001111));
+            var bgColor3 = Colors.FromByte((byte)(this[Register.REGISTER_0x23_BACKGROUND_COLOR_2] & 0b00001111));
+            var fgColor = (byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111);
+
+            for (int col = 0; col <= 7; col += 2) {
+
+                if (fgColor.IsBitSet(BitFlag.BIT_3)) {
+
+                    var bitPair = charRowData >> (6 - col) & 0b11;
+
+                    Color pixelColor;
+
+                    switch (bitPair) {
+
+                        case 0b00:
+                            pixelColor = bgColor1;
+                            break;
+
+                        case 0b01:
+                            pixelColor = bgColor2;
+                            break;
+
+                        case 0b10:
+                            pixelColor = bgColor3;
+                            break;
+
+                        case 0b11:
+                            pixelColor = Colors.FromByte((byte)(fgColor >> 2 & 0b11));
+                            break;
+
+                        default:
+                            pixelColor = Color.Red;
+                            break;
+                    }
+
+                    ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col] = pixelColor;
+                    ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col + 1] = pixelColor;
+
+                } else {
+                    ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col] = Colors.FromByte((byte)(fgColor & 0b111));
+                }
+            }
+        }
+
 
         /// <summary>
         /// Render Border
