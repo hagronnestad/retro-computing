@@ -58,10 +58,10 @@
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
             this.separator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
             this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
             this.btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
-            this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -374,9 +374,21 @@
             this.separator5.Name = "separator5";
             this.separator5.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnShowFullFrameVideo
+            // 
+            this.btnShowFullFrameVideo.Checked = true;
+            this.btnShowFullFrameVideo.CheckOnClick = true;
+            this.btnShowFullFrameVideo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnShowFullFrameVideo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowFullFrameVideo.Image")));
+            this.btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
+            this.btnShowFullFrameVideo.Size = new System.Drawing.Size(98, 22);
+            this.btnShowFullFrameVideo.Text = "Show Full Frame";
+            // 
             // btnUseCrtFilter
             // 
-            this.btnUseCrtFilter.Checked = global::Commodore64.Properties.Settings.Default.ApplyCrtFilter;
+            this.btnUseCrtFilter.Checked = true;
             this.btnUseCrtFilter.CheckOnClick = true;
             this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -388,8 +400,9 @@
             // 
             // btnShowVideoFrameOutlines
             // 
-            this.btnShowVideoFrameOutlines.Checked = global::Commodore64.Properties.Settings.Default.ShowVideoFrameOutlines;
+            this.btnShowVideoFrameOutlines.Checked = true;
             this.btnShowVideoFrameOutlines.CheckOnClick = true;
+            this.btnShowVideoFrameOutlines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowVideoFrameOutlines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.btnShowVideoFrameOutlines.Image = ((System.Drawing.Image)(resources.GetObject("btnShowVideoFrameOutlines.Image")));
             this.btnShowVideoFrameOutlines.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -399,25 +412,15 @@
             // 
             // btnShowScanLinePosition
             // 
-            this.btnShowScanLinePosition.Checked = global::Commodore64.Properties.Settings.Default.ShowScanLinePosition;
+            this.btnShowScanLinePosition.Checked = true;
             this.btnShowScanLinePosition.CheckOnClick = true;
+            this.btnShowScanLinePosition.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowScanLinePosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.btnShowScanLinePosition.Image = ((System.Drawing.Image)(resources.GetObject("btnShowScanLinePosition.Image")));
             this.btnShowScanLinePosition.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowScanLinePosition.Name = "btnShowScanLinePosition";
             this.btnShowScanLinePosition.Size = new System.Drawing.Size(101, 22);
             this.btnShowScanLinePosition.Text = "Scanline Position";
-            // 
-            // btnShowFullFrameVideo
-            // 
-            this.btnShowFullFrameVideo.Checked = global::Commodore64.Properties.Settings.Default.ShowFullFrameVideo;
-            this.btnShowFullFrameVideo.CheckOnClick = true;
-            this.btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnShowFullFrameVideo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowFullFrameVideo.Image")));
-            this.btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
-            this.btnShowFullFrameVideo.Size = new System.Drawing.Size(98, 22);
-            this.btnShowFullFrameVideo.Text = "Show Full Frame";
             // 
             // FormC64Screen
             // 

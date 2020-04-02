@@ -22,53 +22,5 @@ namespace Commodore64.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ApplyCrtFilter {
-            get {
-                return ((bool)(this["ApplyCrtFilter"]));
-            }
-            set {
-                this["ApplyCrtFilter"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowVideoFrameOutlines {
-            get {
-                return ((bool)(this["ShowVideoFrameOutlines"]));
-            }
-            set {
-                this["ShowVideoFrameOutlines"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowScanLinePosition {
-            get {
-                return ((bool)(this["ShowScanLinePosition"]));
-            }
-            set {
-                this["ShowScanLinePosition"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ShowFullFrameVideo {
-            get {
-                return ((bool)(this["ShowFullFrameVideo"]));
-            }
-            set {
-                this["ShowFullFrameVideo"] = value;
-            }
-        }
     }
 }
