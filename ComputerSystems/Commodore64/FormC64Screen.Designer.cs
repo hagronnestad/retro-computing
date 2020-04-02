@@ -30,6 +30,7 @@
             this.lblClockSpeed = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblKeyboardDisabled = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
@@ -39,7 +40,6 @@
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.separator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +57,9 @@
             this.lblVicCurrentLineCycle = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
+            this.separator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
+            this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -124,11 +126,18 @@
             this.lblInstructions.Size = new System.Drawing.Size(82, 19);
             this.lblInstructions.Text = "0 instructions";
             // 
+            // lblIllegalInstructions
+            // 
+            this.lblIllegalInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblIllegalInstructions.Name = "lblIllegalInstructions";
+            this.lblIllegalInstructions.Size = new System.Drawing.Size(82, 19);
+            this.lblIllegalInstructions.Text = "0 instructions";
+            // 
             // lblKeyboardDisabled
             // 
             this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
             this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(678, 19);
+            this.lblKeyboardDisabled.Size = new System.Drawing.Size(709, 19);
             this.lblKeyboardDisabled.Spring = true;
             this.lblKeyboardDisabled.Text = "Keyboard Disabled";
             this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -149,7 +158,9 @@
             this.separator4,
             this.btnDebugger,
             this.btnClockSpeedSlower,
-            this.btnClockSpeedFaster});
+            this.btnClockSpeedFaster,
+            this.separator5,
+            this.btnShowVideoFrameOutlines});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(1008, 25);
@@ -216,18 +227,6 @@
             // 
             this.separator2.Name = "separator2";
             this.separator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // btnUseCrtFilter
-            // 
-            this.btnUseCrtFilter.Checked = global::Commodore64.Properties.Settings.Default.ApplyCrtFilter;
-            this.btnUseCrtFilter.CheckOnClick = true;
-            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
-            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
-            this.btnUseCrtFilter.Text = "CRT filter";
             // 
             // separator3
             // 
@@ -366,12 +365,33 @@
             this.lblVicScreenOn.Size = new System.Drawing.Size(49, 19);
             this.lblVicScreenOn.Text = "Screen:";
             // 
-            // lblIllegalInstructions
+            // separator5
             // 
-            this.lblIllegalInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblIllegalInstructions.Name = "lblIllegalInstructions";
-            this.lblIllegalInstructions.Size = new System.Drawing.Size(82, 19);
-            this.lblIllegalInstructions.Text = "0 instructions";
+            this.separator5.Name = "separator5";
+            this.separator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnUseCrtFilter
+            // 
+            this.btnUseCrtFilter.Checked = global::Commodore64.Properties.Settings.Default.ApplyCrtFilter;
+            this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
+            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
+            this.btnUseCrtFilter.Text = "CRT filter";
+            // 
+            // btnShowVideoFrameOutlines
+            // 
+            this.btnShowVideoFrameOutlines.Checked = global::Commodore64.Properties.Settings.Default.ShowVideoFrameOutlines;
+            this.btnShowVideoFrameOutlines.CheckOnClick = true;
+            this.btnShowVideoFrameOutlines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnShowVideoFrameOutlines.Image = ((System.Drawing.Image)(resources.GetObject("btnShowVideoFrameOutlines.Image")));
+            this.btnShowVideoFrameOutlines.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowVideoFrameOutlines.Name = "btnShowVideoFrameOutlines";
+            this.btnShowVideoFrameOutlines.Size = new System.Drawing.Size(55, 22);
+            this.btnShowVideoFrameOutlines.Text = "Outlines";
             // 
             // FormC64Screen
             // 
@@ -437,5 +457,7 @@
         private System.Windows.Forms.ToolStripButton btnClockSpeedFaster;
         private System.Windows.Forms.ToolStripStatusLabel lblClockSpeed;
         private System.Windows.Forms.ToolStripStatusLabel lblIllegalInstructions;
+        private System.Windows.Forms.ToolStripSeparator separator5;
+        private System.Windows.Forms.ToolStripButton btnShowVideoFrameOutlines;
     }
 }

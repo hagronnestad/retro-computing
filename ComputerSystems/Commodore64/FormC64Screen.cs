@@ -126,9 +126,11 @@ namespace ComputerSystem.Commodore64 {
         private void PScreen_Paint(object sender, PaintEventArgs e) {
             SetPixels(_bC64ScreenBuffer, C64.Vic.ScreenBufferPixels);
 
-            _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.FullFrame.X, (int)C64.Vic.FullFrame.Y, (int)C64.Vic.FullFrame.Width, (int)C64.Vic.FullFrame.Height);
-            _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.BorderFrame.X, (int)C64.Vic.BorderFrame.Y, (int)C64.Vic.BorderFrame.Width, (int)C64.Vic.BorderFrame.Height);
-            _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.DisplayFrame.X, (int)C64.Vic.DisplayFrame.Y, (int)C64.Vic.DisplayFrame.Width, (int)C64.Vic.DisplayFrame.Height);
+            if (btnShowVideoFrameOutlines.Checked) {
+                _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.FullFrame.X, (int)C64.Vic.FullFrame.Y, (int)C64.Vic.FullFrame.Width, (int)C64.Vic.FullFrame.Height);
+                _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.BorderFrame.X, (int)C64.Vic.BorderFrame.Y, (int)C64.Vic.BorderFrame.Width, (int)C64.Vic.BorderFrame.Height);
+                _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.DisplayFrame.X, (int)C64.Vic.DisplayFrame.Y, (int)C64.Vic.DisplayFrame.Width, (int)C64.Vic.DisplayFrame.Height);
+            }
 
             var p = C64.Vic.GetScanlinePoint();
             _gC64ScreenBuffer.DrawLine(_penWhite, p.X, p.Y, p.X + 8, p.Y);
