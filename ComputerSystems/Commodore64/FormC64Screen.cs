@@ -137,7 +137,12 @@ namespace ComputerSystem.Commodore64 {
                 _gC64ScreenBuffer.DrawLine(_penWhite, p.X, p.Y, p.X + 8, p.Y);
             }
 
-            _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
+            if (btnShowFullFrameVideo.Checked) {
+                _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
+            } else {
+                _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, new Rectangle(0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height),
+                    new Rectangle(C64.Vic.BorderFrame.X, C64.Vic.BorderFrame.Y, C64.Vic.BorderFrame.Width, C64.Vic.BorderFrame.Height), GraphicsUnit.Pixel);
+            }
 
             if (btnUseCrtFilter.Checked) ApplyCrtFilter();
 

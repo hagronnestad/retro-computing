@@ -61,6 +61,7 @@
             this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
             this.btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
+            this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -162,7 +163,8 @@
             this.btnClockSpeedFaster,
             this.separator5,
             this.btnShowVideoFrameOutlines,
-            this.btnShowScanLinePosition});
+            this.btnShowScanLinePosition,
+            this.btnShowFullFrameVideo});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(1008, 25);
@@ -406,6 +408,17 @@
             this.btnShowScanLinePosition.Size = new System.Drawing.Size(101, 22);
             this.btnShowScanLinePosition.Text = "Scanline Position";
             // 
+            // btnShowFullFrameVideo
+            // 
+            this.btnShowFullFrameVideo.Checked = global::Commodore64.Properties.Settings.Default.ShowFullFrameVideo;
+            this.btnShowFullFrameVideo.CheckOnClick = true;
+            this.btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnShowFullFrameVideo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowFullFrameVideo.Image")));
+            this.btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
+            this.btnShowFullFrameVideo.Size = new System.Drawing.Size(98, 22);
+            this.btnShowFullFrameVideo.Text = "Show Full Frame";
+            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
@@ -473,5 +486,6 @@
         private System.Windows.Forms.ToolStripSeparator separator5;
         private System.Windows.Forms.ToolStripButton btnShowVideoFrameOutlines;
         private System.Windows.Forms.ToolStripButton btnShowScanLinePosition;
+        private System.Windows.Forms.ToolStripButton btnShowFullFrameVideo;
     }
 }

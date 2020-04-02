@@ -58,5 +58,17 @@ namespace Commodore64.Properties {
                 this["ShowScanLinePosition"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowFullFrameVideo {
+            get {
+                return ((bool)(this["ShowFullFrameVideo"]));
+            }
+            set {
+                this["ShowFullFrameVideo"] = value;
+            }
+        }
     }
 }
