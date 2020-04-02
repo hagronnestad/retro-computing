@@ -46,5 +46,17 @@ namespace Commodore64.Properties {
                 this["ShowVideoFrameOutlines"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowScanLinePosition {
+            get {
+                return ((bool)(this["ShowScanLinePosition"]));
+            }
+            set {
+                this["ShowScanLinePosition"] = value;
+            }
+        }
     }
 }

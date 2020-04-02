@@ -60,6 +60,7 @@
             this.separator5 = new System.Windows.Forms.ToolStripSeparator();
             this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
+            this.btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -160,7 +161,8 @@
             this.btnClockSpeedSlower,
             this.btnClockSpeedFaster,
             this.separator5,
-            this.btnShowVideoFrameOutlines});
+            this.btnShowVideoFrameOutlines,
+            this.btnShowScanLinePosition});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(1008, 25);
@@ -393,6 +395,17 @@
             this.btnShowVideoFrameOutlines.Size = new System.Drawing.Size(55, 22);
             this.btnShowVideoFrameOutlines.Text = "Outlines";
             // 
+            // btnShowScanLinePosition
+            // 
+            this.btnShowScanLinePosition.Checked = global::Commodore64.Properties.Settings.Default.ShowScanLinePosition;
+            this.btnShowScanLinePosition.CheckOnClick = true;
+            this.btnShowScanLinePosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnShowScanLinePosition.Image = ((System.Drawing.Image)(resources.GetObject("btnShowScanLinePosition.Image")));
+            this.btnShowScanLinePosition.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowScanLinePosition.Name = "btnShowScanLinePosition";
+            this.btnShowScanLinePosition.Size = new System.Drawing.Size(101, 22);
+            this.btnShowScanLinePosition.Text = "Scanline Position";
+            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
@@ -459,5 +472,6 @@
         private System.Windows.Forms.ToolStripStatusLabel lblIllegalInstructions;
         private System.Windows.Forms.ToolStripSeparator separator5;
         private System.Windows.Forms.ToolStripButton btnShowVideoFrameOutlines;
+        private System.Windows.Forms.ToolStripButton btnShowScanLinePosition;
     }
 }
