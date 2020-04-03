@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Extensions.Byte;
+using Extensions.Enums;
+using System;
 using System.Diagnostics;
 using System.Timers;
 
@@ -18,6 +20,15 @@ namespace Hardware.Mos6526Cia {
         public event EventHandler Interrupt;
         public event EventHandler ReadDataPortA;
         public event EventHandler ReadDataPortB;
+
+
+
+        bool EnableInterruptTimerA = false;
+        bool EnableInterruptTimerB = false;
+        bool EnableInterruptTodAlarm = false;
+
+        bool LatchInterruptTimerA = false;
+        bool LatchUnderflowTimerA = false;
 
 
         public byte DataPortA { get; set; }
@@ -103,8 +114,22 @@ namespace Hardware.Mos6526Cia {
                     case 3:
                         return DataDirectionB;
 
+                    // 0xDC0D
+                    case 0x0D:
+                        byte b = 0;
+                        if (LatchInterruptTimerA) {
+                            LatchInterruptTimerA = false;
+                            b = b.SetBit(BitFlag.BIT_7, true);
+                        }
+                        if (LatchUnderflowTimerA) {
+                            LatchUnderflowTimerA = false;
+                            b = b.SetBit(BitFlag.BIT_0, true);
+                        }
+                        return b;
+
                     default:
                         // TODO: Implement all registers
+                        Debug.WriteLine($"CIA register not implemented: 0xDC{index:X2}");
                         //throw new IndexOutOfRangeException();
                         return 0;
                 }
@@ -126,9 +151,20 @@ namespace Hardware.Mos6526Cia {
                     case 3:
                         DataDirectionB = value;
                         break;
+
+                    // 0xDC0D
+                    case 0x0D:
+                        var fillBit = value.IsBitSet(BitFlag.BIT_7);
+
+                        if (value.IsBitSet(BitFlag.BIT_0)) EnableInterruptTimerA = fillBit;
+                        if (value.IsBitSet(BitFlag.BIT_1)) EnableInterruptTimerB = fillBit;
+                        if (value.IsBitSet(BitFlag.BIT_2)) EnableInterruptTodAlarm = fillBit;
+
+                        break;
                         
                     default:
                         // TODO: Implement all registers
+                        Debug.WriteLine($"CIA register not implemented: 0xDC{index:X2} (Value: 0x{value:X2})");
                         //throw new IndexOutOfRangeException();
                         break;
                 }
@@ -139,7 +175,12 @@ namespace Hardware.Mos6526Cia {
 
             // Should interrupt?
             if (_swInterrupt.Elapsed.TotalMilliseconds > INTERRUPT_INTERVAL) {
-                Interrupt?.Invoke(this, null);
+                LatchUnderflowTimerA = true;
+
+                if (EnableInterruptTimerA) {
+                    LatchInterruptTimerA = true;
+                    Interrupt?.Invoke(this, null);
+                }
                 _swInterrupt.Restart();
             }
 
