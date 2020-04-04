@@ -171,7 +171,7 @@ namespace Commodore64.Vic {
             // Every cycle draws 8 pixels to the screen
 
             // Generate raster interrupt if the current line equals interrupt line
-            if (InterruptControlRegisterRasterInterruptEnabled && CurrentLine == _rasterLineToGenerateInterruptAt) {
+            if (CurrentLineCycle == 0 && InterruptControlRegisterRasterInterruptEnabled && CurrentLine == _rasterLineToGenerateInterruptAt) {
                 _interruptLatchRasterLine = true;
                 OnGenerateRasterLineInterrupt?.Invoke(this, null);
             }
