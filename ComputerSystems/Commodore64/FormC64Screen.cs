@@ -333,5 +333,27 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
+        private void ToggleFullscreen() {
+            FormBorderStyle = FormBorderStyle == FormBorderStyle.Sizable ? FormBorderStyle.None : FormBorderStyle.Sizable;
+            WindowState = WindowState == FormWindowState.Normal ? FormWindowState.Maximized : FormWindowState.Normal;
+
+            toolMain.Visible = WindowState == FormWindowState.Maximized ? false : true;
+            statusMain.Visible = WindowState == FormWindowState.Maximized ? false : true;
+            statusStrip1.Visible = WindowState == FormWindowState.Maximized ? false : true;
+            pScreen.Dock = WindowState == FormWindowState.Maximized ? DockStyle.Fill : DockStyle.None;
+            pScreen.Anchor = WindowState != FormWindowState.Maximized ? AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right : AnchorStyles.Top | AnchorStyles.Left;
+        }
+
+        private void pScreen_MouseMove(object sender, MouseEventArgs e) {
+            if (WindowState == FormWindowState.Maximized) {
+                toolMain.Visible = e.Y < 5 ? true : false;
+                statusMain.Visible = e.Y > pScreen.Height - 5 ? true : false;
+                statusStrip1.Visible = e.Y > pScreen.Height - 5 ? true : false;
+            }
+        }
+
+        private void btnToggleFullscreen_Click(object sender, EventArgs e) {
+            ToggleFullscreen();
+        }
     }
 }

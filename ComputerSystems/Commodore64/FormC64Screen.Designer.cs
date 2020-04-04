@@ -1,4 +1,4 @@
-namespace ComputerSystem.Commodore64 {
+﻿namespace ComputerSystem.Commodore64 {
     partial class FormC64Screen {
         /// <summary>
         /// Required designer variable.
@@ -40,13 +40,21 @@ namespace ComputerSystem.Commodore64 {
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.separator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
             this.separator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.lblDebug = new System.Windows.Forms.ToolStripLabel();
             this.btnDebugger = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedSlower = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedFaster = new System.Windows.Forms.ToolStripButton();
+            this.separator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.lblVicIiDebugging = new System.Windows.Forms.ToolStripLabel();
+            this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
+            this.btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
+            this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
+            this.separator6 = new System.Windows.Forms.ToolStripSeparator();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -57,14 +65,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicCurrentLineCycle = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
-            this.separator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
-            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
-            this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
-            this.btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
-            this.lblVicIiDebugging = new System.Windows.Forms.ToolStripLabel();
-            this.separator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.lblDebug = new System.Windows.Forms.ToolStripLabel();
+            this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -86,6 +87,7 @@ namespace ComputerSystem.Commodore64 {
             this.pScreen.DragEnter += new System.Windows.Forms.DragEventHandler(this.pScreen_DragEnter);
             this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
             this.pScreen.DoubleClick += new System.EventHandler(this.pScreen_DoubleClick);
+            this.pScreen.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pScreen_MouseMove);
             this.pScreen.Resize += new System.EventHandler(this.PScreen_Resize);
             // 
             // statusMain
@@ -158,6 +160,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnOpen,
             this.btnSave,
             this.separator2,
+            this.btnToggleFullscreen,
             this.btnUseCrtFilter,
             this.separator3,
             this.btnCopyOutput,
@@ -239,6 +242,16 @@ namespace ComputerSystem.Commodore64 {
             this.separator2.Name = "separator2";
             this.separator2.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnUseCrtFilter
+            // 
+            this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
+            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
+            this.btnUseCrtFilter.Text = "CRT filter";
+            // 
             // separator3
             // 
             this.separator3.Name = "separator3";
@@ -269,6 +282,12 @@ namespace ComputerSystem.Commodore64 {
             // 
             this.separator4.Name = "separator4";
             this.separator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // lblDebug
+            // 
+            this.lblDebug.Name = "lblDebug";
+            this.lblDebug.Size = new System.Drawing.Size(33, 22);
+            this.lblDebug.Text = "CPU:";
             // 
             // btnDebugger
             // 
@@ -301,6 +320,58 @@ namespace ComputerSystem.Commodore64 {
             this.btnClockSpeedFaster.Text = "Speed [+]";
             this.btnClockSpeedFaster.ToolTipText = "Clock Speed +";
             this.btnClockSpeedFaster.Click += new System.EventHandler(this.btnClockSpeedFaster_Click);
+            // 
+            // separator5
+            // 
+            this.separator5.Name = "separator5";
+            this.separator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // lblVicIiDebugging
+            // 
+            this.lblVicIiDebugging.Name = "lblVicIiDebugging";
+            this.lblVicIiDebugging.Size = new System.Drawing.Size(39, 22);
+            this.lblVicIiDebugging.Text = "VIC-II:";
+            // 
+            // btnShowVideoFrameOutlines
+            // 
+            this.btnShowVideoFrameOutlines.Checked = true;
+            this.btnShowVideoFrameOutlines.CheckOnClick = true;
+            this.btnShowVideoFrameOutlines.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnShowVideoFrameOutlines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnShowVideoFrameOutlines.Image = ((System.Drawing.Image)(resources.GetObject("btnShowVideoFrameOutlines.Image")));
+            this.btnShowVideoFrameOutlines.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowVideoFrameOutlines.Name = "btnShowVideoFrameOutlines";
+            this.btnShowVideoFrameOutlines.Size = new System.Drawing.Size(23, 22);
+            this.btnShowVideoFrameOutlines.Text = "Outlines";
+            // 
+            // btnShowScanLinePosition
+            // 
+            this.btnShowScanLinePosition.Checked = true;
+            this.btnShowScanLinePosition.CheckOnClick = true;
+            this.btnShowScanLinePosition.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnShowScanLinePosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnShowScanLinePosition.Image = ((System.Drawing.Image)(resources.GetObject("btnShowScanLinePosition.Image")));
+            this.btnShowScanLinePosition.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowScanLinePosition.Name = "btnShowScanLinePosition";
+            this.btnShowScanLinePosition.Size = new System.Drawing.Size(23, 22);
+            this.btnShowScanLinePosition.Text = "Scanline Position";
+            // 
+            // btnShowFullFrameVideo
+            // 
+            this.btnShowFullFrameVideo.Checked = true;
+            this.btnShowFullFrameVideo.CheckOnClick = true;
+            this.btnShowFullFrameVideo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnShowFullFrameVideo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowFullFrameVideo.Image")));
+            this.btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
+            this.btnShowFullFrameVideo.Size = new System.Drawing.Size(23, 22);
+            this.btnShowFullFrameVideo.Text = "Show Full Frame";
+            // 
+            // separator6
+            // 
+            this.separator6.Name = "separator6";
+            this.separator6.Size = new System.Drawing.Size(6, 25);
             // 
             // ofd
             // 
@@ -376,75 +447,16 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicScreenOn.Size = new System.Drawing.Size(49, 19);
             this.lblVicScreenOn.Text = "Screen:";
             // 
-            // separator5
+            // btnToggleFullscreen
             // 
-            this.separator5.Name = "separator5";
-            this.separator5.Size = new System.Drawing.Size(6, 25);
-            // 
-            // btnShowFullFrameVideo
-            // 
-            this.btnShowFullFrameVideo.Checked = true;
-            this.btnShowFullFrameVideo.CheckOnClick = true;
-            this.btnShowFullFrameVideo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowFullFrameVideo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowFullFrameVideo.Image")));
-            this.btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
-            this.btnShowFullFrameVideo.Size = new System.Drawing.Size(23, 22);
-            this.btnShowFullFrameVideo.Text = "Show Full Frame";
-            // 
-            // btnUseCrtFilter
-            // 
-            this.btnUseCrtFilter.Checked = true;
-            this.btnUseCrtFilter.CheckOnClick = true;
-            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
-            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
-            this.btnUseCrtFilter.Text = "CRT filter";
-            // 
-            // btnShowVideoFrameOutlines
-            // 
-            this.btnShowVideoFrameOutlines.Checked = true;
-            this.btnShowVideoFrameOutlines.CheckOnClick = true;
-            this.btnShowVideoFrameOutlines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnShowVideoFrameOutlines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowVideoFrameOutlines.Image = ((System.Drawing.Image)(resources.GetObject("btnShowVideoFrameOutlines.Image")));
-            this.btnShowVideoFrameOutlines.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowVideoFrameOutlines.Name = "btnShowVideoFrameOutlines";
-            this.btnShowVideoFrameOutlines.Size = new System.Drawing.Size(23, 22);
-            this.btnShowVideoFrameOutlines.Text = "Outlines";
-            // 
-            // btnShowScanLinePosition
-            // 
-            this.btnShowScanLinePosition.Checked = true;
-            this.btnShowScanLinePosition.CheckOnClick = true;
-            this.btnShowScanLinePosition.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnShowScanLinePosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowScanLinePosition.Image = ((System.Drawing.Image)(resources.GetObject("btnShowScanLinePosition.Image")));
-            this.btnShowScanLinePosition.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowScanLinePosition.Name = "btnShowScanLinePosition";
-            this.btnShowScanLinePosition.Size = new System.Drawing.Size(23, 22);
-            this.btnShowScanLinePosition.Text = "Scanline Position";
-            // 
-            // lblVicIiDebugging
-            // 
-            this.lblVicIiDebugging.Name = "lblVicIiDebugging";
-            this.lblVicIiDebugging.Size = new System.Drawing.Size(39, 22);
-            this.lblVicIiDebugging.Text = "VIC-II:";
-            // 
-            // separator6
-            // 
-            this.separator6.Name = "separator6";
-            this.separator6.Size = new System.Drawing.Size(6, 25);
-            // 
-            // lblDebug
-            // 
-            this.lblDebug.Name = "lblDebug";
-            this.lblDebug.Size = new System.Drawing.Size(33, 22);
-            this.lblDebug.Text = "CPU:";
+            this.btnToggleFullscreen.CheckOnClick = true;
+            this.btnToggleFullscreen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnToggleFullscreen.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleFullscreen.Image")));
+            this.btnToggleFullscreen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnToggleFullscreen.Name = "btnToggleFullscreen";
+            this.btnToggleFullscreen.Size = new System.Drawing.Size(23, 22);
+            this.btnToggleFullscreen.Text = "Toggle Fullscreen";
+            this.btnToggleFullscreen.Click += new System.EventHandler(this.btnToggleFullscreen_Click);
             // 
             // FormC64Screen
             // 
@@ -517,5 +529,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripLabel lblDebug;
         private System.Windows.Forms.ToolStripLabel lblVicIiDebugging;
         private System.Windows.Forms.ToolStripSeparator separator6;
+        private System.Windows.Forms.ToolStripButton btnToggleFullscreen;
     }
 }
