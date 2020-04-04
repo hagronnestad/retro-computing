@@ -128,9 +128,9 @@ namespace ComputerSystem.Commodore64 {
             SetPixels(_bC64ScreenBuffer, C64.Vic.ScreenBufferPixels);
 
             if (btnShowVideoFrameOutlines.Checked) {
-                _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.FullFrame.X, (int)C64.Vic.FullFrame.Y, (int)C64.Vic.FullFrame.Width, (int)C64.Vic.FullFrame.Height);
-                _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.BorderFrame.X, (int)C64.Vic.BorderFrame.Y, (int)C64.Vic.BorderFrame.Width, (int)C64.Vic.BorderFrame.Height);
-                _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.DisplayFrame.X, (int)C64.Vic.DisplayFrame.Y, (int)C64.Vic.DisplayFrame.Width, (int)C64.Vic.DisplayFrame.Height);
+                _gC64ScreenBuffer.DrawRectangle(_penWhite, C64.Vic.FullFrame.X, C64.Vic.FullFrame.Y, C64.Vic.FullFrame.Width, C64.Vic.FullFrame.Height);
+                _gC64ScreenBuffer.DrawRectangle(_penWhite, C64.Vic.BorderFrame.X, C64.Vic.BorderFrame.Y, C64.Vic.BorderFrame.Width, C64.Vic.BorderFrame.Height);
+                _gC64ScreenBuffer.DrawRectangle(_penWhite, C64.Vic.DisplayFrame.X, C64.Vic.DisplayFrame.Y, C64.Vic.DisplayFrame.Width, C64.Vic.DisplayFrame.Height);
             }
 
             _gC64ScreenBuffer.DrawLine(_penRaster, 0, C64.Vic._rasterLineToGenerateInterruptAt, C64.Vic.FullFrame.Width, C64.Vic._rasterLineToGenerateInterruptAt);
