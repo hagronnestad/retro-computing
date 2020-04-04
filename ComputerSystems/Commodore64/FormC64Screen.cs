@@ -326,6 +326,12 @@ namespace ComputerSystem.Commodore64 {
 
             if (height < pScreen.Height) Height -= pScreen.Height - height;
             if (height > pScreen.Height) Height += height - pScreen.Height;
+
+            // Compensate for full frame mode
+            if (btnShowFullFrameVideo.Checked) {
+                Width += C64.Vic.FullFrame.Width - C64.Vic.BorderFrame.Width;
+            }
         }
+
     }
 }
