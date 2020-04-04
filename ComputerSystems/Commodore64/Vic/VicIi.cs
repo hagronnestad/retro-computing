@@ -24,7 +24,7 @@ namespace Commodore64.Vic {
 
         private readonly TvSystem _tvSystem;
         private readonly int _fullHeight;
-        private int _rasterLineToGenerateInterruptAt = 0;
+        public int _rasterLineToGenerateInterruptAt = 0;
 
         private bool _interruptLatchRasterLine = false;
         private bool _interruptLatchSpriteBackgroundCollision = false;

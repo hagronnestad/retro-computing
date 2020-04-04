@@ -30,6 +30,7 @@ namespace ComputerSystem.Commodore64 {
         private readonly Pen _penScanLine;
         private readonly Pen _penScanLine2;
         private readonly Pen _penWhite = new Pen(Color.White) { DashStyle = DashStyle.Dot };
+        private readonly Pen _penRaster = new Pen(Color.Red) { DashStyle = DashStyle.Dash };
 
         private Timer _uiRefreshTimer;
         private Bitmap _bC64ScreenBuffer;
@@ -131,6 +132,8 @@ namespace ComputerSystem.Commodore64 {
                 _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.BorderFrame.X, (int)C64.Vic.BorderFrame.Y, (int)C64.Vic.BorderFrame.Width, (int)C64.Vic.BorderFrame.Height);
                 _gC64ScreenBuffer.DrawRectangle(_penWhite, (int)C64.Vic.DisplayFrame.X, (int)C64.Vic.DisplayFrame.Y, (int)C64.Vic.DisplayFrame.Width, (int)C64.Vic.DisplayFrame.Height);
             }
+
+            _gC64ScreenBuffer.DrawLine(_penRaster, 0, C64.Vic._rasterLineToGenerateInterruptAt, C64.Vic.FullFrame.Width, C64.Vic._rasterLineToGenerateInterruptAt);
 
             if (btnShowScanLinePosition.Checked) {
                 var p = C64.Vic.GetScanlinePoint();
