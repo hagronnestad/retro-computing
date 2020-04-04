@@ -435,7 +435,7 @@ namespace Commodore64.Vic {
 
             var vicBankOffset = 0;
 
-            switch (C64.Memory[0xDD00] & 0b00000011) {
+            switch (C64.Memory.Read(0xDD00) & 0b00000011) {
                 case 0b00000011:
                     vicBankOffset = 0;
 
