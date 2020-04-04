@@ -317,5 +317,12 @@ namespace ComputerSystem.Commodore64 {
         private void btnClockSpeedFaster_Click(object sender, EventArgs e) {
             C64.CpuClockSpeed /= 10.0d;
         }
+
+        private void pScreen_DoubleClick(object sender, EventArgs e) {
+            var height = (int)((pScreen.Width / 4.0f) * 3.0f);
+
+            if (height < pScreen.Height) Height -= pScreen.Height - height;
+            if (height > pScreen.Height) Height += height - pScreen.Height;
+        }
     }
 }

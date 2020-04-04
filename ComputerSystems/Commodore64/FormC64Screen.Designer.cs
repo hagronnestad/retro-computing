@@ -1,4 +1,4 @@
-﻿namespace ComputerSystem.Commodore64 {
+namespace ComputerSystem.Commodore64 {
     partial class FormC64Screen {
         /// <summary>
         /// Required designer variable.
@@ -85,6 +85,7 @@
             this.pScreen.DragDrop += new System.Windows.Forms.DragEventHandler(this.pScreen_DragDropAsync);
             this.pScreen.DragEnter += new System.Windows.Forms.DragEventHandler(this.pScreen_DragEnter);
             this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
+            this.pScreen.DoubleClick += new System.EventHandler(this.pScreen_DoubleClick);
             this.pScreen.Resize += new System.EventHandler(this.PScreen_Resize);
             // 
             // statusMain
