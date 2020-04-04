@@ -43,7 +43,7 @@ namespace Commodore64.Vic {
 
                     case Register.REGISTER_0x11_SCREEN_CONTROL_1:
                         // Bit #7 og 0x11 is set if current raster line > 255
-                        _registers[(int)index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
+                        _registers[(int)index] = _registers[(int)index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
                         return _registers[(int)index];
 
                     // Current raster line (bits #0-#7).
@@ -53,11 +53,11 @@ namespace Commodore64.Vic {
 
                     // Interrupt status register.
                     case Register.REGISTER_0x19_INTERRUPT_REGISTER:
-                        _registers[(int)index].SetBit(BitFlag.BIT_0, _interruptLatchRasterLine);
-                        _registers[(int)index].SetBit(BitFlag.BIT_1, _interruptLatchSpriteBackgroundCollision);
-                        _registers[(int)index].SetBit(BitFlag.BIT_2, _interruptLatchSpriteSpriteCollision);
-                        _registers[(int)index].SetBit(BitFlag.BIT_3, _interruptLatchLightPenSignal);
-                        _registers[(int)index].SetBit(BitFlag.BIT_7, _interruptLatchAny);
+                        _registers[(int)index] = _registers[(int)index].SetBit(BitFlag.BIT_0, _interruptLatchRasterLine);
+                        _registers[(int)index] = _registers[(int)index].SetBit(BitFlag.BIT_1, _interruptLatchSpriteBackgroundCollision);
+                        _registers[(int)index] = _registers[(int)index].SetBit(BitFlag.BIT_2, _interruptLatchSpriteSpriteCollision);
+                        _registers[(int)index] = _registers[(int)index].SetBit(BitFlag.BIT_3, _interruptLatchLightPenSignal);
+                        _registers[(int)index] = _registers[(int)index].SetBit(BitFlag.BIT_7, _interruptLatchAny);
                         return _registers[(int)index];
 
                     default:
