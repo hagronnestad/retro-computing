@@ -133,7 +133,9 @@ namespace ComputerSystem.Commodore64 {
                 _gC64ScreenBuffer.DrawRectangle(_penWhite, C64.Vic.DisplayFrame.X, C64.Vic.DisplayFrame.Y, C64.Vic.DisplayFrame.Width, C64.Vic.DisplayFrame.Height);
             }
 
-            _gC64ScreenBuffer.DrawLine(_penRaster, 0, C64.Vic._rasterLineToGenerateInterruptAt, C64.Vic.FullFrame.Width, C64.Vic._rasterLineToGenerateInterruptAt);
+            if (btnShowRasterLineInterrupt.Checked && C64.Vic.InterruptControlRegisterRasterInterruptEnabled) {
+                _gC64ScreenBuffer.DrawLine(_penRaster, 0, C64.Vic._rasterLineToGenerateInterruptAt, C64.Vic.FullFrame.Width, C64.Vic._rasterLineToGenerateInterruptAt);
+            }
 
             if (btnShowScanLinePosition.Checked) {
                 var p = C64.Vic.GetScanlinePoint();

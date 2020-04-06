@@ -1,4 +1,4 @@
-﻿namespace ComputerSystem.Commodore64 {
+namespace ComputerSystem.Commodore64 {
     partial class FormC64Screen {
         /// <summary>
         /// Required designer variable.
@@ -40,6 +40,7 @@
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
             this.separator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
             this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
@@ -53,6 +54,7 @@
             this.lblVicIiDebugging = new System.Windows.Forms.ToolStripLabel();
             this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
             this.btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
+            this.btnShowRasterLineInterrupt = new System.Windows.Forms.ToolStripButton();
             this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
             this.separator6 = new System.Windows.Forms.ToolStripSeparator();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
@@ -65,7 +67,6 @@
             this.lblVicCurrentLineCycle = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
-            this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -173,6 +174,7 @@
             this.lblVicIiDebugging,
             this.btnShowVideoFrameOutlines,
             this.btnShowScanLinePosition,
+            this.btnShowRasterLineInterrupt,
             this.btnShowFullFrameVideo,
             this.separator6});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
@@ -241,6 +243,17 @@
             // 
             this.separator2.Name = "separator2";
             this.separator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnToggleFullscreen
+            // 
+            this.btnToggleFullscreen.CheckOnClick = true;
+            this.btnToggleFullscreen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnToggleFullscreen.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleFullscreen.Image")));
+            this.btnToggleFullscreen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnToggleFullscreen.Name = "btnToggleFullscreen";
+            this.btnToggleFullscreen.Size = new System.Drawing.Size(23, 22);
+            this.btnToggleFullscreen.Text = "Toggle Fullscreen";
+            this.btnToggleFullscreen.Click += new System.EventHandler(this.btnToggleFullscreen_Click);
             // 
             // btnUseCrtFilter
             // 
@@ -356,6 +369,17 @@
             this.btnShowScanLinePosition.Size = new System.Drawing.Size(23, 22);
             this.btnShowScanLinePosition.Text = "Scanline Position";
             // 
+            // btnShowRasterLineInterrupt
+            // 
+            this.btnShowRasterLineInterrupt.Checked = true;
+            this.btnShowRasterLineInterrupt.CheckOnClick = true;
+            this.btnShowRasterLineInterrupt.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnShowRasterLineInterrupt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnShowRasterLineInterrupt.Image = ((System.Drawing.Image)(resources.GetObject("btnShowRasterLineInterrupt.Image")));
+            this.btnShowRasterLineInterrupt.Name = "btnShowRasterLineInterrupt";
+            this.btnShowRasterLineInterrupt.Size = new System.Drawing.Size(23, 22);
+            this.btnShowRasterLineInterrupt.Text = "Show Raster Line Interrupt";
+            // 
             // btnShowFullFrameVideo
             // 
             this.btnShowFullFrameVideo.Checked = true;
@@ -447,17 +471,6 @@
             this.lblVicScreenOn.Size = new System.Drawing.Size(49, 19);
             this.lblVicScreenOn.Text = "Screen:";
             // 
-            // btnToggleFullscreen
-            // 
-            this.btnToggleFullscreen.CheckOnClick = true;
-            this.btnToggleFullscreen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnToggleFullscreen.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleFullscreen.Image")));
-            this.btnToggleFullscreen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnToggleFullscreen.Name = "btnToggleFullscreen";
-            this.btnToggleFullscreen.Size = new System.Drawing.Size(23, 22);
-            this.btnToggleFullscreen.Text = "Toggle Fullscreen";
-            this.btnToggleFullscreen.Click += new System.EventHandler(this.btnToggleFullscreen_Click);
-            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
@@ -530,5 +543,6 @@
         private System.Windows.Forms.ToolStripLabel lblVicIiDebugging;
         private System.Windows.Forms.ToolStripSeparator separator6;
         private System.Windows.Forms.ToolStripButton btnToggleFullscreen;
+        private System.Windows.Forms.ToolStripButton btnShowRasterLineInterrupt;
     }
 }
