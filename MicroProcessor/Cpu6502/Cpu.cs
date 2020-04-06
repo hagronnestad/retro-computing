@@ -104,14 +104,14 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         public byte Value {
             get {
-                return OpCode.AddressingMode == AddressingMode.Accumulator ? AR : Memory[Address];
+                return OpCode.AddressingMode == AddressingMode.Accumulator ? AR : Memory.Read(Address);
             }
             set {
                 if (OpCode.AddressingMode == AddressingMode.Accumulator) {
                     AR = value;
 
                 } else {
-                    Memory[Address] = value;
+                    Memory.Write(Address, value);
                 }
             }
         }
@@ -213,7 +213,7 @@ namespace MicroProcessor.Cpu6502 {
         /// <param name="ignoreCycles"></param>
         public void Step(bool ignoreCycles = false) {
             
-            OpCode = OpCodeCache[Memory[PC]];
+            OpCode = OpCodeCache[Memory.Read(PC)];
             OpCode.OpCodeAddress = PC;
 
             if (OnStep != null) {
@@ -222,7 +222,7 @@ namespace MicroProcessor.Cpu6502 {
 
                 o.Operands.Clear();
                 for (int j = 1; j < o.Length; j++) {
-                    o.Operands.Add(Memory[PC + j]);
+                    o.Operands.Add(Memory.Read(PC + j));
                 }
 
                 OnStep?.Invoke(this, o);
@@ -257,7 +257,7 @@ namespace MicroProcessor.Cpu6502 {
 
             SR.IrqDisable = true;
 
-            PC = (ushort)((Memory[RESET_VECTOR_ADDRESS + 1] << 8) | Memory[RESET_VECTOR_ADDRESS]);
+            PC = (ushort)((Memory.Read(RESET_VECTOR_ADDRESS + 1) << 8) | Memory.Read(RESET_VECTOR_ADDRESS));
 
             // Reset takes 8 cycles
             TotalCycles += 8;
@@ -287,7 +287,7 @@ namespace MicroProcessor.Cpu6502 {
             PushStack((byte)((SR.Register | (byte)ProcessorStatusFlags.Reserved) & (byte)~ProcessorStatusFlags.BreakCommand));
             SR.IrqDisable = true;
 
-            PC = (ushort)((Memory[NMI_VECTOR_ADDRESS + 1] << 8) | Memory[NMI_VECTOR_ADDRESS]);
+            PC = (ushort)((Memory.Read(NMI_VECTOR_ADDRESS + 1) << 8) | Memory.Read(NMI_VECTOR_ADDRESS));
 
             // NMI takes 8 cycles
             TotalCycles += 8;
@@ -306,7 +306,7 @@ namespace MicroProcessor.Cpu6502 {
 
             SR.IrqDisable = true;
 
-            PC = (ushort)((Memory[IRQ_VECTOR_ADDRESS + 1] << 8) | Memory[IRQ_VECTOR_ADDRESS]);
+            PC = (ushort)((Memory.Read(IRQ_VECTOR_ADDRESS + 1) << 8) | Memory.Read(IRQ_VECTOR_ADDRESS));
 
             // IRQ takes 7 cycles
             TotalCycles += 7;
@@ -320,7 +320,7 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         /// <param name="value"></param>
         public void PushStack(byte value) {
-            Memory[0x0100 + SP] = value;
+            Memory.Write(0x0100 + SP, value);
             SP--;
         }
 
@@ -330,16 +330,16 @@ namespace MicroProcessor.Cpu6502 {
         /// <returns></returns>
         public byte PopStack() {
             SP++;
-            var b = Memory[0x0100 + SP];
+            var b = Memory.Read(0x0100 + SP);
             return b;
         }
 
 
         [AddressingMode(AddressingMode = AddressingMode.Absolute)]
         public void Absolute() {
-            var lowAddressByte = Memory[PC];
+            var lowAddressByte = Memory.Read(PC);
             PC++;
-            var highAddressByte = Memory[PC];
+            var highAddressByte = Memory.Read(PC);
             PC++;
 
             Address = (ushort)((highAddressByte << 8) | lowAddressByte);
@@ -347,9 +347,9 @@ namespace MicroProcessor.Cpu6502 {
 
         [AddressingMode(AddressingMode = AddressingMode.AbsoluteX)]
         public void AbsoluteX() {
-            var lowAddressByte = Memory[PC];
+            var lowAddressByte = Memory.Read(PC);
             PC++;
-            var highAddressByte = Memory[PC];
+            var highAddressByte = Memory.Read(PC);
             PC++;
 
             Address = (ushort)((highAddressByte << 8) | lowAddressByte);
@@ -358,9 +358,9 @@ namespace MicroProcessor.Cpu6502 {
 
         [AddressingMode(AddressingMode = AddressingMode.AbsoluteY)]
         public void AbsoluteY() {
-            var lowAddressByte = Memory[PC];
+            var lowAddressByte = Memory.Read(PC);
             PC++;
-            var highAddressByte = Memory[PC];
+            var highAddressByte = Memory.Read(PC);
             PC++;
 
             Address = (ushort)((highAddressByte << 8) | lowAddressByte);
@@ -375,19 +375,19 @@ namespace MicroProcessor.Cpu6502 {
 
         [AddressingMode(AddressingMode = AddressingMode.Indirect)]
         public void Indirect() {
-            var lowAddressPointer = Memory[PC];
+            var lowAddressPointer = Memory.Read(PC);
             PC++;
-            var highAddressPointer = Memory[PC];
+            var highAddressPointer = Memory.Read(PC);
             PC++;
 
             var addressPointer = (ushort)((highAddressPointer << 8) | lowAddressPointer);
 
             if (lowAddressPointer == 0xFF) {
                 // This handles a hardware bug in the 6502
-                Address = (ushort)(Memory[addressPointer & 0xFF00] << 8 | Memory[addressPointer]);
+                Address = (ushort)(Memory.Read(addressPointer & 0xFF00) << 8 | Memory.Read(addressPointer));
 
             } else {
-                Address = (ushort)(Memory[addressPointer + 1] << 8 | Memory[addressPointer]);
+                Address = (ushort)(Memory.Read(addressPointer + 1) << 8 | Memory.Read(addressPointer));
             }
         }
 
@@ -395,11 +395,11 @@ namespace MicroProcessor.Cpu6502 {
         public void XIndirect() {
             // The ushort type below is used intentionally to allow byte rollover check
 
-            ushort pageZeroAddress = Memory[PC];
+            ushort pageZeroAddress = Memory.Read(PC);
             PC++;
 
-            var lowAddress = Memory[(pageZeroAddress + XR) & 0x00FF];
-            var highAddress = Memory[(pageZeroAddress + XR + 1) & 0x00FF];
+            var lowAddress = Memory.Read((pageZeroAddress + XR) & 0x00FF);
+            var highAddress = Memory.Read((pageZeroAddress + XR + 1) & 0x00FF);
 
             Address = (ushort)((highAddress << 8) | lowAddress);
         }
@@ -408,11 +408,11 @@ namespace MicroProcessor.Cpu6502 {
         public void IndirectY() {
             // The ushort type below is used intentionally to allow byte rollover check
 
-            ushort pageZeroAddress = Memory[PC];
+            ushort pageZeroAddress = Memory.Read(PC);
             PC++;
 
-            var lowAddress = Memory[pageZeroAddress & 0x00FF];
-            var highAddress = Memory[(pageZeroAddress + 1) & 0x00FF];
+            var lowAddress = Memory.Read(pageZeroAddress & 0x00FF);
+            var highAddress = Memory.Read((pageZeroAddress + 1) & 0x00FF);
 
             Address = (ushort)((highAddress << 8) | lowAddress);
             Address += YR;
@@ -420,14 +420,14 @@ namespace MicroProcessor.Cpu6502 {
 
         [AddressingMode(AddressingMode = AddressingMode.Relative)]
         public void Relative() {
-            sbyte rel_addr = (sbyte)Memory[PC];
+            sbyte rel_addr = (sbyte)Memory.Read(PC);
             PC++;
             Address = (ushort)(PC + rel_addr);
         }
 
         [AddressingMode(AddressingMode = AddressingMode.Zeropage)]
         public void Zeropage() {
-            Address = Memory[PC];
+            Address = Memory.Read(PC);
             PC++;
         }
 
@@ -435,7 +435,7 @@ namespace MicroProcessor.Cpu6502 {
         public void ZeropageX() {
             // The ushort type below is used intentionally to allow byte rollover check
 
-            ushort a = (ushort)(Memory[PC] + XR);
+            ushort a = (ushort)(Memory.Read(PC) + XR);
             Address = (a &= 0x00FF);
             PC++;
         }
@@ -444,7 +444,7 @@ namespace MicroProcessor.Cpu6502 {
         public void ZeropageY() {
             // The ushort type below is used intentionally to allow byte rollover check
 
-            ushort a = (ushort)(Memory[PC] + YR);
+            ushort a = (ushort)(Memory.Read(PC) + YR);
             Address = (a &= 0x00FF);
             PC++;
         }
@@ -813,7 +813,7 @@ namespace MicroProcessor.Cpu6502 {
 
             SR.IrqDisable = true;
 
-            PC = (ushort)((Memory[BRK_VECTOR_ADDRESS + 1] << 8) | Memory[BRK_VECTOR_ADDRESS]);
+            PC = (ushort)((Memory.Read(BRK_VECTOR_ADDRESS + 1) << 8) | Memory.Read(BRK_VECTOR_ADDRESS));
         }
 
         [OpCodeDefinition(Name = nameof(NOP), Code = 0xEA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
