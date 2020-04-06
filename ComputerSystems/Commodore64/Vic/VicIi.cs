@@ -102,7 +102,9 @@ namespace Commodore64.Vic {
 
         private void UpdateRasterLineToGenerateInterruptAt() {
             _rasterLineToGenerateInterruptAt = this[Register.REGISTER_0x12_RASTER_COUNTER];
-            if (this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_7)) _rasterLineToGenerateInterruptAt += 255;
+            if (this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_7)) {
+                _rasterLineToGenerateInterruptAt += 255;
+            }
         }
 
         public enum TvSystem {
