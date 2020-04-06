@@ -151,9 +151,9 @@
   <data name="btnPause.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABhSURBVDhP7ZKxCQBRCEPFBT44ggu4/3QeClcYSHP+8h5I
-        ioRXKbnkriAiUkQ6EdYNgbv3qBJh3RCYWY8qEdYNgar2qBJh3RDU4D2Edb8ABOecHlQirBuC9SOtX/kL
-        S0HmA8XPLkI8RIY1AAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABkSURBVDhPzZKxCcAwDASNFzB4BC2g/adzgiKeyMU1LpID
+        8cVdqfYv3H3ds3IL5ISZRZRbICfmnBHlFsiJ3ntEuQVybyLK2yEnKCInKCInKCInKCL3MMaIILdAThw/
+        0vErf0BrF0WQUPX3itPMAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnOpen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
