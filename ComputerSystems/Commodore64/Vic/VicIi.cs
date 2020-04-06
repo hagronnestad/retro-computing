@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Commodore64.Vic.Enums;
 using Extensions.Byte;
@@ -434,8 +434,9 @@ namespace Commodore64.Vic {
 
             var vicBankOffset = 0;
 
-            switch (C64.Memory.Read(0xDD00) & 0b00000011) {
-                case 0b00000011:
+            switch (C64.Memory.Read(0xDD00) & 0b11) {
+
+                case 0b11:
                     vicBankOffset = 0;
 
                     if (address >= 0x1000 && address <= 0x1FFF) {
@@ -444,11 +445,11 @@ namespace Commodore64.Vic {
 
                     break;
 
-                case 0b00000010:
+                case 0b10:
                     vicBankOffset = 0x4000;
                     break;
 
-                case 0b00000001:
+                case 0b01:
                     vicBankOffset = 0x8000;
 
                     if (address >= 0x1000 && address <= 0x1FFF) {
@@ -457,7 +458,7 @@ namespace Commodore64.Vic {
 
                     break;
 
-                case 0b00000000:
+                case 0b00:
                     vicBankOffset = 0xC000;
                     break;
             }
