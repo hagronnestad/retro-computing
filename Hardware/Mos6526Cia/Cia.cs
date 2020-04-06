@@ -6,7 +6,7 @@ using System.Timers;
 
 namespace Hardware.Mos6526Cia {
 
-    public class Cia {
+    public class Cia1 {
 
         private const double INTERRUPT_INTERVAL = 1000.0f / 60.0f;
 
@@ -61,7 +61,7 @@ namespace Hardware.Mos6526Cia {
             }
         }
 
-        public Cia() {
+        public Cia1() {
             _timeOfDay = DateTime.Now;
 
             _timer = new Timer(100);

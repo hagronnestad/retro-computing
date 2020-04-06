@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using static Commodore64.Vic.VicIi;
 using Commodore64.Vic;
+using Commodore64.Cia;
 
 namespace Commodore64 {
     public class C64 {
@@ -24,7 +25,8 @@ namespace Commodore64 {
         public double CpuClockSpeed { get; set; } = 1.0f / CLOCK_PAL;
 
 
-        public Cia Cia { get; private set; }
+        public Cia1 Cia { get; private set; }
+        public Cia2 Cia2 { get; private set; }
         public VicIi Vic { get; private set; }
         public C64Bus Memory { get; private set; }
         public Cpu Cpu { get; private set; }
@@ -38,11 +40,12 @@ namespace Commodore64 {
         public void Initialize() {
             RemoveEventHandlers();
 
-            Cia = new Cia();
+            Cia = new Cia1();
+            Cia2 = new Cia2();
             Vic = new VicIi(TvSystem.PAL) {
                 C64 = this
             };
-            Memory = new C64Bus(Cia, Vic);
+            Memory = new C64Bus(Cia, Cia2, Vic);
             Cpu = new Cpu(Memory);
 
             AddEventHandlers();

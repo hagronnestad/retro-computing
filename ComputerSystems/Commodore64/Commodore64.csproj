@@ -57,6 +57,8 @@
     <Compile Include="C64MemoryLocations.cs" />
     <Compile Include="C64MemoryValues.cs" />
     <Compile Include="C64MemoryOffsets.cs" />
+    <Compile Include="Cia\Cia2.cs" />
+    <Compile Include="Cia\Enums\Register.cs" />
     <Compile Include="Colors.cs" />
     <Compile Include="Vic\Enums\GraphicsMode.cs" />
     <Compile Include="Enums\PetsciiCode.cs" />

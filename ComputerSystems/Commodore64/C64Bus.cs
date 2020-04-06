@@ -5,6 +5,7 @@ using System.IO;
 using System;
 using Commodore64.Vic;
 using Commodore64.Vic.Enums;
+using Commodore64.Cia;
 
 namespace Commodore64 {
 
@@ -35,10 +36,11 @@ namespace Commodore64 {
         public MemoryBase<byte> _romCharacter;
         private MemoryBase<byte> _romKernal;
 
-        private Cia _cia;
+        private Cia1 _cia;
+        private Cia2 _cia2;
         private readonly VicIi _vic;
 
-        public C64Bus(Cia cia, VicIi vic) : base(0x10000) {
+        public C64Bus(Cia1 cia, Cia2 cia2, VicIi vic) : base(0x10000) {
             //_memory.FillWithRandomData();
 
             // Intialize processor addressing mode with default values
@@ -51,6 +53,7 @@ namespace Commodore64 {
             _romKernal = new MemoryBase<byte>(File.ReadAllBytes("kernal.rom")) { IsReadOnly = true };
 
             _cia = cia;
+            _cia2 = cia2;
             _vic = vic;
         }
 
@@ -223,7 +226,8 @@ namespace Commodore64 {
 
                     // CIA 2
                     if (address >= 0xDD00 && address <= 0xDDFF) {
-                        return base.Read(address);
+                        return _cia2[(Cia.Enums.Register)((address - 0xDD00) % 0x10)];
+                        //return base.Read(address);
                     }
 
 
@@ -371,8 +375,15 @@ namespace Commodore64 {
                     return;
                 }
 
-            }
+                // CIA 2
+                if (address >= 0xDD00 && address <= 0xDDFF) {
+                    //base.Write(address, value);
+                    //Debug.WriteLine($"Unimplemented CIA2.Write (using base.Write) Address: 0x{address:X4}, Value: 0x{value:X2}");
+                    _cia2[(Cia.Enums.Register)((address - 0xDD00) % 0x10)] = value;
+                    return;
+                }
 
+            }
 
             base.Write(address, value);
         }
