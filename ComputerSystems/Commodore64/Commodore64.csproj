@@ -61,7 +61,6 @@
     <Compile Include="Cia\Enums\Register.cs" />
     <Compile Include="Colors.cs" />
     <Compile Include="Vic\Enums\GraphicsMode.cs" />
-    <Compile Include="Enums\PetsciiCode.cs" />
     <Compile Include="FormC64Screen.cs">
       <SubType>Form</SubType>
     </Compile>
