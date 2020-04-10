@@ -1,4 +1,4 @@
-﻿using Commodore64.Cia.Enums;
+using Commodore64.Cia.Enums;
 using Extensions.Byte;
 using Extensions.Enums;
 
@@ -16,7 +16,12 @@ namespace Commodore64.Cia {
         public byte[] _registers = new byte[0x10];
 
         public Cia2() {
-            _registers[0] = 0b00000011;
+            // This sets the default VIC bank at startup
+            // The value is getting set on startup by the KERNAL, but for some reason the
+            // R_0x02_PORT_A_DATA_DIRECTION register isn't set up to allow the write at that moment
+            // I don't know if either of the registers should have a default value or if they're
+            // controlled by hardware, anyway, this works for now...
+            _registers[(int)Register.R_0x00_PORT_A] = 0b00000011;
         }
 
         public byte this[Register index] {
