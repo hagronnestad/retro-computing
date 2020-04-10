@@ -4,6 +4,9 @@ using Extensions.Enums;
 
 namespace Commodore64.Cia {
     
+    // Some information and test programs here:
+    // https://sourceforge.net/p/vice-emu/code/HEAD/tree/testprogs/CIA/tod/
+
     /// <summary>
     /// This should be a generic CIA chip class that could be shared between the C64s two CIA chips
     /// or at least be a base class for the common functionality and extended class with
