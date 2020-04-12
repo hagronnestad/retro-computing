@@ -1,9 +1,4 @@
 ﻿using Commodore64.Cia.Enums;
-using Extensions.Byte;
-using Extensions.Enums;
-using System;
-using System.Diagnostics;
-using System.Timers;
 
 namespace Commodore64.Cia {
 
@@ -27,23 +22,23 @@ namespace Commodore64.Cia {
 
                 switch (index) {
 
-                    case Register.R_0x0B_TOD_HOURS:
-                        _timeOfDayIsHalted = true;
+                    //case Register.R_0x0B_TOD_HOURS:
+                    //    _timeOfDayIsHalted = true;
 
-                        var hour = (byte)_timeOfDayValue.Hour;
-                        hour.SetBit(BitFlag.BIT_7, hour > 11); // Bit 7 is AM/PM (FALSE = AM / TRUE = PM)
-                        return hour;
+                    //    var hour = (byte)_timeOfDayValue.Hour;
+                    //    hour.SetBit(BitFlag.BIT_7, hour > 11); // Bit 7 is AM/PM (FALSE = AM / TRUE = PM)
+                    //    return hour;
 
-                    case Register.R_0x0A_TOD_MINUTES:
-                        return (byte)_timeOfDayValue.Minute;
+                    //case Register.R_0x0A_TOD_MINUTES:
+                    //    return (byte)_timeOfDayValue.Minute;
 
-                    case Register.R_0x09_TOD_SECONDS:
-                        return (byte)_timeOfDayValue.Second;
+                    //case Register.R_0x09_TOD_SECONDS:
+                    //    return (byte)_timeOfDayValue.Second;
 
-                    case Register.R_0x08_TOD_TENTH_SECONDS:
-                        _timeOfDayIsHalted = false;
+                    //case Register.R_0x08_TOD_TENTH_SECONDS:
+                    //    _timeOfDayIsHalted = false;
 
-                        return (byte)(_timeOfDayValue.Millisecond / 100);
+                    //    return (byte)(_timeOfDayValue.Millisecond / 100);
 
                     default:
                         return _registers[i];
@@ -92,11 +87,11 @@ namespace Commodore64.Cia {
                         break;
 
                     case Register.R_0x08_TOD_TENTH_SECONDS:
-                        _timeOfDayStartValue = _timeOfDayValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
-                            _registers[(int)Register.R_0x0B_TOD_HOURS & 0b00011111],
-                            _registers[(int)Register.R_0x0A_TOD_MINUTES],
-                            _registers[(int)Register.R_0x09_TOD_SECONDS],
-                            value);
+                        //_timeOfDayStartValue = _timeOfDayValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                        //    _registers[(int)Register.R_0x0B_TOD_HOURS & 0b00011111],
+                        //    _registers[(int)Register.R_0x0A_TOD_MINUTES],
+                        //    _registers[(int)Register.R_0x09_TOD_SECONDS],
+                        //    value);
                         if (!_timeOfDayIsStarted) StartTimeOfDay();
                         _registers[i] = value;
                         break;
@@ -130,41 +125,15 @@ namespace Commodore64.Cia {
 
         // Time of Day
 
-        private Stopwatch _timeOfDayStopwatch;
-        private Timer _timeOfDayTimer;
-
-        private DateTime _timeOfDayStartValue;
-        private DateTime _timeOfDayValue;
-        private DateTime _timeOfDayAlarm = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
-
         private bool _timeOfDayIsStarted = false;
         private bool _timeOfDayIsHalted = false;
 
         private void InitTimeOfDay() {
-            _timeOfDayStopwatch = new Stopwatch();
-            _timeOfDayStartValue = _timeOfDayValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 1, 0, 0, 0);
 
-            // This timer drives the ToD at 60Hz to match the hardware resolution
-            _timeOfDayTimer = new Timer(1000.0f / 60.0f);
-            _timeOfDayTimer.Elapsed += _timeOfDayTimer_Elapsed;
-            _timeOfDayTimer.AutoReset = true;
         }
 
         private void StartTimeOfDay() {
-            _timeOfDayTimer.Start();
 
-            // This stopwatch keeps accurate time elapsed from the ToD reference
-            // We can't just add the elapsed time for each _timeOfDayTimer.Elapsed event
-            // because that's not accurate enough and drifts very fast
-            _timeOfDayStopwatch.Start();
-
-            _timeOfDayIsStarted = true;
-        }
-
-        private void _timeOfDayTimer_Elapsed(object sender, ElapsedEventArgs e) {
-            if (!_timeOfDayIsHalted) _timeOfDayValue = _timeOfDayStartValue.AddMilliseconds(_timeOfDayStopwatch.ElapsedMilliseconds);
-
-            //Debug.WriteLine(_timeOfDayValue.ToLongTimeString());
         }
     }
 }
