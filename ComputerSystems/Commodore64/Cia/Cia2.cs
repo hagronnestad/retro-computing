@@ -1,4 +1,8 @@
 ﻿using Commodore64.Cia.Enums;
+using Extensions.Enums;
+using Extensions.Byte;
+using System.Timers;
+using System;
 
 namespace Commodore64.Cia {
 
@@ -22,23 +26,22 @@ namespace Commodore64.Cia {
 
                 switch (index) {
 
-                    //case Register.R_0x0B_TOD_HOURS:
-                    //    _timeOfDayIsHalted = true;
+                    case Register.R_0x0B_TOD_HOURS:
+                        _todIsHalted = true;
 
-                    //    var hour = (byte)_timeOfDayValue.Hour;
-                    //    hour.SetBit(BitFlag.BIT_7, hour > 11); // Bit 7 is AM/PM (FALSE = AM / TRUE = PM)
-                    //    return hour;
+                        var hb = ToBcd((byte)(_todHaltedHours & 0b00011111));
+                        hb.SetBit(BitFlag.BIT_7, hb > 11); // Bit 7 is AM/PM (FALSE = AM / TRUE = PM)
+                        return hb;
 
-                    //case Register.R_0x0A_TOD_MINUTES:
-                    //    return (byte)_timeOfDayValue.Minute;
+                    case Register.R_0x0A_TOD_MINUTES:
+                        return ToBcd(_todHaltedMinutes);
 
-                    //case Register.R_0x09_TOD_SECONDS:
-                    //    return (byte)_timeOfDayValue.Second;
+                    case Register.R_0x09_TOD_SECONDS:
+                        return ToBcd(_todHaltedSeconds);
 
-                    //case Register.R_0x08_TOD_TENTH_SECONDS:
-                    //    _timeOfDayIsHalted = false;
-
-                    //    return (byte)(_timeOfDayValue.Millisecond / 100);
+                    case Register.R_0x08_TOD_TENTH_SECONDS:
+                        _todIsHalted = false;
+                        return ToBcd(_todHaltedTenths);
 
                     default:
                         return _registers[i];
@@ -87,13 +90,22 @@ namespace Commodore64.Cia {
                         break;
 
                     case Register.R_0x08_TOD_TENTH_SECONDS:
-                        //_timeOfDayStartValue = _timeOfDayValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
-                        //    _registers[(int)Register.R_0x0B_TOD_HOURS & 0b00011111],
-                        //    _registers[(int)Register.R_0x0A_TOD_MINUTES],
-                        //    _registers[(int)Register.R_0x09_TOD_SECONDS],
-                        //    value);
-                        if (!_timeOfDayIsStarted) StartTimeOfDay();
-                        _registers[i] = value;
+                        _todTenths = _todHaltedTenths = FromBcd(value);
+                        _todIsHalted = false;
+                        if (!_todIsStarted) ToDStart();
+                        break;
+
+                    case Register.R_0x09_TOD_SECONDS:
+                        _todSeconds = _todHaltedSeconds = FromBcd(value);
+                        break;
+
+                    case Register.R_0x0A_TOD_MINUTES:
+                        _todMinutes = _todHaltedMinutes = FromBcd(value);
+                        break;
+
+                    case Register.R_0x0B_TOD_HOURS:
+                        _todIsHalted = true;
+                        _todHours = _todHaltedHours = FromBcd(value);
                         break;
 
                     default:
@@ -113,7 +125,7 @@ namespace Commodore64.Cia {
             _registers[(int)Register.R_0x00_PORT_A] = 0b00000011;
 
 
-            InitTimeOfDay();
+            ToDInit();
         }
 
 
@@ -125,15 +137,88 @@ namespace Commodore64.Cia {
 
         // Time of Day
 
-        private bool _timeOfDayIsStarted = false;
-        private bool _timeOfDayIsHalted = false;
+        private Timer _todTimer;
 
-        private void InitTimeOfDay() {
+        private byte _todHours = 0;
+        private byte _todMinutes = 0;
+        private byte _todSeconds = 0;
+        private byte _todTenths = 0;
 
+        private byte _todHaltedHours = 0;
+        private byte _todHaltedMinutes = 0;
+        private byte _todHaltedSeconds = 0;
+        private byte _todHaltedTenths = 0;
+
+        private bool _todIsStarted = false;
+        private bool _todIsHalted = false;
+
+        private void ToDInit() {
+            _todTimer = new Timer(100) {
+                AutoReset = true
+            };
+
+            _todTimer.Elapsed += _todTimer_Elapsed;
+
+            _todHours = 1;
+            _todHaltedHours = 1;
         }
 
-        private void StartTimeOfDay() {
+        private void _todTimer_Elapsed(object sender, ElapsedEventArgs e) {
+            ToDUpdate();
+        }
 
+        private void ToDStart() {
+            _todIsStarted = true;
+            _todTimer.Start();
+        }
+
+        private void ToDUpdate() {
+            _todTenths++;
+
+            if (_todTenths == 10) {
+                _todTenths = 0;
+                _todSeconds++;
+            }
+
+            if (_todSeconds == 60) {
+                _todSeconds = 0;
+                _todMinutes++;
+            }
+
+            if (_todMinutes == 60) {
+                _todMinutes = 0;
+                _todHours++;
+            }
+
+            if (_todHours == 13) {
+                _todHours = 1;
+            }
+
+            if (!_todIsHalted) {
+                _todHaltedTenths = _todTenths;
+                _todHaltedSeconds = _todSeconds;
+                _todHaltedMinutes = _todMinutes;
+                _todHaltedHours = _todHours;
+            }
+        }
+
+
+        public static byte ToBcd(byte value) {
+            if (value > 159) return 0;
+
+            var r = value % 10;
+            var f = (value / 10);
+
+            return (byte)((f * 16) + r);
+        }
+
+        public static byte FromBcd(byte value) {
+            if (value > 0xF9) return 0;
+
+            var r = value % 16;
+            var f = (value / 16);
+
+            return (byte)((f * 10) + r);
         }
     }
 }
