@@ -57,6 +57,11 @@
     <Compile Include="C64MemoryLocations.cs" />
     <Compile Include="C64MemoryValues.cs" />
     <Compile Include="C64MemoryOffsets.cs" />
+    <Compile Include="Cartridge\FileFormats\Crt\CrtChip.cs" />
+    <Compile Include="Cartridge\FileFormats\Crt\CrtChipType.cs" />
+    <Compile Include="Cartridge\FileFormats\Crt\CrtFile.cs" />
+    <Compile Include="Cartridge\FileFormats\Crt\CrtHardwareType.cs" />
+    <Compile Include="Cartridge\FileFormats\Crt\CrtHeader.cs" />
     <Compile Include="Cia\Cia2.cs" />
     <Compile Include="Cia\Enums\Register.cs" />
     <Compile Include="Colors.cs" />
@@ -128,5 +133,6 @@
       <Name>MicroProcessor</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
