@@ -9,12 +9,17 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
 
 
         public static CrtFile FromBytes(byte[] data) {
-            var crt = new CrtFile();
+            var crt = new CrtFile {
+                Header = CrtHeader.FromBytes(data)
+            };
 
-            crt.Header = CrtHeader.FromBytes(data);
+            var offset = 0x40;
 
-            // TODO: Add support for multiple CHIP-sections
-            crt.Chips.Add(CrtChip.FromBytes(data.Skip(0x40).ToArray()));
+            while (offset < data.Length) {
+                var chip = CrtChip.FromBytes(data.Skip(offset).ToArray());
+                crt.Chips.Add(chip);
+                offset += (int) chip.ChipLength;
+            }
 
             return crt;
         }
