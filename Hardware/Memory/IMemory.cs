@@ -7,7 +7,7 @@ namespace Hardware.Memory {
         event EventHandler<MemoryReadEventArgs<TValue>> OnRead;
         event EventHandler<MemoryWriteEventArgs<TValue>> OnWrite;
 
-        bool IsReadOnly { get; set; }
+        bool IsReadOnly { get; }
 
         TValue Read(int address);
         void Write(int address, TValue value);

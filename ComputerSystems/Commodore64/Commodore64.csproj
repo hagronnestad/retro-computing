@@ -62,6 +62,7 @@
     <Compile Include="Cartridge\FileFormats\Crt\CrtFile.cs" />
     <Compile Include="Cartridge\FileFormats\Crt\CrtHardwareType.cs" />
     <Compile Include="Cartridge\FileFormats\Crt\CrtHeader.cs" />
+    <Compile Include="Cartridge\ICartridge.cs" />
     <Compile Include="Cia\Cia2.cs" />
     <Compile Include="Cia\Enums\Register.cs" />
     <Compile Include="Colors.cs" />
