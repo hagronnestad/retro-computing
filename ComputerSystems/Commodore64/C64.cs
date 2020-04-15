@@ -9,6 +9,7 @@ using System;
 using static Commodore64.Vic.VicIi;
 using Commodore64.Vic;
 using Commodore64.Cia;
+using Commodore64.Cartridge;
 
 namespace Commodore64 {
     public class C64 {
@@ -30,6 +31,7 @@ namespace Commodore64 {
         public VicIi Vic { get; private set; }
         public C64Bus Memory { get; private set; }
         public Cpu Cpu { get; private set; }
+        public ICartridge Cartridge { get; set; }
 
         public bool KeyboardActivated { get; set; } = false;
 
@@ -47,6 +49,8 @@ namespace Commodore64 {
             };
             Memory = new C64Bus(Cia, Cia2, Vic);
             Cpu = new Cpu(Memory);
+
+            if (Cartridge != null) Memory.InsertCartridge(Cartridge);
 
             AddEventHandlers();
             Cpu.Reset();
