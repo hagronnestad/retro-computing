@@ -30,7 +30,7 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
             h.HardwareType = (CrtHardwareType) BitConverter.ToUInt16(data.Skip(0x16).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
             h.ExRomLine = data[0x18];
             h.GameLine = data[0x19];
-            h.Name = Encoding.ASCII.GetString(data, 0x20, 0x20).Trim('\0');
+            h.Name = Encoding.ASCII.GetString(data, 0x20, 0x20).Trim('\0', ' ');
 
 
             return h;
