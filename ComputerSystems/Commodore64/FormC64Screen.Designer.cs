@@ -39,6 +39,8 @@ namespace ComputerSystem.Commodore64 {
             this.separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnOpen = new System.Windows.Forms.ToolStripButton();
             this.btnSave = new System.Windows.Forms.ToolStripButton();
+            this.separator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnInsertCartridge = new System.Windows.Forms.ToolStripButton();
             this.separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
             this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
@@ -67,6 +69,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicCurrentLineCycle = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ofdInsertCartridge = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -81,7 +84,7 @@ namespace ComputerSystem.Commodore64 {
             this.pScreen.Location = new System.Drawing.Point(0, 25);
             this.pScreen.Margin = new System.Windows.Forms.Padding(0);
             this.pScreen.Name = "pScreen";
-            this.pScreen.Size = new System.Drawing.Size(1008, 624);
+            this.pScreen.Size = new System.Drawing.Size(713, 534);
             this.pScreen.TabIndex = 1;
             this.pScreen.TabStop = false;
             this.pScreen.DragDrop += new System.Windows.Forms.DragEventHandler(this.pScreen_DragDropAsync);
@@ -100,9 +103,9 @@ namespace ComputerSystem.Commodore64 {
             this.lblInstructions,
             this.lblIllegalInstructions,
             this.lblKeyboardDisabled});
-            this.statusMain.Location = new System.Drawing.Point(0, 673);
+            this.statusMain.Location = new System.Drawing.Point(0, 583);
             this.statusMain.Name = "statusMain";
-            this.statusMain.Size = new System.Drawing.Size(1008, 24);
+            this.statusMain.Size = new System.Drawing.Size(713, 24);
             this.statusMain.TabIndex = 2;
             this.statusMain.Text = "statusStrip1";
             // 
@@ -146,7 +149,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
             this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(709, 19);
+            this.lblKeyboardDisabled.Size = new System.Drawing.Size(289, 19);
             this.lblKeyboardDisabled.Spring = true;
             this.lblKeyboardDisabled.Text = "Keyboard Disabled";
             this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -160,6 +163,8 @@ namespace ComputerSystem.Commodore64 {
             this.separator1,
             this.btnOpen,
             this.btnSave,
+            this.separator7,
+            this.btnInsertCartridge,
             this.separator2,
             this.btnToggleFullscreen,
             this.btnUseCrtFilter,
@@ -179,7 +184,7 @@ namespace ComputerSystem.Commodore64 {
             this.separator6});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(1008, 25);
+            this.toolMain.Size = new System.Drawing.Size(713, 25);
             this.toolMain.TabIndex = 0;
             this.toolMain.Text = "toolStrip1";
             // 
@@ -238,6 +243,19 @@ namespace ComputerSystem.Commodore64 {
             this.btnSave.Size = new System.Drawing.Size(23, 22);
             this.btnSave.Text = "Save";
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
+            // 
+            // separator7
+            // 
+            this.separator7.Name = "separator7";
+            this.separator7.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnInsertCartridge
+            // 
+            this.btnInsertCartridge.Image = ((System.Drawing.Image)(resources.GetObject("btnInsertCartridge.Image")));
+            this.btnInsertCartridge.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnInsertCartridge.Name = "btnInsertCartridge";
+            this.btnInsertCartridge.Size = new System.Drawing.Size(23, 22);
+            this.btnInsertCartridge.Click += new System.EventHandler(this.btnInsertCartridge_ClickAsync);
             // 
             // separator2
             // 
@@ -415,9 +433,9 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicCurrentLineCycle,
             this.lblVicGraphicsMode,
             this.lblVicScreenOn});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 649);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 559);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1008, 24);
+            this.statusStrip1.Size = new System.Drawing.Size(713, 24);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -471,12 +489,16 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicScreenOn.Size = new System.Drawing.Size(49, 19);
             this.lblVicScreenOn.Text = "Screen:";
             // 
+            // ofdInsertCartridge
+            // 
+            this.ofdInsertCartridge.Filter = "CRT-files|*.crt";
+            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 697);
+            this.ClientSize = new System.Drawing.Size(713, 607);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolMain);
             this.Controls.Add(this.statusMain);
@@ -544,5 +566,8 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripSeparator separator6;
         private System.Windows.Forms.ToolStripButton btnToggleFullscreen;
         private System.Windows.Forms.ToolStripButton btnShowRasterLineInterrupt;
+        private System.Windows.Forms.ToolStripButton btnInsertCartridge;
+        private System.Windows.Forms.OpenFileDialog ofdInsertCartridge;
+        private System.Windows.Forms.ToolStripSeparator separator7;
     }
 }

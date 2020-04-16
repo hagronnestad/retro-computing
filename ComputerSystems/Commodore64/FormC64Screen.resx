@@ -178,13 +178,22 @@
         rkJggg==
 </value>
   </data>
+  <data name="btnInsertCartridge.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACYSURBVDhPxZPNDcMgDEa9ALswAoN0oeyUPZgCbnDh4NjB
+        /LRFkZEq9UlPINsf8SXQsNYiHSpldrATbr49YozBpvceU0r4Cde4N89KHMA5hyxdMYSApRSJDbgWY7xn
+        pvnK/Cp/JecssQHXVBtofNxgR4n/YAPia0hp5f8bEKumxs6qqbGzamrs3IXzeG2dZKX9jdognzUDcAGP
+        00j5mQqgrAAAAABJRU5ErkJggg==
+</value>
+  </data>
   <data name="btnToggleFullscreen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACYSURBVDhPY6AaqKys/O/t7f3fwMAALwapAamFaoMAkIC9
-        o8//kLz/RGEbW4evKIaATMWmEB8G6YFqZ2AAOQ0keOzYMTBGVwzDyPIgPVDtqAYga8CG8RpACqaNARR7
-        ASSJzxBkebgB+vr6AjADSMEgPSC9YENAHDNza6wKsWErKytML5CDodqJM+DAgQMYbKh2KriAfMDAAABY
-        uclJExwT1wAAAABJRU5ErkJggg==
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACVSURBVDhPtY9NCoAgEIXnCN1EVwVWRGtbdo723s6VN2pt
+        vJrCSqTfgQ/Ked9D6bMxxnittZdSJkEGWdaWwUHTdr4f/CWquhl3JWiNBVPAYZ0IV8Ohc27mGF4J93BY
+        3xeEQoxkwR3+KXj9BCxTJeF+KxBCZGvBHeDAnUvwkxdlNBhDKXV+whNYv1ZgrT19s/7BDZ4P0QRVYslI
+        p7FFOgAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="btnUseCrtFilter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -274,5 +283,8 @@
   </metadata>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>587, 17</value>
+  </metadata>
+  <metadata name="ofdInsertCartridge.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>697, 12</value>
   </metadata>
 </root>

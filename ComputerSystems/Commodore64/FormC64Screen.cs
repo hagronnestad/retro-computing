@@ -13,6 +13,8 @@ using System.Threading;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using Commodore64.Vic;
+using Commodore64.Cartridge.FileFormats.Crt;
+using System.Threading.Tasks;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -356,6 +358,26 @@ namespace ComputerSystem.Commodore64 {
 
         private void btnToggleFullscreen_Click(object sender, EventArgs e) {
             ToggleFullscreen();
+        }
+
+        private async void btnInsertCartridge_ClickAsync(object sender, EventArgs e) {
+
+            if (!btnInsertCartridge.Checked) {
+                if (ofdInsertCartridge.ShowDialog() == DialogResult.OK) {
+                    var crt = CrtFile.FromFile(ofdInsertCartridge.FileName);
+                    C64.Cartridge = crt;
+                    btnInsertCartridge.Text = $"{crt.Name}";
+                    btnInsertCartridge.Checked = true;
+                }
+
+            } else {
+                C64.Cartridge = null;
+                btnInsertCartridge.Text = "";
+                btnInsertCartridge.Checked = false;
+            }
+
+            await C64.PowerOff();
+            C64.PowerOn();
         }
     }
 }
