@@ -149,7 +149,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
             this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(289, 19);
+            this.lblKeyboardDisabled.Size = new System.Drawing.Size(414, 19);
             this.lblKeyboardDisabled.Spring = true;
             this.lblKeyboardDisabled.Text = "Keyboard Disabled";
             this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -365,9 +365,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             // btnShowVideoFrameOutlines
             // 
-            this.btnShowVideoFrameOutlines.Checked = true;
             this.btnShowVideoFrameOutlines.CheckOnClick = true;
-            this.btnShowVideoFrameOutlines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowVideoFrameOutlines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnShowVideoFrameOutlines.Image = ((System.Drawing.Image)(resources.GetObject("btnShowVideoFrameOutlines.Image")));
             this.btnShowVideoFrameOutlines.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -377,9 +375,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             // btnShowScanLinePosition
             // 
-            this.btnShowScanLinePosition.Checked = true;
             this.btnShowScanLinePosition.CheckOnClick = true;
-            this.btnShowScanLinePosition.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowScanLinePosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnShowScanLinePosition.Image = ((System.Drawing.Image)(resources.GetObject("btnShowScanLinePosition.Image")));
             this.btnShowScanLinePosition.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -389,9 +385,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             // btnShowRasterLineInterrupt
             // 
-            this.btnShowRasterLineInterrupt.Checked = true;
             this.btnShowRasterLineInterrupt.CheckOnClick = true;
-            this.btnShowRasterLineInterrupt.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowRasterLineInterrupt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnShowRasterLineInterrupt.Image = ((System.Drawing.Image)(resources.GetObject("btnShowRasterLineInterrupt.Image")));
             this.btnShowRasterLineInterrupt.Name = "btnShowRasterLineInterrupt";
@@ -400,9 +394,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             // btnShowFullFrameVideo
             // 
-            this.btnShowFullFrameVideo.Checked = true;
             this.btnShowFullFrameVideo.CheckOnClick = true;
-            this.btnShowFullFrameVideo.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnShowFullFrameVideo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowFullFrameVideo.Image")));
             this.btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
