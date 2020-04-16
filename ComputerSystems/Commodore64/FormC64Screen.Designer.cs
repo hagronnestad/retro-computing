@@ -504,6 +504,7 @@ namespace ComputerSystem.Commodore64 {
             this.Controls.Add(this.statusMain);
             this.Controls.Add(this.pScreen);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormC64Screen";
             this.Text = "Retrocomputing.NET - Commodore 64";
             this.Activated += new System.EventHandler(this.FormC64Screen_Activated);
