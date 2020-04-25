@@ -264,22 +264,25 @@ namespace ComputerSystem.Commodore64 {
             C64.Cpu.Reset();
         }
 
+
         private async void pScreen_DragDropAsync(object sender, DragEventArgs e) {
             if (e.Data.GetData(DataFormats.FileDrop) is string[] d && d.Length > 0) {
-                if (!File.Exists(d.First())) return;
 
-                await C64.Cpu.Pause();
-                LoadPrg(d.First());
-                C64.Cpu.Resume();
+                var fileName = d.First();
+                if (!File.Exists(fileName)) return;
 
-                // TODO: Fix this RUN hack
-                while (!Focused) {
-                    Focus();
+                switch (Path.GetExtension(fileName).ToLower()) {
+                    case ".prg":
+                        await C64.Cpu.Pause();
+                        LoadPrg(fileName);
+                        C64.Cpu.Resume();
+                        // TODO: Auto run program
+                        break;
+
+                    case ".crt":
+                        await InsertCartridge(fileName);
+                        break;
                 }
-                SendKeys.SendWait("r");
-                SendKeys.SendWait("u");
-                SendKeys.SendWait("n");
-                SendKeys.SendWait("{ENTER}");
             }
         }
 
@@ -361,20 +364,30 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private async void btnInsertCartridge_ClickAsync(object sender, EventArgs e) {
-
             if (!btnInsertCartridge.Checked) {
                 if (ofdInsertCartridge.ShowDialog() == DialogResult.OK) {
-                    var crt = CrtFile.FromFile(ofdInsertCartridge.FileName);
-                    C64.Cartridge = crt;
-                    btnInsertCartridge.Text = $"{crt.Name}";
-                    btnInsertCartridge.Checked = true;
+                    await InsertCartridge(ofdInsertCartridge.FileName);
                 }
 
             } else {
-                C64.Cartridge = null;
-                btnInsertCartridge.Text = "";
-                btnInsertCartridge.Checked = false;
+                await RemoveCartridge();
             }
+        }
+
+        private async Task InsertCartridge(string fileName) {
+            var crt = CrtFile.FromFile(fileName);
+            C64.Cartridge = crt;
+            btnInsertCartridge.Text = $"{crt.Name}";
+            btnInsertCartridge.Checked = true;
+
+            await C64.PowerOff();
+            C64.PowerOn();
+        }
+
+        private async Task RemoveCartridge() {
+            C64.Cartridge = null;
+            btnInsertCartridge.Text = "";
+            btnInsertCartridge.Checked = false;
 
             await C64.PowerOff();
             C64.PowerOn();
