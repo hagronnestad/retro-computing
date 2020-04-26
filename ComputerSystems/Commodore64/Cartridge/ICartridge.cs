@@ -1,6 +1,7 @@
 ﻿using Hardware.Memory;
 
 namespace Commodore64.Cartridge {
+
     public interface ICartridge : IMemory<byte> {
 
         string Id { get; }
@@ -9,4 +10,5 @@ namespace Commodore64.Cartridge {
         string Name { get; }
 
     }
+
 }

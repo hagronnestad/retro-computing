@@ -27,7 +27,7 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
 
             h.Length = BitConverter.ToUInt32(data.Skip(0x10).Take(sizeof(UInt32)).Reverse().ToArray(), 0);
             h.Version = BitConverter.ToUInt16(data.Skip(0x14).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
-            h.HardwareType = (CrtHardwareType) BitConverter.ToUInt16(data.Skip(0x16).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
+            h.HardwareType = (CrtHardwareType)BitConverter.ToUInt16(data.Skip(0x16).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
             h.ExRomLine = data[0x18];
             h.GameLine = data[0x19];
             h.Name = Encoding.ASCII.GetString(data, 0x20, 0x20).Trim('\0', ' ');
@@ -35,5 +35,7 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
 
             return h;
         }
+
     }
+
 }

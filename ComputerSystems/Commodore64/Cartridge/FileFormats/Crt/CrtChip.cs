@@ -26,7 +26,7 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
             if (c.Identifier.ToUpper() != "CHIP") throw new FileFormatException(".CRT CHIP-packet identifier is not correct.");
 
             c.ChipLength = BitConverter.ToUInt32(data.Skip(0x04).Take(sizeof(UInt32)).Reverse().ToArray(), 0);
-            c.ChipType = (CrtChipType) BitConverter.ToUInt16(data.Skip(0x08).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
+            c.ChipType = (CrtChipType)BitConverter.ToUInt16(data.Skip(0x08).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
             c.Bank = BitConverter.ToUInt16(data.Skip(0x0A).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
             c.Address = BitConverter.ToUInt16(data.Skip(0x0C).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
             c.Length = BitConverter.ToUInt16(data.Skip(0x0E).Take(sizeof(UInt16)).Reverse().ToArray(), 0);

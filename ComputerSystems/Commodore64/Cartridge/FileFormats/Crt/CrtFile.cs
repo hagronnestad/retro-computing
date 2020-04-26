@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 
 namespace Commodore64.Cartridge.FileFormats.Crt {
+
     public class CrtFile : ICartridge {
 
         public CrtHeader Header { get; set; }
@@ -23,7 +24,7 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
             while (offset < data.Length) {
                 var chip = CrtChip.FromBytes(data.Skip(offset).ToArray());
                 crt.Chips.Add(chip);
-                offset += (int) chip.ChipLength;
+                offset += (int)chip.ChipLength;
             }
 
             return crt;
@@ -55,5 +56,7 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
         public void Write(int address, byte value) {
             throw new NotImplementedException();
         }
+
     }
+
 }
