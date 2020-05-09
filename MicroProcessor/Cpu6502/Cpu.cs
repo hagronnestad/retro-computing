@@ -244,7 +244,7 @@ namespace MicroProcessor.Cpu6502 {
 
             // Keeps track of needed cycles to complete the current instruction
             // ignoreCycles = true is used to step the CPU with a debugger
-            if (!ignoreCycles) _cyclesRemainingCurrentInstruction += OpCode.Cycles;
+            if (!ignoreCycles) _cyclesRemainingCurrentInstruction += OpCode.Cycles - 1;
         }
 
         public void Reset() {
