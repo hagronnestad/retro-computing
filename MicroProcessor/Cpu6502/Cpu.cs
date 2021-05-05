@@ -25,7 +25,7 @@ namespace MicroProcessor.Cpu6502 {
         /// </summary>
         private int _cyclesRemainingCurrentInstruction = 0;
 
-        private TaskCompletionSource<bool> _tcsPause;
+        private TaskCompletionSource<bool> _tcsPause = new TaskCompletionSource<bool>();
         private bool _isPaused = false;
         private bool _pausedWaiting = false;
 
@@ -157,8 +157,6 @@ namespace MicroProcessor.Cpu6502 {
             if (_pausedWaiting) return Task.FromResult(false);
 
             _pausedWaiting = true;
-
-            _tcsPause = new TaskCompletionSource<bool>();
             return _tcsPause.Task;
         }
 
@@ -168,6 +166,7 @@ namespace MicroProcessor.Cpu6502 {
         public void Resume() {
             if (_pausedWaiting) return;
 
+            _tcsPause = new TaskCompletionSource<bool>();
             _isPaused = false;
         }
 
