@@ -284,6 +284,7 @@ namespace ComputerSystem.Commodore64 {
                 if (!File.Exists(fileName)) return;
 
                 switch (Path.GetExtension(fileName).ToLower()) {
+                    case "":
                     case ".prg":
                         await C64.Cpu.Pause();
                         LoadPrg(fileName, true);
