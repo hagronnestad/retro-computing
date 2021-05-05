@@ -403,5 +403,26 @@ namespace ComputerSystem.Commodore64 {
             await C64.PowerOff();
             C64.PowerOn();
         }
+
+        private void FormC64Screen_KeyUp(object sender, KeyEventArgs e) {
+            if (e.Control && e.KeyCode == Keys.V) {
+                var text = Clipboard.GetText();
+                PasteText(text);
+            }
+        }
+
+        private void PasteText(string text) {
+            if (string.IsNullOrWhiteSpace(text)) return;
+
+            for (int i = 0; i < text.Length; i++) {
+                C64.Memory._memory[0x0277] = (byte)text[i];
+                C64.Memory._memory[0x00C6] = 1;
+
+                while (C64.Memory._memory[0x00C6] != 0) {
+                    Application.DoEvents();
+                }
+            }
+        }
+
     }
 }

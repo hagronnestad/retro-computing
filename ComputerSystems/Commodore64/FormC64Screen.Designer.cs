@@ -503,6 +503,7 @@ namespace ComputerSystem.Commodore64 {
             this.Deactivate += new System.EventHandler(this.FormC64Screen_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormC64Screen_FormClosing);
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).EndInit();
             this.statusMain.ResumeLayout(false);
             this.statusMain.PerformLayout();
