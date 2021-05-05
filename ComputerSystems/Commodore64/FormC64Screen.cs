@@ -188,20 +188,32 @@ namespace ComputerSystem.Commodore64 {
             C64.PowerOn();
         }
 
-        private void LoadPrg(string fileName) {
+        private void LoadPrg(string fileName, bool executeRun) {
             var file = File.ReadAllBytes(fileName);
 
             var address = BitConverter.ToUInt16(file, 0);
             var data = file.Skip(2).ToArray();
 
             for (int i = 0; i < data.Length; i++) {
-                C64.Memory[address + i] = data[i];
+                C64.Memory._memory[address + i] = data[i];
+            }
+
+            if (executeRun) {
+                // Put "RUN" + {RETURN} directly into the BASIC keyboard
+                // buffer and set the buffer length, BASIC does the rest!
+                C64.Memory._memory[0x0277] = (byte)'R';
+                C64.Memory._memory[0x0278] = (byte)'U';
+                C64.Memory._memory[0x0279] = (byte)'N';
+                C64.Memory._memory[0x027A] = 13; // {RETURN}
+                C64.Memory._memory[0x00C6] = 4;
             }
         }
 
-        private void BtnOpen_Click(object sender, EventArgs e) {
+        private async void BtnOpen_ClickAsync(object sender, EventArgs e) {
             if (ofd.ShowDialog() == DialogResult.OK) {
-                LoadPrg(ofd.FileName);
+                await C64.Cpu.Pause();
+                LoadPrg(ofd.FileName, true);
+                C64.Cpu.Resume();
             }
         }
 
@@ -274,9 +286,8 @@ namespace ComputerSystem.Commodore64 {
                 switch (Path.GetExtension(fileName).ToLower()) {
                     case ".prg":
                         await C64.Cpu.Pause();
-                        LoadPrg(fileName);
+                        LoadPrg(fileName, true);
                         C64.Cpu.Resume();
-                        // TODO: Auto run program
                         break;
 
                     case ".crt":
