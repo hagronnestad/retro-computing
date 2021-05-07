@@ -409,7 +409,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             // ofd
             // 
-            this.ofd.Filter = "PRG-files|*.prg";
+            this.ofd.Filter = "PRG-files|*.prg|All files|*.*";
             // 
             // sfd
             // 
