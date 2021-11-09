@@ -1,4 +1,4 @@
-﻿using Hardware.Memory;
+using Hardware.Memory;
 using Hardware.Mos6526Cia;
 using System.IO;
 using System;
@@ -307,6 +307,7 @@ namespace Commodore64 {
 
             if (address == 0x0001) {
                 base.Write(address, (byte)(value | ((byte)(value & _memory[0x0000]))));
+                return;
             }
 
             // I/O
