@@ -1,4 +1,4 @@
-﻿using Commodore64;
+using Commodore64;
 using System;
 using System.Windows.Forms;
 

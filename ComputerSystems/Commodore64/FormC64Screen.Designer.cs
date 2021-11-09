@@ -87,6 +87,7 @@ namespace ComputerSystem.Commodore64 {
             this.pScreen.Size = new System.Drawing.Size(713, 534);
             this.pScreen.TabIndex = 1;
             this.pScreen.TabStop = false;
+            this.pScreen.Click += new System.EventHandler(this.pScreen_Click);
             this.pScreen.DragDrop += new System.Windows.Forms.DragEventHandler(this.pScreen_DragDropAsync);
             this.pScreen.DragEnter += new System.Windows.Forms.DragEventHandler(this.pScreen_DragEnter);
             this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
@@ -275,7 +276,9 @@ namespace ComputerSystem.Commodore64 {
             // 
             // btnUseCrtFilter
             // 
+            this.btnUseCrtFilter.Checked = true;
             this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
             this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -401,6 +404,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
             this.btnShowFullFrameVideo.Size = new System.Drawing.Size(23, 22);
             this.btnShowFullFrameVideo.Text = "Show Full Frame";
+            this.btnShowFullFrameVideo.Click += new System.EventHandler(this.btnShowFullFrameVideo_Click);
             // 
             // separator6
             // 

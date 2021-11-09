@@ -50,7 +50,6 @@ namespace ComputerSystem.Commodore64 {
             _penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
             _penScanLine2 = new Pen(Color.FromArgb(20, 127, 127, 127));
 
-
             _uiRefreshTimer = new Timer((e) => {
 
                 try {
@@ -214,7 +213,7 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        private async void BtnOpen_ClickAsync(object sender, EventArgs e) {
+        private async void BtnOpen_Click(object sender, EventArgs e) {
             if (ofd.ShowDialog() == DialogResult.OK) {
                 await C64.Cpu.Pause();
                 LoadPrg(ofd.FileName, true);
@@ -277,8 +276,10 @@ namespace ComputerSystem.Commodore64 {
             C64.KeyboardActivated = false;
         }
 
-        private void BtnReset_Click(object sender, EventArgs e) {
+        private async void BtnReset_Click(object sender, EventArgs e) {
+            await C64.Cpu.Pause();
             C64.Cpu.Reset();
+            C64.Cpu.Resume();
         }
 
 
@@ -346,6 +347,10 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private void pScreen_DoubleClick(object sender, EventArgs e) {
+            ResizeToCorrectAspectRatio();
+        }
+
+        private void ResizeToCorrectAspectRatio() {
             var height = (int)((pScreen.Width / 4.0f) * 3.0f);
 
             if (height < pScreen.Height) Height -= pScreen.Height - height;
@@ -408,6 +413,14 @@ namespace ComputerSystem.Commodore64 {
 
             await C64.PowerOff();
             C64.PowerOn();
+        }
+
+        private void pScreen_Click(object sender, EventArgs e) {
+
+        }
+
+        private void btnShowFullFrameVideo_Click(object sender, EventArgs e) {
+            ResizeToCorrectAspectRatio();
         }
 
         private void FormC64Screen_KeyUp(object sender, KeyEventArgs e) {
