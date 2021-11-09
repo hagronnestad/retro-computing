@@ -170,8 +170,13 @@ namespace ComputerSystem.Commodore64 {
 
             _bC64ScreenOutputBuffer.Dispose();
             _gC64ScreenOutputBuffer.Dispose();
+
             _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
+
+            _gC64ScreenOutputBuffer.SmoothingMode = SmoothingMode.AntiAlias;
+            _gC64ScreenOutputBuffer.InterpolationMode = InterpolationMode.NearestNeighbor;
+            //_gC64ScreenOutputBuffer.PixelOffsetMode = PixelOffsetMode.HighSpeed;
         }
 
         private void FormC64Screen_FormClosing(object sender, FormClosingEventArgs e) {
