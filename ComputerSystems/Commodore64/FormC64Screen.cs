@@ -37,6 +37,8 @@ namespace ComputerSystem.Commodore64 {
         private Graphics _gC64ScreenBuffer;
         private Image _crtImage;
 
+        private bool _isInitialized = false;
+
         public FormC64Screen(C64 c64) {
             InitializeComponent();
 
@@ -53,7 +55,10 @@ namespace ComputerSystem.Commodore64 {
 
                 try {
                     Invoke(new Action(() => {
-                        lblClockSpeed.Text = $"{1 / c64.CpuClockSpeed:F0} Hz";
+                        lblClockSpeed.Text = $"{c64.CpuClockSpeedHz / 1000000:F4} MHz";
+                        lblClockSpeedReal.Text = $"{c64.CpuClockSpeedRealHz / 1000000:F4} MHz";
+                        lblClockSpeedRealPercent.Text = $"{c64.CpuClockSpeedPercent:F2} %";
+                        lblCpuClockSpeedMultiplier.Text = $"x{c64.CpuClockSpeedMultiplier:F2}";
 
                         lblCycles.Text = $"{c64.Cpu.TotalCycles:N0} cycles";
                         lblInstructions.Text = $"{c64.Cpu.TotalInstructions:N0} instructions";
@@ -74,6 +79,8 @@ namespace ComputerSystem.Commodore64 {
             }, null, TimeSpan.FromMilliseconds(1000), TimeSpan.FromMilliseconds(50));
 
             c64.PowerOn();
+
+            _isInitialized = true;
         }
 
         private void FormC64Screen_Load(object sender, EventArgs e) {
@@ -151,6 +158,7 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private void PScreen_Resize(object sender, EventArgs e) {
+            if (!_isInitialized) return;
             if (WindowState == FormWindowState.Minimized) return;
 
             _bC64ScreenOutputBuffer.Dispose();
@@ -324,17 +332,49 @@ namespace ComputerSystem.Commodore64 {
             b.UnlockBits(data);
         }
 
+        private void AdjustSpeedMultiplier(float value)
+        {
+            C64.CpuClockSpeedMultiplier += value;
+
+            if (C64.CpuClockSpeedMultiplier <= C64.CpuClockSpeedMultiplierMin)
+            {
+                C64.CpuClockSpeedMultiplier = C64.CpuClockSpeedMultiplierMin;
+                return;
+            }
+
+            if (C64.CpuClockSpeedMultiplier >= C64.CpuClockSpeedMultiplierMax)
+            {
+                C64.CpuClockSpeedMultiplier = C64.CpuClockSpeedMultiplierMax;
+                return;
+            }
+        }
+
         private void btnSlowDown_Click(object sender, EventArgs e) {
-            C64.CpuClockSpeed *= 10.0d;
+            AdjustSpeedMultiplier(-0.01f);
         }
 
         private void btnClockSpeedFaster_Click(object sender, EventArgs e) {
-            C64.CpuClockSpeed /= 10.0d;
+            AdjustSpeedMultiplier(0.01f);
+        }
+
+        private void btnClockSpeedSlowerSlower_Click(object sender, EventArgs e)
+        {
+            AdjustSpeedMultiplier(-0.10f);
+        }
+
+        private void btnClockSpeedFasterFaster_Click(object sender, EventArgs e)
+        {
+            AdjustSpeedMultiplier(0.10f);
+        }
+        private void btnClockSpeedDefault_Click(object sender, EventArgs e)
+        {
+            C64.CpuClockSpeedMultiplier = 1f;
         }
 
         private void pScreen_DoubleClick(object sender, EventArgs e) {
             ResizeToCorrectAspectRatio();
         }
+
 
         private void ResizeToCorrectAspectRatio() {
             var height = (int)((pScreen.Width / 4.0f) * 3.0f);
@@ -428,6 +468,5 @@ namespace ComputerSystem.Commodore64 {
                 }
             }
         }
-
     }
 }

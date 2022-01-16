@@ -28,6 +28,9 @@ namespace ComputerSystem.Commodore64 {
             this.statusMain = new System.Windows.Forms.StatusStrip();
             this.lblStatusCpu = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblClockSpeed = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblClockSpeedReal = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblClockSpeedRealPercent = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblCpuClockSpeedMultiplier = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
@@ -42,16 +45,18 @@ namespace ComputerSystem.Commodore64 {
             this.separator7 = new System.Windows.Forms.ToolStripSeparator();
             this.btnInsertCartridge = new System.Windows.Forms.ToolStripButton();
             this.separator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
             this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
+            this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
             this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
             this.separator4 = new System.Windows.Forms.ToolStripSeparator();
             this.lblDebug = new System.Windows.Forms.ToolStripLabel();
             this.btnDebugger = new System.Windows.Forms.ToolStripButton();
+            this.btnClockSpeedSlowerSlower = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedSlower = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedFaster = new System.Windows.Forms.ToolStripButton();
+            this.btnClockSpeedFasterFaster = new System.Windows.Forms.ToolStripButton();
             this.separator5 = new System.Windows.Forms.ToolStripSeparator();
             this.lblVicIiDebugging = new System.Windows.Forms.ToolStripLabel();
             this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
@@ -70,6 +75,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
             this.ofdInsertCartridge = new System.Windows.Forms.OpenFileDialog();
+            this.btnClockSpeedDefault = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -81,10 +87,10 @@ namespace ComputerSystem.Commodore64 {
             this.pScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pScreen.Location = new System.Drawing.Point(0, 25);
+            this.pScreen.Location = new System.Drawing.Point(0, 29);
             this.pScreen.Margin = new System.Windows.Forms.Padding(0);
             this.pScreen.Name = "pScreen";
-            this.pScreen.Size = new System.Drawing.Size(713, 534);
+            this.pScreen.Size = new System.Drawing.Size(832, 624);
             this.pScreen.TabIndex = 1;
             this.pScreen.TabStop = false;
             this.pScreen.Click += new System.EventHandler(this.pScreen_Click);
@@ -100,20 +106,24 @@ namespace ComputerSystem.Commodore64 {
             this.statusMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatusCpu,
             this.lblClockSpeed,
+            this.lblClockSpeedReal,
+            this.lblClockSpeedRealPercent,
+            this.lblCpuClockSpeedMultiplier,
             this.lblCycles,
             this.lblInstructions,
             this.lblIllegalInstructions,
             this.lblKeyboardDisabled});
-            this.statusMain.Location = new System.Drawing.Point(0, 583);
+            this.statusMain.Location = new System.Drawing.Point(0, 681);
             this.statusMain.Name = "statusMain";
-            this.statusMain.Size = new System.Drawing.Size(713, 24);
+            this.statusMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.statusMain.Size = new System.Drawing.Size(832, 24);
             this.statusMain.TabIndex = 2;
             this.statusMain.Text = "statusStrip1";
             // 
             // lblStatusCpu
             // 
             this.lblStatusCpu.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblStatusCpu.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblStatusCpu.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblStatusCpu.Name = "lblStatusCpu";
             this.lblStatusCpu.Size = new System.Drawing.Size(34, 19);
             this.lblStatusCpu.Text = "CPU";
@@ -124,6 +134,27 @@ namespace ComputerSystem.Commodore64 {
             this.lblClockSpeed.Name = "lblClockSpeed";
             this.lblClockSpeed.Size = new System.Drawing.Size(34, 19);
             this.lblClockSpeed.Text = "0 Hz";
+            // 
+            // lblClockSpeedReal
+            // 
+            this.lblClockSpeedReal.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblClockSpeedReal.Name = "lblClockSpeedReal";
+            this.lblClockSpeedReal.Size = new System.Drawing.Size(34, 19);
+            this.lblClockSpeedReal.Text = "0 Hz";
+            // 
+            // lblClockSpeedRealPercent
+            // 
+            this.lblClockSpeedRealPercent.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblClockSpeedRealPercent.Name = "lblClockSpeedRealPercent";
+            this.lblClockSpeedRealPercent.Size = new System.Drawing.Size(30, 19);
+            this.lblClockSpeedRealPercent.Text = "0 %";
+            // 
+            // lblCpuClockSpeedMultiplier
+            // 
+            this.lblCpuClockSpeedMultiplier.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.lblCpuClockSpeedMultiplier.Name = "lblCpuClockSpeedMultiplier";
+            this.lblCpuClockSpeedMultiplier.Size = new System.Drawing.Size(23, 19);
+            this.lblCpuClockSpeedMultiplier.Text = "1x";
             // 
             // lblCycles
             // 
@@ -150,7 +181,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
             this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(414, 19);
+            this.lblKeyboardDisabled.Size = new System.Drawing.Size(444, 19);
             this.lblKeyboardDisabled.Spring = true;
             this.lblKeyboardDisabled.Text = "Keyboard Disabled";
             this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -167,15 +198,18 @@ namespace ComputerSystem.Commodore64 {
             this.separator7,
             this.btnInsertCartridge,
             this.separator2,
-            this.btnToggleFullscreen,
             this.btnUseCrtFilter,
+            this.btnToggleFullscreen,
             this.separator3,
             this.btnCopyOutput,
             this.separator4,
             this.lblDebug,
             this.btnDebugger,
+            this.btnClockSpeedSlowerSlower,
             this.btnClockSpeedSlower,
+            this.btnClockSpeedDefault,
             this.btnClockSpeedFaster,
+            this.btnClockSpeedFasterFaster,
             this.separator5,
             this.lblVicIiDebugging,
             this.btnShowVideoFrameOutlines,
@@ -185,7 +219,7 @@ namespace ComputerSystem.Commodore64 {
             this.separator6});
             this.toolMain.Location = new System.Drawing.Point(0, 0);
             this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(713, 25);
+            this.toolMain.Size = new System.Drawing.Size(832, 25);
             this.toolMain.TabIndex = 0;
             this.toolMain.Text = "toolStrip1";
             // 
@@ -263,6 +297,16 @@ namespace ComputerSystem.Commodore64 {
             this.separator2.Name = "separator2";
             this.separator2.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnUseCrtFilter
+            // 
+            this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
+            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
+            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
+            this.btnUseCrtFilter.Text = "CRT filter";
+            // 
             // btnToggleFullscreen
             // 
             this.btnToggleFullscreen.CheckOnClick = true;
@@ -273,18 +317,6 @@ namespace ComputerSystem.Commodore64 {
             this.btnToggleFullscreen.Size = new System.Drawing.Size(23, 22);
             this.btnToggleFullscreen.Text = "Toggle Fullscreen";
             this.btnToggleFullscreen.Click += new System.EventHandler(this.btnToggleFullscreen_Click);
-            // 
-            // btnUseCrtFilter
-            // 
-            this.btnUseCrtFilter.Checked = true;
-            this.btnUseCrtFilter.CheckOnClick = true;
-            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
-            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
-            this.btnUseCrtFilter.Text = "CRT filter";
             // 
             // separator3
             // 
@@ -322,6 +354,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblDebug.Name = "lblDebug";
             this.lblDebug.Size = new System.Drawing.Size(33, 22);
             this.lblDebug.Text = "CPU:";
+            this.lblDebug.Visible = false;
             // 
             // btnDebugger
             // 
@@ -331,7 +364,19 @@ namespace ComputerSystem.Commodore64 {
             this.btnDebugger.Name = "btnDebugger";
             this.btnDebugger.Size = new System.Drawing.Size(23, 22);
             this.btnDebugger.Text = "Debugger";
+            this.btnDebugger.Visible = false;
             this.btnDebugger.Click += new System.EventHandler(this.BtnMemoryWatch_Click);
+            // 
+            // btnClockSpeedSlowerSlower
+            // 
+            this.btnClockSpeedSlowerSlower.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnClockSpeedSlowerSlower.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedSlowerSlower.Image")));
+            this.btnClockSpeedSlowerSlower.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClockSpeedSlowerSlower.Name = "btnClockSpeedSlowerSlower";
+            this.btnClockSpeedSlowerSlower.Size = new System.Drawing.Size(23, 22);
+            this.btnClockSpeedSlowerSlower.Text = "Speed [-]";
+            this.btnClockSpeedSlowerSlower.ToolTipText = "Clock Speed -";
+            this.btnClockSpeedSlowerSlower.Click += new System.EventHandler(this.btnClockSpeedSlowerSlower_Click);
             // 
             // btnClockSpeedSlower
             // 
@@ -355,6 +400,17 @@ namespace ComputerSystem.Commodore64 {
             this.btnClockSpeedFaster.ToolTipText = "Clock Speed +";
             this.btnClockSpeedFaster.Click += new System.EventHandler(this.btnClockSpeedFaster_Click);
             // 
+            // btnClockSpeedFasterFaster
+            // 
+            this.btnClockSpeedFasterFaster.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnClockSpeedFasterFaster.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedFasterFaster.Image")));
+            this.btnClockSpeedFasterFaster.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClockSpeedFasterFaster.Name = "btnClockSpeedFasterFaster";
+            this.btnClockSpeedFasterFaster.Size = new System.Drawing.Size(23, 22);
+            this.btnClockSpeedFasterFaster.Text = "Speed [+]";
+            this.btnClockSpeedFasterFaster.ToolTipText = "Clock Speed +";
+            this.btnClockSpeedFasterFaster.Click += new System.EventHandler(this.btnClockSpeedFasterFaster_Click);
+            // 
             // separator5
             // 
             this.separator5.Name = "separator5";
@@ -365,6 +421,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicIiDebugging.Name = "lblVicIiDebugging";
             this.lblVicIiDebugging.Size = new System.Drawing.Size(39, 22);
             this.lblVicIiDebugging.Text = "VIC-II:";
+            this.lblVicIiDebugging.Visible = false;
             // 
             // btnShowVideoFrameOutlines
             // 
@@ -429,16 +486,17 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicCurrentLineCycle,
             this.lblVicGraphicsMode,
             this.lblVicScreenOn});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 559);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 657);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(713, 24);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(832, 24);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // lblStatusVic
             // 
             this.lblStatusVic.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblStatusVic.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusVic.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblStatusVic.Name = "lblStatusVic";
             this.lblStatusVic.Size = new System.Drawing.Size(43, 19);
             this.lblStatusVic.Text = "VIC-II";
@@ -489,18 +547,30 @@ namespace ComputerSystem.Commodore64 {
             // 
             this.ofdInsertCartridge.Filter = "CRT-files|*.crt";
             // 
+            // btnClockSpeedDefault
+            // 
+            this.btnClockSpeedDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnClockSpeedDefault.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedDefault.Image")));
+            this.btnClockSpeedDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClockSpeedDefault.Name = "btnClockSpeedDefault";
+            this.btnClockSpeedDefault.Size = new System.Drawing.Size(23, 22);
+            this.btnClockSpeedDefault.Text = "Speed [-]";
+            this.btnClockSpeedDefault.ToolTipText = "Clock Speed -";
+            this.btnClockSpeedDefault.Click += new System.EventHandler(this.btnClockSpeedDefault_Click);
+            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(713, 607);
+            this.ClientSize = new System.Drawing.Size(832, 705);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolMain);
             this.Controls.Add(this.statusMain);
             this.Controls.Add(this.pScreen);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FormC64Screen";
             this.Text = "Retrocomputing.NET - Commodore 64";
             this.Activated += new System.EventHandler(this.FormC64Screen_Activated);
@@ -525,7 +595,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.StatusStrip statusMain;
         private System.Windows.Forms.ToolStripStatusLabel lblStatusCpu;
         private System.Windows.Forms.ToolStrip toolMain;
-        private System.Windows.Forms.ToolStripButton btnUseCrtFilter;
         private System.Windows.Forms.ToolStripButton btnRestart;
         private System.Windows.Forms.ToolStripButton btnOpen;
         private System.Windows.Forms.OpenFileDialog ofd;
@@ -553,7 +622,7 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripStatusLabel lblVicCurrentLineCycle;
         private System.Windows.Forms.ToolStripButton btnClockSpeedSlower;
         private System.Windows.Forms.ToolStripButton btnClockSpeedFaster;
-        private System.Windows.Forms.ToolStripStatusLabel lblClockSpeed;
+        private System.Windows.Forms.ToolStripStatusLabel lblClockSpeedReal;
         private System.Windows.Forms.ToolStripStatusLabel lblIllegalInstructions;
         private System.Windows.Forms.ToolStripSeparator separator5;
         private System.Windows.Forms.ToolStripButton btnShowVideoFrameOutlines;
@@ -567,5 +636,12 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripButton btnInsertCartridge;
         private System.Windows.Forms.OpenFileDialog ofdInsertCartridge;
         private System.Windows.Forms.ToolStripSeparator separator7;
+        private System.Windows.Forms.ToolStripStatusLabel lblClockSpeed;
+        private System.Windows.Forms.ToolStripStatusLabel lblClockSpeedRealPercent;
+        private System.Windows.Forms.ToolStripStatusLabel lblCpuClockSpeedMultiplier;
+        private System.Windows.Forms.ToolStripButton btnUseCrtFilter;
+        private System.Windows.Forms.ToolStripButton btnClockSpeedSlowerSlower;
+        private System.Windows.Forms.ToolStripButton btnClockSpeedFasterFaster;
+        private System.Windows.Forms.ToolStripButton btnClockSpeedDefault;
     }
 }
