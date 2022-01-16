@@ -14,8 +14,10 @@ This hobby project contains software implementations of old microprocessors and 
 #### [MOS Technology 6502 8-bit microprocessor](MicroProcessor/Cpu6502)
 
 
-### Computer systems
+### Computer Systems
 
 #### [Commodore 64 Emulator](ComputerSystems/Commodore64)
 
-![](Screenshots/12-c64-header.png)
+*My Commodore 64 emulator running my version of `cmatrix` for the C64; `c64matrix`:*
+
+![](Gifs/10-c64matrix.gif)

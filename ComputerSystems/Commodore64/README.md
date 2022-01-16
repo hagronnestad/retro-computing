@@ -2,7 +2,7 @@
 
 One of the main goals of this project was to be able to run the **C64 KERNAL-** and **BASIC-ROM** on the **6502**. **BASIC** was one of my first introductions to programming and seeing that **`READY.`** prompt on my own C64 emulator so many years later was extremely pleasing. 😁
 
-![](../../Screenshots/11-basic-prompt.png)
+![](../../Screenshots/18-ui-updates-speed-control-improvements.png)
 
 ## Features / Roadmap
 
@@ -11,15 +11,22 @@ One of the main goals of this project was to be able to run the **C64 KERNAL-** 
 - [x] Simple character buffer view (with limited input possibilities)
 - [x] Able to input BASIC program and run
 - [x] Proper input/keyboard mapping
-- [x] Real character mode output by using the CHARACTER GENERATOR ROM
-- [x] Character mode output with char color data
-- [ ] Full VIC-II emulation
+- [ ] VIC-II emulation
+  - [x] Standard Character Mode
+  - [x] Multi Color Character Mode
+  - [ ] Standard Bitmap Mode
+  - [ ] Multi Color Bitmap Mode
 - [ ] SID emulation
 
 
 
 ## Progress Screenshots
+
 *Most recent screenshots first*.
+
+![](../../Screenshots/18-ui-updates-speed-control-improvements.png)
+> Refined UI with more toolbar items, support for attaching `.crt`-file cartridges, change clock speed, debug tools for the VIC-II, improved status bar and a new CRT look.
+---
 
 ![](../../Screenshots/10-keyboard-matrix-test-program.png)
 > Keyboard matrix implemented. In this screenshot I'm running the [Keyboard IO Routine V2.5](https://csdb.dk/release/index.php?id=120949) test program.
