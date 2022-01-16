@@ -29,26 +29,25 @@ namespace ComputerSystem.Commodore64 {
         private Bitmap _bC64ScreenOutputBuffer;
         private Graphics _gC64ScreenOutputBuffer;
 
-        private readonly Pen _penScanLine;
-        private readonly Pen _penScanLine2;
         private readonly Pen _penWhite = new Pen(Color.White) { DashStyle = DashStyle.Dot };
         private readonly Pen _penRaster = new Pen(Color.Red) { DashStyle = DashStyle.Dash };
 
         private Timer _uiRefreshTimer;
         private Bitmap _bC64ScreenBuffer;
         private Graphics _gC64ScreenBuffer;
+        private Image _crtImage;
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
 
             C64 = c64;
 
+            _crtImage = Image.FromFile("Images\\crt-overlay-03.png");
+
             _bC64ScreenBuffer = new Bitmap(VicIi.FULL_WIDTH, VicIi.FULL_HEIGHT_PAL, PixelFormat.Format24bppRgb);
             _gC64ScreenBuffer = Graphics.FromImage(_bC64ScreenBuffer);
             _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
-            _penScanLine = new Pen(Color.FromArgb(100, 127, 127, 127));
-            _penScanLine2 = new Pen(Color.FromArgb(20, 127, 127, 127));
 
             _uiRefreshTimer = new Timer((e) => {
 
@@ -111,18 +110,8 @@ namespace ComputerSystem.Commodore64 {
         }
 
         public void ApplyCrtFilter() {
-            var width = _bC64ScreenOutputBuffer.Width;
-            var height = _bC64ScreenOutputBuffer.Height;
-            var penWidth = (int)(_penScanLine.Width * 2);
-            var penWidth2 = (int)(_penScanLine2.Width * 2);
-
-            for (int i = 0; i < width; i += penWidth2) {
-                _gC64ScreenOutputBuffer.DrawLine(_penScanLine2, i, 0, i, height);
-            }
-
-            for (int i = 0; i < height; i += penWidth) {
-                _gC64ScreenOutputBuffer.DrawLine(_penScanLine, 0, i, width, i);
-            }
+            _gC64ScreenOutputBuffer.DrawImage(_crtImage, 0, 0,
+                _bC64ScreenOutputBuffer.Width + 1, _bC64ScreenOutputBuffer.Height + 1);
         }
 
         private void PScreen_Paint(object sender, PaintEventArgs e) {
@@ -163,9 +152,6 @@ namespace ComputerSystem.Commodore64 {
 
         private void PScreen_Resize(object sender, EventArgs e) {
             if (WindowState == FormWindowState.Minimized) return;
-
-            _penScanLine.Width = (int)(pScreen.Height * 0.005);
-            _penScanLine2.Width = (int)(pScreen.Width * 0.0025);
 
             _bC64ScreenOutputBuffer.Dispose();
             _gC64ScreenOutputBuffer.Dispose();
