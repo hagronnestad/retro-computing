@@ -23,7 +23,17 @@ namespace Commodore64 {
         private bool _isRunnning = false;
         private TaskCompletionSource<bool> _tcsStop;
 
-        public double CpuClockSpeed { get; set; } = 1.0f / CLOCK_PAL;
+        public double CpuClockSpeedMultiplier = 1f;
+        public double CpuClockSpeedMultiplierMin = 0.00001f;
+        public double CpuClockSpeedMultiplierMax = 3f;
+
+        public double CpuClockSpeedHz { get; set; } = CLOCK_PAL;
+        public double CpuPeriodMilliseconds => ((1f / (CpuClockSpeedHz * CpuClockSpeedMultiplier)) * 1000f);
+        
+        public double CpuClockSpeedRealHz = 0f;
+        public double CpuPeriodMillisecondsReal = 0f;
+
+        public double CpuClockSpeedPercent => (CpuClockSpeedRealHz / CLOCK_PAL) * 100f;
 
 
         public Cia1 Cia { get; private set; }
@@ -65,12 +75,16 @@ namespace Commodore64 {
             _tcsStop = new TaskCompletionSource<bool>();
 
             var swCpuClock = Stopwatch.StartNew();
-            
+
             var t = new Thread(() => {
                 while (_isRunnning) {
                     
                     // CPU clock
-                    if (swCpuClock.Elapsed.TotalMilliseconds > CpuClockSpeed) {
+                    if (swCpuClock.Elapsed.TotalMilliseconds >= CpuPeriodMilliseconds) {
+                        CpuPeriodMillisecondsReal = swCpuClock.Elapsed.TotalMilliseconds;
+                        CpuClockSpeedRealHz = 1 / (CpuPeriodMillisecondsReal / 1000.0f);
+                        
+                        swCpuClock.Restart();
 
                         // Clock CIA 1
                         Cia.Clock();
@@ -80,8 +94,6 @@ namespace Commodore64 {
 
                         // Cycle the CPU
                         Cpu.Cycle();
-
-                        swCpuClock.Restart();
                     }
                 }
 
