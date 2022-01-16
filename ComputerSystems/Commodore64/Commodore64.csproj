@@ -6,7 +6,13 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<UseWPF>True</UseWPF>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<StartupObject>ComputerSystem.Commodore64.Program</StartupObject>
+		<ApplicationIcon>icon_transparent_32.ico</ApplicationIcon>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="icon_transparent_32.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Debugger\Debugger.csproj" />
