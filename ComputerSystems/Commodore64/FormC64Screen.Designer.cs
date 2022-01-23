@@ -55,6 +55,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnDebugger = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedSlowerSlower = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedSlower = new System.Windows.Forms.ToolStripButton();
+            this.btnClockSpeedDefault = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedFaster = new System.Windows.Forms.ToolStripButton();
             this.btnClockSpeedFasterFaster = new System.Windows.Forms.ToolStripButton();
             this.separator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -75,7 +76,6 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
             this.ofdInsertCartridge = new System.Windows.Forms.OpenFileDialog();
-            this.btnClockSpeedDefault = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
@@ -299,7 +299,9 @@ namespace ComputerSystem.Commodore64 {
             // 
             // btnUseCrtFilter
             // 
+            this.btnUseCrtFilter.Checked = true;
             this.btnUseCrtFilter.CheckOnClick = true;
+            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
             this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -388,6 +390,17 @@ namespace ComputerSystem.Commodore64 {
             this.btnClockSpeedSlower.Text = "Speed [-]";
             this.btnClockSpeedSlower.ToolTipText = "Clock Speed -";
             this.btnClockSpeedSlower.Click += new System.EventHandler(this.btnSlowDown_Click);
+            // 
+            // btnClockSpeedDefault
+            // 
+            this.btnClockSpeedDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnClockSpeedDefault.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedDefault.Image")));
+            this.btnClockSpeedDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClockSpeedDefault.Name = "btnClockSpeedDefault";
+            this.btnClockSpeedDefault.Size = new System.Drawing.Size(23, 22);
+            this.btnClockSpeedDefault.Text = "Speed [-]";
+            this.btnClockSpeedDefault.ToolTipText = "Clock Speed -";
+            this.btnClockSpeedDefault.Click += new System.EventHandler(this.btnClockSpeedDefault_Click);
             // 
             // btnClockSpeedFaster
             // 
@@ -546,17 +559,6 @@ namespace ComputerSystem.Commodore64 {
             // ofdInsertCartridge
             // 
             this.ofdInsertCartridge.Filter = "CRT-files|*.crt";
-            // 
-            // btnClockSpeedDefault
-            // 
-            this.btnClockSpeedDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClockSpeedDefault.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedDefault.Image")));
-            this.btnClockSpeedDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnClockSpeedDefault.Name = "btnClockSpeedDefault";
-            this.btnClockSpeedDefault.Size = new System.Drawing.Size(23, 22);
-            this.btnClockSpeedDefault.Text = "Speed [-]";
-            this.btnClockSpeedDefault.ToolTipText = "Clock Speed -";
-            this.btnClockSpeedDefault.Click += new System.EventHandler(this.btnClockSpeedDefault_Click);
             // 
             // FormC64Screen
             // 
