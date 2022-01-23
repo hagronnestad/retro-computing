@@ -294,6 +294,19 @@ namespace ComputerSystem.Commodore64 {
                     case ".crt":
                         await InsertCartridge(fileName);
                         break;
+
+                    case ".bin":
+                        await C64.Cpu.Pause();
+
+                        var file = File.ReadAllBytes(fileName);
+                        for (int i = 0; i < file.Length; i++)
+                        {
+                            C64.Memory._memory[0x8000 + i] = file[i];
+                        }
+
+                        C64.Cpu.PC = 0x8000;
+                        C64.Cpu.Resume();
+                        break;
                 }
             }
         }
