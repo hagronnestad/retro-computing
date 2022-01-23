@@ -463,8 +463,9 @@ namespace ComputerSystem.Commodore64 {
                 C64.Memory._memory[0x0277] = (byte)text[i];
                 C64.Memory._memory[0x00C6] = 1;
 
-                while (C64.Memory._memory[0x00C6] != 0) {
-                    Application.DoEvents();
+                while (C64.Memory._memory[0x00C6] != 0)
+                {
+                    Thread.Sleep(1);
                 }
             }
         }
