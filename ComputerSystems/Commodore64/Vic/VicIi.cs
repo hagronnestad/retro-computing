@@ -42,7 +42,7 @@ namespace Commodore64.Vic {
                 switch (index) {
 
                     case Register.REGISTER_0x11_SCREEN_CONTROL_1:
-                        // Bit #7 og 0x11 is set if current raster line > 255
+                        // Bit #7 of 0x11 is set if current raster line > 255
                         _registers[(int)index] = _registers[(int)index].SetBit(BitFlag.BIT_7, CurrentLine > 255);
                         return _registers[(int)index];
 
