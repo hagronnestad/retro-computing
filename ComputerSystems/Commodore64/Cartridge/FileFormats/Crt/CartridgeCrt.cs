@@ -6,16 +6,13 @@ using System.Linq;
 
 namespace Commodore64.Cartridge.FileFormats.Crt {
 
-    public class CrtFile : ICartridge {
+    public class CartridgeCrt : ICartridge {
 
         public CrtHeader Header { get; set; }
         public List<CrtChip> Chips { get; set; } = new List<CrtChip>();
 
-        public event EventHandler<MemoryReadEventArgs<byte>> OnRead;
-        public event EventHandler<MemoryWriteEventArgs<byte>> OnWrite;
-
-        public static CrtFile FromBytes(byte[] data) {
-            var crt = new CrtFile {
+        public static CartridgeCrt FromBytes(byte[] data) {
+            var crt = new CartridgeCrt {
                 Header = CrtHeader.FromBytes(data)
             };
 
@@ -30,12 +27,15 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
             return crt;
         }
 
-        public static CrtFile FromFile(string path) {
+        public static CartridgeCrt FromFile(string path) {
             return FromBytes(File.ReadAllBytes(path));
         }
 
 
         // ICartridge implementation
+
+        public event EventHandler<MemoryReadEventArgs<byte>> OnRead;
+        public event EventHandler<MemoryWriteEventArgs<byte>> OnWrite;
 
         public byte this[int i] {
             get => Read(i);

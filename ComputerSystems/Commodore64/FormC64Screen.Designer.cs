@@ -65,7 +65,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnShowRasterLineInterrupt = new System.Windows.Forms.ToolStripButton();
             this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
             this.separator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblStatusVic = new System.Windows.Forms.ToolStripStatusLabel();
@@ -366,7 +366,6 @@ namespace ComputerSystem.Commodore64 {
             this.btnDebugger.Name = "btnDebugger";
             this.btnDebugger.Size = new System.Drawing.Size(23, 22);
             this.btnDebugger.Text = "Debugger";
-            this.btnDebugger.Visible = false;
             this.btnDebugger.Click += new System.EventHandler(this.BtnMemoryWatch_Click);
             // 
             // btnClockSpeedSlowerSlower
@@ -481,9 +480,9 @@ namespace ComputerSystem.Commodore64 {
             this.separator6.Name = "separator6";
             this.separator6.Size = new System.Drawing.Size(6, 25);
             // 
-            // ofd
+            // ofdOpenFile
             // 
-            this.ofd.Filter = "PRG-files|*.prg|All files|*.*";
+            this.ofdOpenFile.Filter = "PRG-files|*.prg|All files|*.*";
             // 
             // sfd
             // 
@@ -558,7 +557,7 @@ namespace ComputerSystem.Commodore64 {
             // 
             // ofdInsertCartridge
             // 
-            this.ofdInsertCartridge.Filter = "CRT-files|*.crt";
+            this.ofdInsertCartridge.Filter = "Cartridges|*.crt;*.bin|Cartridge|*.crt|Raw Cartridge|*.bin|All files|*.*";
             // 
             // FormC64Screen
             // 
@@ -574,6 +573,7 @@ namespace ComputerSystem.Commodore64 {
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FormC64Screen";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Retrocomputing.NET - Commodore 64";
             this.Activated += new System.EventHandler(this.FormC64Screen_Activated);
             this.Deactivate += new System.EventHandler(this.FormC64Screen_Deactivate);
@@ -599,7 +599,7 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStrip toolMain;
         private System.Windows.Forms.ToolStripButton btnRestart;
         private System.Windows.Forms.ToolStripButton btnOpen;
-        private System.Windows.Forms.OpenFileDialog ofd;
+        private System.Windows.Forms.OpenFileDialog ofdOpenFile;
         private System.Windows.Forms.ToolStripButton btnSave;
         private System.Windows.Forms.SaveFileDialog sfd;
         private System.Windows.Forms.ToolStripSplitButton btnCopyOutput;

@@ -15,6 +15,8 @@ using System.Drawing.Drawing2D;
 using Commodore64.Vic;
 using Commodore64.Cartridge.FileFormats.Crt;
 using System.Threading.Tasks;
+using Commodore64.Cartridge.FileFormats.Raw;
+using Commodore64.Cartridge;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -186,34 +188,6 @@ namespace ComputerSystem.Commodore64 {
             C64.PowerOn();
         }
 
-        private void LoadPrg(string fileName, bool executeRun) {
-            var file = File.ReadAllBytes(fileName);
-
-            var address = BitConverter.ToUInt16(file, 0);
-            var data = file.Skip(2).ToArray();
-
-            for (int i = 0; i < data.Length; i++) {
-                C64.Memory._memory[address + i] = data[i];
-            }
-
-            if (executeRun) {
-                // Put "RUN" + {RETURN} directly into the BASIC keyboard
-                // buffer and set the buffer length, BASIC does the rest!
-                C64.Memory._memory[0x0277] = (byte)'R';
-                C64.Memory._memory[0x0278] = (byte)'U';
-                C64.Memory._memory[0x0279] = (byte)'N';
-                C64.Memory._memory[0x027A] = 13; // {RETURN}
-                C64.Memory._memory[0x00C6] = 4;
-            }
-        }
-
-        private async void BtnOpen_Click(object sender, EventArgs e) {
-            if (ofd.ShowDialog() == DialogResult.OK) {
-                await C64.Cpu.Pause();
-                LoadPrg(ofd.FileName, true);
-                C64.Cpu.Resume();
-            }
-        }
 
         private void BtnSave_Click(object sender, EventArgs e) {
             if (sfd.ShowDialog() == DialogResult.OK) {
@@ -276,45 +250,135 @@ namespace ComputerSystem.Commodore64 {
             C64.Cpu.Resume();
         }
 
-
-        private async void pScreen_DragDropAsync(object sender, DragEventArgs e) {
-            if (e.Data.GetData(DataFormats.FileDrop) is string[] d && d.Length > 0) {
-
+        private async void pScreen_DragDropAsync(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] d && d.Length > 0)
+            {
                 var fileName = d.First();
                 if (!File.Exists(fileName)) return;
 
-                switch (Path.GetExtension(fileName).ToLower()) {
-                    case "":
-                    case ".prg":
-                        await C64.Cpu.Pause();
-                        LoadPrg(fileName, true);
-                        C64.Cpu.Resume();
-                        break;
-
-                    case ".crt":
-                        await InsertCartridge(fileName);
-                        break;
-
-                    case ".bin":
-                        await C64.Cpu.Pause();
-
-                        var file = File.ReadAllBytes(fileName);
-                        for (int i = 0; i < file.Length; i++)
-                        {
-                            C64.Memory._memory[0x8000 + i] = file[i];
-                        }
-
-                        C64.Cpu.PC = 0x8000;
-                        C64.Cpu.Resume();
-                        break;
-                }
+                await HandleFileOpen(fileName);
             }
         }
 
-        private void pScreen_DragEnter(object sender, DragEventArgs e) {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+        private void pScreen_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
                 e.Effect = DragDropEffects.Copy;
             }
+        }
+
+        private async void BtnOpen_Click(object sender, EventArgs e)
+        {
+            if (ofdOpenFile.ShowDialog() == DialogResult.OK)
+            {
+                await HandleFileOpen(ofdOpenFile.FileName);
+            }
+        }
+
+        private async void btnInsertCartridge_ClickAsync(object sender, EventArgs e)
+        {
+            if (btnInsertCartridge.Checked)
+            {
+                await RemoveCartridge();
+                return;
+            }
+
+            if (ofdInsertCartridge.ShowDialog() == DialogResult.OK)
+            {
+                await HandleFileOpen(ofdInsertCartridge.FileName);
+            }
+        }
+
+        private async Task HandleFileOpen(string fileName)
+        {
+            var ext = Path.GetExtension(fileName);
+
+            switch (ext.ToLower())
+            {
+                case ".prg":
+                    await C64.Cpu.Pause();
+                    LoadPrg(fileName, true);
+                    C64.Cpu.Resume();
+                    break;
+
+                case ".crt":
+                case ".bin":
+                    await InsertCartridge(fileName);
+                    break;
+
+                default:
+                    // Using Task.Run to prevent a bug where the window locks up when using drag and drop
+                    await Task.Run(() => MessageBox.Show("Unknown file format.", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Warning));
+                    return;
+            }
+        }
+
+        private void LoadPrg(string fileName, bool executeRun)
+        {
+            var file = File.ReadAllBytes(fileName);
+
+            var address = BitConverter.ToUInt16(file, 0);
+            var data = file.Skip(2).ToArray();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                C64.Memory._memory[address + i] = data[i];
+            }
+
+            if (executeRun)
+            {
+                // Put "RUN" + {RETURN} directly into the BASIC keyboard
+                // buffer and set the buffer length, BASIC does the rest!
+                C64.Memory._memory[0x0277] = (byte)'R';
+                C64.Memory._memory[0x0278] = (byte)'U';
+                C64.Memory._memory[0x0279] = (byte)'N';
+                C64.Memory._memory[0x027A] = 13; // {RETURN}
+                C64.Memory._memory[0x00C6] = 4;
+            }
+        }
+
+        private async Task<ICartridge> InsertCartridge(string fileName)
+        {
+            var ext = Path.GetExtension(fileName);
+
+            ICartridge crt;
+
+            switch (ext.ToLower())
+            {
+                case ".crt":
+                    crt = CartridgeCrt.FromFile(fileName);
+                    C64.Cartridge = crt;
+                    break;
+
+                case ".bin":
+                    crt = CartridgeRaw.FromFile(fileName);
+                    C64.Cartridge = crt;
+                    break;
+
+                default:
+                    return null;
+
+            }
+
+            btnInsertCartridge.Text = $"{crt.Name}";
+            btnInsertCartridge.Checked = true;
+
+            await C64.PowerOff();
+            C64.PowerOn();
+
+            return crt;
+        }
+
+        private async Task RemoveCartridge()
+        {
+            C64.Cartridge = null;
+            btnInsertCartridge.Text = "";
+            btnInsertCartridge.Checked = false;
+
+            await C64.PowerOff();
+            C64.PowerOn();
         }
 
         public void SetPixels(Bitmap b, Color[,] pixels) {
@@ -422,36 +486,6 @@ namespace ComputerSystem.Commodore64 {
 
         private void btnToggleFullscreen_Click(object sender, EventArgs e) {
             ToggleFullscreen();
-        }
-
-        private async void btnInsertCartridge_ClickAsync(object sender, EventArgs e) {
-            if (!btnInsertCartridge.Checked) {
-                if (ofdInsertCartridge.ShowDialog() == DialogResult.OK) {
-                    await InsertCartridge(ofdInsertCartridge.FileName);
-                }
-
-            } else {
-                await RemoveCartridge();
-            }
-        }
-
-        private async Task InsertCartridge(string fileName) {
-            var crt = CrtFile.FromFile(fileName);
-            C64.Cartridge = crt;
-            btnInsertCartridge.Text = $"{crt.Name}";
-            btnInsertCartridge.Checked = true;
-
-            await C64.PowerOff();
-            C64.PowerOn();
-        }
-
-        private async Task RemoveCartridge() {
-            C64.Cartridge = null;
-            btnInsertCartridge.Text = "";
-            btnInsertCartridge.Checked = false;
-
-            await C64.PowerOff();
-            C64.PowerOn();
         }
 
         private void pScreen_Click(object sender, EventArgs e) {
