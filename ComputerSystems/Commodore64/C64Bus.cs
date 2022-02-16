@@ -37,7 +37,7 @@ namespace Commodore64 {
 
         private MemoryBase<byte> _romBasic;
         public MemoryBase<byte> _romCharacter;
-        private MemoryBase<byte> _romKernal;
+        public MemoryBase<byte> _romKernal;
 
         private Cia1 _cia;
         private Cia2 _cia2;

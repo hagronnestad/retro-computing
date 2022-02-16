@@ -34,5 +34,17 @@ namespace Commodore64.Properties {
                 this["CurrentColorPalette"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool KernalWhiteTextColor {
+            get {
+                return ((bool)(this["KernalWhiteTextColor"]));
+            }
+            set {
+                this["KernalWhiteTextColor"] = value;
+            }
+        }
     }
 }

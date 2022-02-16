@@ -78,6 +78,8 @@ namespace ComputerSystem.Commodore64 {
             this.ofdInsertCartridge = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuColors = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuKernalWhiteTextColor = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuPalettes = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOpenPaletteFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -580,6 +582,8 @@ namespace ComputerSystem.Commodore64 {
             // mnuColors
             // 
             this.mnuColors.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuKernalWhiteTextColor,
+            this.toolStripSeparator2,
             this.mnuPalettes,
             this.mnuOpenPaletteFolder,
             this.toolStripSeparator1,
@@ -588,6 +592,18 @@ namespace ComputerSystem.Commodore64 {
             this.mnuColors.Size = new System.Drawing.Size(53, 20);
             this.mnuColors.Text = "Colors";
             this.mnuColors.DropDownOpening += new System.EventHandler(this.mnuColors_DropDownOpening);
+            // 
+            // mnuKernalWhiteTextColor
+            // 
+            this.mnuKernalWhiteTextColor.Name = "mnuKernalWhiteTextColor";
+            this.mnuKernalWhiteTextColor.Size = new System.Drawing.Size(197, 22);
+            this.mnuKernalWhiteTextColor.Text = "White Text Color Patch";
+            this.mnuKernalWhiteTextColor.Click += new System.EventHandler(this.mnuKernalWhiteTextColor_ClickAsync);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(194, 6);
             // 
             // mnuPalettes
             // 
@@ -715,5 +731,7 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.OpenFileDialog ofdImportVicePaletteFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mnuOpenPaletteFolder;
+        private System.Windows.Forms.ToolStripMenuItem mnuKernalWhiteTextColor;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

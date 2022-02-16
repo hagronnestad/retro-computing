@@ -10,6 +10,7 @@ using static Commodore64.Vic.VicIi;
 using Commodore64.Vic;
 using Commodore64.Cia;
 using Commodore64.Cartridge;
+using Commodore64.Properties;
 
 namespace Commodore64 {
     public class C64 {
@@ -63,13 +64,24 @@ namespace Commodore64 {
             if (Cartridge != null) Memory.InsertCartridge(Cartridge);
 
             AddEventHandlers();
-            Cpu.Reset();
+        }
+
+        public void PatchKernalRomTextColor(byte color)
+        {
+            Memory._romKernal.IsReadOnly = false;
+            Memory._romKernal[0x0535] = color;
+            Memory._romKernal.IsReadOnly = true;
         }
 
         public void PowerOn() {
             if (_isRunnning) return;
 
             Initialize();
+
+            // Apply ROM patches
+            if (Settings.Default.KernalWhiteTextColor) PatchKernalRomTextColor(0x01);
+
+            Cpu.Reset();
 
             _isRunnning = true;
             _tcsStop = new TaskCompletionSource<bool>();

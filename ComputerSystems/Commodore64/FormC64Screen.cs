@@ -86,7 +86,20 @@ namespace ComputerSystem.Commodore64 {
             _isInitialized = true;
         }
 
+        private void LoadSettings()
+        {
+            mnuKernalWhiteTextColor.Checked = Settings.Default.KernalWhiteTextColor;
+        }
+
+        private void SaveSettings()
+        {
+            Settings.Default.KernalWhiteTextColor = mnuKernalWhiteTextColor.Checked;
+            Settings.Default.Save();
+        }
+
         private void FormC64Screen_Load(object sender, EventArgs e) {
+            LoadSettings();
+
             pScreen.AllowDrop = true;
             new Thread(InvalidateScreen).Start();
         }
@@ -173,7 +186,7 @@ namespace ComputerSystem.Commodore64 {
 
             C64.PowerOff();
 
-            Settings.Default.Save();
+            SaveSettings();
         }
 
         private async void BtnRestart_Click(object sender, EventArgs e) {
@@ -560,6 +573,26 @@ namespace ComputerSystem.Commodore64 {
         private void mnuOpenPaletteFolder_Click(object sender, EventArgs e)
         {
             Process.Start("explorer.exe", Path.GetFullPath(@"Palettes\"));
+        }
+
+        private async void mnuKernalWhiteTextColor_ClickAsync(object sender, EventArgs e)
+        {
+            Settings.Default.KernalWhiteTextColor = !Settings.Default.KernalWhiteTextColor;
+            mnuKernalWhiteTextColor.Checked = Settings.Default.KernalWhiteTextColor;
+
+            await Task.Run(async () => {
+                if (MessageBox.Show(
+                    "This setting requires a restart. Do you want to restart now?",
+                    "Restart",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.Yes) {
+
+                    await C64.PowerOff();
+                    C64.PowerOn();
+                }
+            });
+
+
         }
     }
 }
