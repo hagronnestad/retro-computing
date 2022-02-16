@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using Commodore64.Properties;
+using Commodore64.Vic.Colors;
 using Commodore64.Vic.Enums;
 using Extensions.Byte;
 using Extensions.Enums;
 
-namespace Commodore64.Vic {
+namespace Commodore64.Vic
+{
     public class VicIi {
 
         /// <summary>
@@ -157,6 +160,8 @@ namespace Commodore64.Vic {
 
 
         public VicIi(TvSystem tvSystem) {
+            ColorManager.LoadPalette(PaletteDefinition.FromFile(Settings.Default.CurrentColorPalette));
+
             _tvSystem = tvSystem;
             _fullHeight = tvSystem == TvSystem.PAL ? FULL_HEIGHT_PAL : FULL_HEIGHT_NTSC;
 
@@ -259,8 +264,8 @@ namespace Commodore64.Vic {
             var charDataOffsetInMemory = vicRead((ushort)(screenPointer + charOffsetInMemory));
             var charRowData = vicRead((ushort)(characterPointer + charDataOffsetInMemory * 8 + charRow));
 
-            var bgColor = Colors.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
-            var fgColor = Colors.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111));
+            var bgColor = ColorManager.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
+            var fgColor = ColorManager.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111));
 
             for (int col = 0; col <= 7; col++) {
                 var pixel = charRowData.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
@@ -287,9 +292,9 @@ namespace Commodore64.Vic {
             var charDataOffsetInMemory = vicRead((ushort)(screenPointer + charOffsetInMemory));
             var charRowData = vicRead((ushort)(characterPointer + charDataOffsetInMemory * 8 + charRow));
 
-            var bgColor1 = Colors.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
-            var bgColor2 = Colors.FromByte((byte)(this[Register.REGISTER_0x22_BACKGROUND_COLOR_1] & 0b00001111));
-            var bgColor3 = Colors.FromByte((byte)(this[Register.REGISTER_0x23_BACKGROUND_COLOR_2] & 0b00001111));
+            var bgColor1 = ColorManager.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
+            var bgColor2 = ColorManager.FromByte((byte)(this[Register.REGISTER_0x22_BACKGROUND_COLOR_1] & 0b00001111));
+            var bgColor3 = ColorManager.FromByte((byte)(this[Register.REGISTER_0x23_BACKGROUND_COLOR_2] & 0b00001111));
             var fgColor = (byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111);
             
             var pixelColor = Color.Red;
@@ -311,7 +316,7 @@ namespace Commodore64.Vic {
                             break;
                         case 0b11:
                             var b = (fgColor >> 0) & 0b111;
-                            pixelColor = Colors.FromByte((byte)b);
+                            pixelColor = ColorManager.FromByte((byte)b);
                             break;
                     }
 
@@ -321,7 +326,7 @@ namespace Commodore64.Vic {
                     col++;
 
                 } else {
-                    var pixel = charRowData.IsBitSet(7 - (BitIndex)col) ? Colors.FromByte(fgColor) : bgColor1;
+                    var pixel = charRowData.IsBitSet(7 - (BitIndex)col) ? ColorManager.FromByte(fgColor) : bgColor1;
                     ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col] = pixel;
                 }
             }
@@ -346,9 +351,9 @@ namespace Commodore64.Vic {
             var charDataOffsetInMemory = vicRead((ushort)(screenPointer + charOffsetInMemory));
             var charRowData = vicRead((ushort)(characterPointer + charDataOffsetInMemory * 8 + charRow));
 
-            var bgColor = Colors.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
-            var fgColor1 = Colors.FromByte((byte)(this[Register.REGISTER_0x22_BACKGROUND_COLOR_1] & 0b00001111));
-            var fgColor2 = Colors.FromByte((byte)(this[Register.REGISTER_0x23_BACKGROUND_COLOR_2] & 0b00001111));
+            var bgColor = ColorManager.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
+            var fgColor1 = ColorManager.FromByte((byte)(this[Register.REGISTER_0x22_BACKGROUND_COLOR_1] & 0b00001111));
+            var fgColor2 = ColorManager.FromByte((byte)(this[Register.REGISTER_0x23_BACKGROUND_COLOR_2] & 0b00001111));
             var fgColor3 = (byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111);
 
             var pixelColor = Color.Red;
@@ -384,7 +389,7 @@ namespace Commodore64.Vic {
         /// Render Border
         /// </summary>
         private void RenderBorder() {
-            var bgColor = Colors.FromByte((byte)(this[Register.REGISTER_0x20_BORDER_COLOR] & 0b00001111));
+            var bgColor = ColorManager.FromByte((byte)(this[Register.REGISTER_0x20_BORDER_COLOR] & 0b00001111));
 
             for (int i = 0; i < 8; i++) {
                 ScreenBufferPixels[CurrentLine, CurrentLineCycle * 8 + i] = bgColor;

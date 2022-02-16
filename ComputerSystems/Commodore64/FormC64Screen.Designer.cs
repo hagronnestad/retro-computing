@@ -76,10 +76,18 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
             this.ofdInsertCartridge = new System.Windows.Forms.OpenFileDialog();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.mnuColors = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPalettes = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuOpenPaletteFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuImportVICEPaletteFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.ofdImportVicePaletteFile = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // pScreen
@@ -87,7 +95,7 @@ namespace ComputerSystem.Commodore64 {
             this.pScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pScreen.Location = new System.Drawing.Point(0, 29);
+            this.pScreen.Location = new System.Drawing.Point(0, 49);
             this.pScreen.Margin = new System.Windows.Forms.Padding(0);
             this.pScreen.Name = "pScreen";
             this.pScreen.Size = new System.Drawing.Size(832, 624);
@@ -113,7 +121,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblInstructions,
             this.lblIllegalInstructions,
             this.lblKeyboardDisabled});
-            this.statusMain.Location = new System.Drawing.Point(0, 681);
+            this.statusMain.Location = new System.Drawing.Point(0, 701);
             this.statusMain.Name = "statusMain";
             this.statusMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
             this.statusMain.Size = new System.Drawing.Size(832, 24);
@@ -217,7 +225,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnShowRasterLineInterrupt,
             this.btnShowFullFrameVideo,
             this.separator6});
-            this.toolMain.Location = new System.Drawing.Point(0, 0);
+            this.toolMain.Location = new System.Drawing.Point(0, 24);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(832, 25);
             this.toolMain.TabIndex = 0;
@@ -498,7 +506,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblVicCurrentLineCycle,
             this.lblVicGraphicsMode,
             this.lblVicScreenOn});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 657);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 677);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
             this.statusStrip1.Size = new System.Drawing.Size(832, 24);
@@ -559,18 +567,71 @@ namespace ComputerSystem.Commodore64 {
             // 
             this.ofdInsertCartridge.Filter = "Cartridges|*.crt;*.bin|Cartridge|*.crt|Raw Cartridge|*.bin|All files|*.*";
             // 
+            // menuStrip
+            // 
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuColors});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(832, 24);
+            this.menuStrip.TabIndex = 5;
+            this.menuStrip.Text = "menuStrip1";
+            // 
+            // mnuColors
+            // 
+            this.mnuColors.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuPalettes,
+            this.mnuOpenPaletteFolder,
+            this.toolStripSeparator1,
+            this.mnuImportVICEPaletteFile});
+            this.mnuColors.Name = "mnuColors";
+            this.mnuColors.Size = new System.Drawing.Size(53, 20);
+            this.mnuColors.Text = "Colors";
+            this.mnuColors.DropDownOpening += new System.EventHandler(this.mnuColors_DropDownOpening);
+            // 
+            // mnuPalettes
+            // 
+            this.mnuPalettes.Name = "mnuPalettes";
+            this.mnuPalettes.Size = new System.Drawing.Size(197, 22);
+            this.mnuPalettes.Text = "Palettes";
+            // 
+            // mnuOpenPaletteFolder
+            // 
+            this.mnuOpenPaletteFolder.Name = "mnuOpenPaletteFolder";
+            this.mnuOpenPaletteFolder.Size = new System.Drawing.Size(197, 22);
+            this.mnuOpenPaletteFolder.Text = "Open Palette Folder";
+            this.mnuOpenPaletteFolder.Click += new System.EventHandler(this.mnuOpenPaletteFolder_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(194, 6);
+            // 
+            // mnuImportVICEPaletteFile
+            // 
+            this.mnuImportVICEPaletteFile.Name = "mnuImportVICEPaletteFile";
+            this.mnuImportVICEPaletteFile.Size = new System.Drawing.Size(197, 22);
+            this.mnuImportVICEPaletteFile.Text = "Import VICE Palette File";
+            this.mnuImportVICEPaletteFile.Click += new System.EventHandler(this.mnuImportVICEPaletteFile_Click);
+            // 
+            // ofdImportVicePaletteFile
+            // 
+            this.ofdImportVicePaletteFile.Filter = "VICE Palette File|*.vpl";
+            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 705);
+            this.ClientSize = new System.Drawing.Size(832, 725);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolMain);
             this.Controls.Add(this.statusMain);
+            this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.pScreen);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FormC64Screen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -587,6 +648,8 @@ namespace ComputerSystem.Commodore64 {
             this.toolMain.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -645,5 +708,12 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripButton btnClockSpeedSlowerSlower;
         private System.Windows.Forms.ToolStripButton btnClockSpeedFasterFaster;
         private System.Windows.Forms.ToolStripButton btnClockSpeedDefault;
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem mnuColors;
+        private System.Windows.Forms.ToolStripMenuItem mnuPalettes;
+        private System.Windows.Forms.ToolStripMenuItem mnuImportVICEPaletteFile;
+        private System.Windows.Forms.OpenFileDialog ofdImportVicePaletteFile;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mnuOpenPaletteFolder;
     }
 }

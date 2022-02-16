@@ -17,6 +17,7 @@ using Commodore64.Cartridge.FileFormats.Crt;
 using System.Threading.Tasks;
 using Commodore64.Cartridge.FileFormats.Raw;
 using Commodore64.Cartridge;
+using Commodore64.Vic.Colors;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form {
@@ -308,6 +309,14 @@ namespace ComputerSystem.Commodore64 {
                     await InsertCartridge(fileName);
                     break;
 
+                case ".vpl": // VICE Palette file
+                    ColorManager.LoadPalette(PaletteDefinition.FromVicePaletteFile(fileName));
+                    break;
+
+                case ".json": // Just color palettes for now
+                    ColorManager.LoadPalette(PaletteDefinition.FromFile(fileName));
+                    break;
+
                 default:
                     // Using Task.Run to prevent a bug where the window locks up when using drag and drop
                     await Task.Run(() => MessageBox.Show("Unknown file format.", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Warning));
@@ -469,11 +478,12 @@ namespace ComputerSystem.Commodore64 {
             FormBorderStyle = FormBorderStyle == FormBorderStyle.Sizable ? FormBorderStyle.None : FormBorderStyle.Sizable;
             WindowState = WindowState == FormWindowState.Normal ? FormWindowState.Maximized : FormWindowState.Normal;
 
+            menuStrip.Visible = FormBorderStyle == FormBorderStyle.None ? false : true;
             toolMain.Visible = FormBorderStyle == FormBorderStyle.None ? false : true;
             statusMain.Visible = FormBorderStyle == FormBorderStyle.None ? false : true;
             statusStrip1.Visible = FormBorderStyle == FormBorderStyle.None ? false : true;
             pScreen.Dock = FormBorderStyle == FormBorderStyle.None ? DockStyle.Fill : DockStyle.None;
-            pScreen.Anchor = FormBorderStyle != FormBorderStyle.None ? AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right : AnchorStyles.Top | AnchorStyles.Left;
+            pScreen.Anchor = FormBorderStyle != FormBorderStyle.None ? AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right : AnchorStyles.Top | AnchorStyles.Left;            
         }
 
         private void pScreen_MouseMove(object sender, MouseEventArgs e) {
@@ -515,6 +525,49 @@ namespace ComputerSystem.Commodore64 {
                     Thread.Sleep(1);
                 }
             }
+        }
+
+        private void mnuColors_DropDownOpening(object sender, EventArgs e)
+        {
+            mnuPalettes.DropDownItems.Clear();
+
+            var paths = Directory.GetFiles("Palettes", "*.json");
+
+            foreach (var path in paths)
+            {
+                var fileName = Path.GetFileName(path);
+
+                mnuPalettes.DropDownItems.Add(
+                    new ToolStripMenuItem(
+                        Path.GetFileNameWithoutExtension(path),
+                        null,
+                        (s, e) =>
+                        {
+                            ColorManager.LoadPalette(PaletteDefinition.FromFile(fileName));
+                            Settings.Default.CurrentColorPalette = fileName;
+                        }
+                    )
+                    {
+                        Checked = fileName == Settings.Default.CurrentColorPalette
+                    }
+                );
+            }
+        }
+
+        private void mnuImportVICEPaletteFile_Click(object sender, EventArgs e)
+        {
+            if (ofdImportVicePaletteFile.ShowDialog() == DialogResult.OK)
+            {
+                var fn = ofdImportVicePaletteFile.FileName;
+                var pd = PaletteDefinition.ImportVicePaletteFile(fn);
+                ColorManager.LoadPalette(pd);
+                Settings.Default.CurrentColorPalette = $"{Path.GetFileNameWithoutExtension(fn)}.json";
+            }
+        }
+
+        private void mnuOpenPaletteFolder_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", Path.GetFullPath(@"Palettes\"));
         }
     }
 }
