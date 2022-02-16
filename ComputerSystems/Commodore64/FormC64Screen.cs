@@ -88,16 +88,8 @@ namespace ComputerSystem.Commodore64 {
 
         private void FormC64Screen_Load(object sender, EventArgs e) {
             pScreen.AllowDrop = true;
-
-            C64.Vic.OnLastScanLine += Vic_OnLastScanLine;
-
             new Thread(InvalidateScreen).Start();
         }
-
-        private void Vic_OnLastScanLine(object sender, EventArgs e) {
-
-        }
-
 
         private void InvalidateScreen() {
             while (true) {
