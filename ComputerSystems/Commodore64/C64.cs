@@ -1,4 +1,4 @@
-﻿using MicroProcessor.Cpu6502;
+using MicroProcessor.Cpu6502;
 using System.Diagnostics;
 using System.Threading;
 using Extensions.Byte;
@@ -90,7 +90,7 @@ namespace Commodore64 {
 
             var t = new Thread(() => {
                 while (_isRunnning) {
-                    
+
                     // CPU clock
                     if (swCpuClock.Elapsed.TotalMilliseconds >= CpuPeriodMilliseconds) {
                         CpuPeriodMillisecondsReal = swCpuClock.Elapsed.TotalMilliseconds;

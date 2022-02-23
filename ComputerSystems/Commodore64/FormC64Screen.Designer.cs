@@ -46,6 +46,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnInsertCartridge = new System.Windows.Forms.ToolStripButton();
             this.separator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
+            this.btnShowOnScreenDisplay = new System.Windows.Forms.ToolStripButton();
             this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
             this.separator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
@@ -209,6 +210,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnInsertCartridge,
             this.separator2,
             this.btnUseCrtFilter,
+            this.btnShowOnScreenDisplay,
             this.btnToggleFullscreen,
             this.separator3,
             this.btnCopyOutput,
@@ -318,6 +320,19 @@ namespace ComputerSystem.Commodore64 {
             this.btnUseCrtFilter.Name = "btnUseCrtFilter";
             this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
             this.btnUseCrtFilter.Text = "CRT filter";
+            // 
+            // btnShowOnScreenDisplay
+            // 
+            this.btnShowOnScreenDisplay.Checked = true;
+            this.btnShowOnScreenDisplay.CheckOnClick = true;
+            this.btnShowOnScreenDisplay.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.btnShowOnScreenDisplay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnShowOnScreenDisplay.Image = ((System.Drawing.Image)(resources.GetObject("btnShowOnScreenDisplay.Image")));
+            this.btnShowOnScreenDisplay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnShowOnScreenDisplay.Name = "btnShowOnScreenDisplay";
+            this.btnShowOnScreenDisplay.Size = new System.Drawing.Size(23, 22);
+            this.btnShowOnScreenDisplay.Text = "CRT filter";
+            this.btnShowOnScreenDisplay.Click += new System.EventHandler(this.btnShowOnScreenDisplay_Click);
             // 
             // btnToggleFullscreen
             // 
@@ -733,5 +748,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripMenuItem mnuOpenPaletteFolder;
         private System.Windows.Forms.ToolStripMenuItem mnuKernalWhiteTextColor;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton btnShowOnScreenDisplay;
     }
 }

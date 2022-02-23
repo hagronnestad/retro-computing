@@ -46,5 +46,29 @@ namespace Commodore64.Properties {
                 this["KernalWhiteTextColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseCrtFilter {
+            get {
+                return ((bool)(this["UseCrtFilter"]));
+            }
+            set {
+                this["UseCrtFilter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowOnScreenDisplay {
+            get {
+                return ((bool)(this["ShowOnScreenDisplay"]));
+            }
+            set {
+                this["ShowOnScreenDisplay"] = value;
+            }
+        }
     }
 }

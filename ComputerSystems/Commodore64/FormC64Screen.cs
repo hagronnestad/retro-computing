@@ -42,6 +42,7 @@ namespace ComputerSystem.Commodore64 {
         private Bitmap _bC64ScreenBuffer;
         private Graphics _gC64ScreenBuffer;
         private Image _crtImage;
+        private OsdManager _osdManager;
 
         private bool _isInitialized = false;
         private bool _formIsClosing = false;
@@ -49,6 +50,9 @@ namespace ComputerSystem.Commodore64 {
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
+
+            _osdManager = new OsdManager();
+            _osdManager.AddItem("Power On");
 
             C64 = c64;
 
@@ -94,11 +98,15 @@ namespace ComputerSystem.Commodore64 {
         private void LoadSettings()
         {
             mnuKernalWhiteTextColor.Checked = Settings.Default.KernalWhiteTextColor;
+            btnUseCrtFilter.Checked = Settings.Default.UseCrtFilter;
+            btnShowOnScreenDisplay.Checked = Settings.Default.ShowOnScreenDisplay;
         }
 
         private void SaveSettings()
         {
             Settings.Default.KernalWhiteTextColor = mnuKernalWhiteTextColor.Checked;
+            Settings.Default.UseCrtFilter = btnUseCrtFilter.Checked;
+            Settings.Default.ShowOnScreenDisplay = btnShowOnScreenDisplay.Checked;
             Settings.Default.Save();
         }
 
@@ -168,8 +176,10 @@ namespace ComputerSystem.Commodore64 {
                     new Rectangle(C64.Vic.BorderFrame.X, C64.Vic.BorderFrame.Y, C64.Vic.BorderFrame.Width, C64.Vic.BorderFrame.Height), GraphicsUnit.Pixel);
             }
 
+            if (btnShowOnScreenDisplay.Checked) _gC64ScreenOutputBuffer.DrawImage(_osdManager.OsdBitmap, 0, 0, pScreen.Width, pScreen.Height);
             if (btnUseCrtFilter.Checked) ApplyCrtFilter();
 
+            e.Graphics.CompositingMode = CompositingMode.SourceCopy;
             e.Graphics.DrawImage(_bC64ScreenOutputBuffer, 0, 0, pScreen.Width, pScreen.Height);
 
             _stopWatch.Stop();
@@ -207,6 +217,7 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private async void BtnRestart_Click(object sender, EventArgs e) {
+            _osdManager.AddItem("Power Cycle");
             await C64.PowerOff();
             C64.PowerOn();
         }
@@ -251,10 +262,12 @@ namespace ComputerSystem.Commodore64 {
 
             if (btnPause.Checked) {
                 var r = await C64.Cpu.Pause();
+                _osdManager.AddItem("Pause");
 
             } else {
 
                 C64.Cpu.Resume();
+                _osdManager.AddItem("Resume");
             }
 
         }
@@ -271,6 +284,8 @@ namespace ComputerSystem.Commodore64 {
             await C64.Cpu.Pause();
             C64.Cpu.Reset();
             C64.Cpu.Resume();
+
+            _osdManager.AddItem("Reset");
         }
 
         private async void pScreen_DragDropAsync(object sender, DragEventArgs e)
@@ -324,23 +339,28 @@ namespace ComputerSystem.Commodore64 {
                     await C64.Cpu.Pause();
                     LoadPrg(fileName, true);
                     C64.Cpu.Resume();
+                    _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
                     break;
 
                 case ".crt":
                 case ".bin":
                     await InsertCartridge(fileName);
+                    _osdManager.AddItem($"Inserted {Path.GetFileName(fileName)}");
                     break;
 
                 case ".vpl": // VICE Palette file
                     ColorManager.LoadPalette(PaletteDefinition.FromVicePaletteFile(fileName));
+                    _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
                     break;
 
                 case ".json": // Just color palettes for now
                     ColorManager.LoadPalette(PaletteDefinition.FromFile(fileName));
+                    _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
                     break;
 
                 default:
                     // Using Task.Run to prevent a bug where the window locks up when using drag and drop
+                    _osdManager.AddItem($"Unknown file format!");
                     await Task.Run(() => MessageBox.Show("Unknown file format.", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Warning));
                     return;
             }
@@ -610,6 +630,11 @@ namespace ComputerSystem.Commodore64 {
             });
 
 
+        }
+
+        private void btnShowOnScreenDisplay_Click(object sender, EventArgs e)
+        {
+            if (btnShowOnScreenDisplay.Checked) _osdManager.AddItem("On Screen Display On");
         }
     }
 }
