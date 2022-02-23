@@ -26,9 +26,12 @@ namespace ComputerSystem.Commodore64 {
 
         private readonly Stopwatch _stopWatch = new Stopwatch();
 
-        private double _fpsActual = 0.0f;
+        private Thread _invalidateScreenThread;
 
-        private double _screenRefreshRate = 1000.0f / 60.0f; // 60 fps
+        private double _fpsTarget = 50.0f;
+        private double _fpsActual = 0.0f;
+        private Queue<double> _fpsValues = new Queue<double>();
+
         private Bitmap _bC64ScreenOutputBuffer;
         private Graphics _gC64ScreenOutputBuffer;
 
@@ -41,6 +44,8 @@ namespace ComputerSystem.Commodore64 {
         private Image _crtImage;
 
         private bool _isInitialized = false;
+        private bool _formIsClosing = false;
+
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
@@ -68,7 +73,7 @@ namespace ComputerSystem.Commodore64 {
                         lblIllegalInstructions.Text = $"{c64.Cpu.TotalIllegalInstructions:N0} illegal instructions";
                         lblKeyboardDisabled.Visible = !c64.KeyboardActivated;
 
-                        lblFps.Text = $"{((int)_fpsActual):D3} fps";
+                        lblFps.Text = $"{((int)_fpsActual):D2} fps";
                         lblVicCycles.Text = $"{c64.Vic.TotalCycles:N0} cycles";
 
                         lblVicCurrentLine.Text = $"Line: {c64.Vic.CurrentLine:D3}";
@@ -101,26 +106,35 @@ namespace ComputerSystem.Commodore64 {
             LoadSettings();
 
             pScreen.AllowDrop = true;
-            new Thread(InvalidateScreen).Start();
+
+            _invalidateScreenThread = new Thread(InvalidateScreen);
+            _invalidateScreenThread.Start();
         }
 
         private void InvalidateScreen() {
-            while (true) {
-                if (!Visible || WindowState == FormWindowState.Minimized) {
-                    Thread.Sleep(1000);
-                    continue;
-                }
+            var sw = Stopwatch.StartNew();
 
-                try {
-                    Invoke(new Action(() => {
+            var period = 1000.0f / _fpsTarget;
+
+            while (!_formIsClosing) {
+                if (!Visible || WindowState == FormWindowState.Minimized) continue;
+
+                sw.Restart();
+
+                try
+                {
+                    Invoke(new Action(() =>
+                    {
                         pScreen.Invalidate();
                     }));
-
-                } catch (Exception) {
-                    return;
+                }
+                catch (Exception)
+                {
                 }
 
-                Thread.Sleep((int)_screenRefreshRate);
+                while (sw.Elapsed.TotalMilliseconds < period)
+                {
+                }
             }
         }
 
@@ -159,10 +173,11 @@ namespace ComputerSystem.Commodore64 {
             e.Graphics.DrawImage(_bC64ScreenOutputBuffer, 0, 0, pScreen.Width, pScreen.Height);
 
             _stopWatch.Stop();
-
-            _fpsActual = 1000f / _stopWatch.Elapsed.TotalMilliseconds;
-
+            _fpsValues.Enqueue(_stopWatch.Elapsed.TotalMilliseconds);
             _stopWatch.Restart();
+            
+            if (_fpsValues.Count > 15) _fpsValues.Dequeue();
+            _fpsActual = 1000f / _fpsValues.Average(x => x);
         }
 
         private void PScreen_Resize(object sender, EventArgs e) {
@@ -181,6 +196,8 @@ namespace ComputerSystem.Commodore64 {
         }
 
         private void FormC64Screen_FormClosing(object sender, FormClosingEventArgs e) {
+            _formIsClosing = true;
+
             _gC64ScreenOutputBuffer.Dispose();
             _bC64ScreenOutputBuffer.Dispose();
 
