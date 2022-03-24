@@ -131,23 +131,23 @@
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEYSURBVDhPY6AaqKys/O/t7f3fwMAALwapAamFaoMAkIC9
-        o8//ksbT/xsnvfrfNevX/5Zp3/93zf79v3X6bwg97QeYdgpc+t/G1uEriiEgU53DT/0Pyfv/3zvtH5j2
+        o8//ksbT/xsnvfrfNevX/5Zp3/93zf79v3X6bwg97QeYdgpc+t/G1v4riiEgU53DT/0Pyfv/3zvtH5j2
         Sf+PlfZM+fU/OmXKT5AeqHYGBpDTQDb1zP3/v33mPyj9H40Gif8F0n//1/fcBHsHqh1iAMhkfDZ7JH/9
         H5j9C8wHuRLDAIQL0G1GdsE/MB+ESXYBjAbZTqYLEDQIk+0CEI3iAn19fQEQp7DuNBYbIX5GFf/3v7Bq
         M9gAkF6wISCOmbn1f8/YU2CXBOf+A9sUnPsXzA/I+gamQbFg7b34v5WVFaYXyMFQ7cQZcODAAQw2VDsV
-        XEA+YGAAAPNS0ZryCg0NAAAAAElFTkSuQmCC
+        XEA+YGAAAO/70Zn2kYRtAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnShowOnScreenDisplay.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFpSURBVDhPY6AaqKys/O/t7f3fwMAALwapAamFaoMAkIC9
-        o89/n/T/RGEbW4evKIaATMWmEB8G6YFqZ2AAOc294P1/sYu+/wVv2/w3nbLpv2vxq//C153+i15x/2/b
+        o89/n/T/RGEbW/uvKIaATMWmEB8G6YFqZ2AAOc294P1/sYu+/wVv2/w3nbLpv2vxq//C153+i15x/2/b
         fOE/30PD/4J3rP5Lng4DGwDSA9UOMUBxd+F/uUOp/00nb/3P+0T3v8G8Rf9lDyf/N5yz7L/6hmagmM5/
         h9pbYLbO0mmYBghfd/7vUvocbLrAPbP/TpUP/otcdfvP9Ur5v0XfXrABzuWP/1t1Hf6vuCcf0wCZo4n/
         TaZu/O+d8fc/2yfR/+rr2/4bzl7+X3NN93/p47FwA0Au0lrZj2kAyBaWrwL/mb/z/tda1Qu06ch/hn+M
         YGwybQPYAP77pv8Z/jL9dy15iWkALHQ98j7D2cjYM/s7GMP4cAP09fUFkA0gFoP0gPSCDQFxzMytsSrE
-        hq2srDC9QA6GaifOgAMHDmCwodqp4ALyAQMDAOmspiFvxw/yAAAAAElFTkSuQmCC
+        hq2srDC9QA6GaifOgAMHDmCwodqp4ALyAQMDAOZVpiBte9t2AAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="btnToggleFullscreen.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -266,6 +266,9 @@
   </metadata>
   <metadata name="ofdImportVicePaletteFile.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>797, 17</value>
+  </metadata>
+  <metadata name="fsw.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>983, 17</value>
   </metadata>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

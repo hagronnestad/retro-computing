@@ -86,11 +86,13 @@ namespace ComputerSystem.Commodore64 {
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuImportVICEPaletteFile = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdImportVicePaletteFile = new System.Windows.Forms.OpenFileDialog();
+            this.fsw = new System.IO.FileSystemWatcher();
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
             this.statusMain.SuspendLayout();
             this.toolMain.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fsw)).BeginInit();
             this.SuspendLayout();
             // 
             // pScreen
@@ -649,6 +651,13 @@ namespace ComputerSystem.Commodore64 {
             // 
             this.ofdImportVicePaletteFile.Filter = "VICE Palette File|*.vpl";
             // 
+            // fsw
+            // 
+            this.fsw.EnableRaisingEvents = true;
+            this.fsw.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+            this.fsw.SynchronizingObject = this;
+            this.fsw.Changed += new System.IO.FileSystemEventHandler(this.fsw_Changed);
+            // 
             // FormC64Screen
             // 
             this.AllowDrop = true;
@@ -681,6 +690,7 @@ namespace ComputerSystem.Commodore64 {
             this.statusStrip1.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fsw)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -749,5 +759,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripMenuItem mnuKernalWhiteTextColor;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton btnShowOnScreenDisplay;
+        private System.IO.FileSystemWatcher fsw;
     }
 }

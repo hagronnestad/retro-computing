@@ -340,6 +340,7 @@ namespace ComputerSystem.Commodore64 {
                     LoadPrg(fileName, true);
                     C64.Cpu.Resume();
                     _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
+                    fsw.Path = Path.GetDirectoryName(fileName);
                     break;
 
                 case ".crt":
@@ -364,6 +365,40 @@ namespace ComputerSystem.Commodore64 {
                     await Task.Run(() => MessageBox.Show("Unknown file format.", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Warning));
                     return;
             }
+        }
+
+        bool fswBusy = false;
+
+        private async void fsw_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (fswBusy) return;
+            if (e.ChangeType != WatcherChangeTypes.Changed) return;
+
+            fswBusy = true;
+
+            var ext = Path.GetExtension(e.Name);
+
+            switch (ext.ToLower())
+            {
+                case ".prg":
+                    await C64.PowerOff();
+                    C64.PowerOn();
+
+                    // TODO: Fix hacky solution to wait for the BASIC prompt before continuing
+                    await Task.Delay(3000);
+
+                    await C64.Cpu.Pause();
+                    LoadPrg(e.FullPath, true);
+                    C64.Cpu.Resume();
+
+                    _osdManager.AddItem($"Loaded {Path.GetFileName(e.FullPath)}");
+                    break;
+
+                default:
+                    return;
+            }
+
+            fswBusy = false;
         }
 
         private void LoadPrg(string fileName, bool executeRun)
