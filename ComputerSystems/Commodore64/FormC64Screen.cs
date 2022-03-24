@@ -46,6 +46,7 @@ namespace ComputerSystem.Commodore64 {
 
         private bool _isInitialized = false;
         private bool _formIsClosing = false;
+        private bool _fswBusy = false;
 
 
         public FormC64Screen(C64 c64) {
@@ -367,14 +368,12 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        bool fswBusy = false;
-
         private async void fsw_Changed(object sender, FileSystemEventArgs e)
         {
-            if (fswBusy) return;
+            if (_fswBusy) return;
             if (e.ChangeType != WatcherChangeTypes.Changed) return;
 
-            fswBusy = true;
+            _fswBusy = true;
 
             var ext = Path.GetExtension(e.Name);
 
@@ -395,10 +394,10 @@ namespace ComputerSystem.Commodore64 {
                     break;
 
                 default:
-                    return;
+                    break;
             }
 
-            fswBusy = false;
+            _fswBusy = false;
         }
 
         private void LoadPrg(string fileName, bool executeRun)
