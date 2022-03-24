@@ -60,7 +60,7 @@ namespace ComputerSystem.Commodore64 {
 
             _bC64ScreenBuffer = new Bitmap(VicIi.FULL_WIDTH, VicIi.FULL_HEIGHT_PAL, PixelFormat.Format24bppRgb);
             _gC64ScreenBuffer = Graphics.FromImage(_bC64ScreenBuffer);
-            _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
+            _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height, PixelFormat.Format24bppRgb);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
 
             _uiRefreshTimer = new Timer((e) => {
@@ -197,7 +197,7 @@ namespace ComputerSystem.Commodore64 {
             _bC64ScreenOutputBuffer.Dispose();
             _gC64ScreenOutputBuffer.Dispose();
 
-            _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height);
+            _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height, PixelFormat.Format24bppRgb);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
 
             //_gC64ScreenOutputBuffer.SmoothingMode = SmoothingMode.AntiAlias;
