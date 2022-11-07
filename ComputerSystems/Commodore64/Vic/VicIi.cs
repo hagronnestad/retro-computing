@@ -218,6 +218,8 @@ namespace Commodore64.Vic
                         break;
                 }
 
+                RenderSprites();
+
             } else {
 
                 if (IsInBorder(p)) {
@@ -245,6 +247,24 @@ namespace Commodore64.Vic
             TotalCycles++;
         }
 
+        private void RenderSprites()
+        {
+            for (byte i = 0; i < 8; i++)
+            {
+                var s = VicIiSprite.GetSprite(_registers, i);
+                var sr = new Rectangle(s.X + DisplayFrame.X - 24, s.Y, 24, 21);
+
+                var p = GetScanlinePoint();
+
+                if (sr.Contains(p))
+                {
+                    for (int col = 0; col <= 7; col++)
+                    {
+                        ScreenBufferPixels[p.Y, p.X + col] = (i == 0 ? Color.White : Color.Yellow);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Render 40x25 Standard Character Mode
