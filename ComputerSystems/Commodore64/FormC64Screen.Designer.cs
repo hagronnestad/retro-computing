@@ -654,7 +654,9 @@ namespace ComputerSystem.Commodore64 {
             // fsw
             // 
             this.fsw.EnableRaisingEvents = true;
-            this.fsw.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+            this.fsw.NotifyFilter = ((System.IO.NotifyFilters)((((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.DirectoryName) 
+            | System.IO.NotifyFilters.LastWrite) 
+            | System.IO.NotifyFilters.CreationTime)));
             this.fsw.SynchronizingObject = this;
             this.fsw.Changed += new System.IO.FileSystemEventHandler(this.fsw_Changed);
             // 
