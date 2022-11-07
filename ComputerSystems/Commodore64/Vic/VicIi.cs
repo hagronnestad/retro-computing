@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Commodore64.Properties;
 using Commodore64.Vic.Colors;
@@ -24,10 +24,19 @@ namespace Commodore64.Vic
         public C64 C64;
 
         public Color[,] ScreenBufferPixels { get; }
+        public int RasterLineToGenerateInterruptAt {
+            get {
+                var rl = 0;
+                rl = _rasterLineToGenerateInterruptAtBitEight << 8 | _rasterLineToGenerateInterruptAtBitZeroToSeven;
+                return rl & 0b111111111;
+            }
+        }
+
+        private byte _rasterLineToGenerateInterruptAtBitZeroToSeven = 0;
+        private byte _rasterLineToGenerateInterruptAtBitEight = 0;
 
         private readonly TvSystem _tvSystem;
         private readonly int _fullHeight;
-        public int _rasterLineToGenerateInterruptAt = 0;
 
         private bool _interruptLatchRasterLine = false;
         private bool _interruptLatchSpriteBackgroundCollision = false;
@@ -52,7 +61,7 @@ namespace Commodore64.Vic
                     // Current raster line (bits #0-#7).
                     // There's an additional bit used (bit #7) in 0x11 for values > 255
                     case Register.REGISTER_0x12_RASTER_COUNTER:
-                        return CurrentLine > 255 ? (byte)(CurrentLine - 255) : (byte)CurrentLine;
+                        return (byte)(CurrentLine & 0b11111111);
 
                     // Interrupt status register.
                     case Register.REGISTER_0x19_INTERRUPT_REGISTER:
@@ -68,22 +77,20 @@ namespace Commodore64.Vic
                 }
             }
             set {
+                var reg = (int)index;
                 switch (index) {
-
                     // Raster line to generate interrupt at (bits #0-#7).
                     // There's an additional bit used (bit #7) in 0x11 for values > 255
                     case Register.REGISTER_0x12_RASTER_COUNTER:
-                        _registers[(int)index] = value;
-                        UpdateRasterLineToGenerateInterruptAt();
+                        _registers[reg] = value;
+                        _rasterLineToGenerateInterruptAtBitZeroToSeven = value;
                         break;
 
                     // Raster line to generate interrupt at (bit #7).
                     // Bit #7 in this register is used as the 8th bit for the raster counter
-                    // that's why we need to update the internal raster line variable if this
-                    // register is modified
                     case Register.REGISTER_0x11_SCREEN_CONTROL_1:
-                        _registers[(int)index] = value;
-                        UpdateRasterLineToGenerateInterruptAt();
+                        _registers[reg] = value;
+                        _rasterLineToGenerateInterruptAtBitEight = (byte)(value >> 7);
                         break;
 
                     // Interrupt status register.
@@ -93,20 +100,13 @@ namespace Commodore64.Vic
                         if (value.IsBitSet(BitFlag.BIT_1)) _interruptLatchSpriteBackgroundCollision = false;
                         if (value.IsBitSet(BitFlag.BIT_2)) _interruptLatchSpriteSpriteCollision = false;
                         if (value.IsBitSet(BitFlag.BIT_3)) _interruptLatchLightPenSignal = false;
-                        _registers[(int)index] = value;
+                        _registers[reg] = value;
                         break;
 
                     default:
-                        _registers[(int)index] = value;
+                        _registers[reg] = value;
                         break;
                 }
-            }
-        }
-
-        private void UpdateRasterLineToGenerateInterruptAt() {
-            _rasterLineToGenerateInterruptAt = this[Register.REGISTER_0x12_RASTER_COUNTER];
-            if (this[Register.REGISTER_0x11_SCREEN_CONTROL_1].IsBitSet(BitFlag.BIT_7)) {
-                _rasterLineToGenerateInterruptAt += 255;
             }
         }
 
@@ -178,7 +178,7 @@ namespace Commodore64.Vic
             // Every cycle draws 8 pixels to the screen
 
             // Generate raster interrupt if the current line equals interrupt line
-            if (CurrentLineCycle == 0 && InterruptControlRegisterRasterInterruptEnabled && CurrentLine == _rasterLineToGenerateInterruptAt) {
+            if (CurrentLineCycle == 0 && InterruptControlRegisterRasterInterruptEnabled && CurrentLine == RasterLineToGenerateInterruptAt) {
                 _interruptLatchRasterLine = true;
                 OnGenerateRasterLineInterrupt?.Invoke(this, null);
                 //Debug.WriteLine($"OnGenerateRasterLineInterrupt: {_rasterLineToGenerateInterruptAt}");

@@ -162,7 +162,7 @@ namespace ComputerSystem.Commodore64 {
             }
 
             if (btnShowRasterLineInterrupt.Checked && C64.Vic.InterruptControlRegisterRasterInterruptEnabled) {
-                _gC64ScreenBuffer.DrawLine(_penRaster, 0, C64.Vic._rasterLineToGenerateInterruptAt, C64.Vic.FullFrame.Width, C64.Vic._rasterLineToGenerateInterruptAt);
+                _gC64ScreenBuffer.DrawLine(_penRaster, 0, C64.Vic.RasterLineToGenerateInterruptAt, C64.Vic.FullFrame.Width, C64.Vic.RasterLineToGenerateInterruptAt);
             }
 
             if (btnShowScanLinePosition.Checked) {
