@@ -3,6 +3,7 @@ using Extensions.Enums;
 using Extensions.Byte;
 using System.Timers;
 using System;
+using System.Diagnostics;
 
 namespace Commodore64.Cia {
 
@@ -42,6 +43,10 @@ namespace Commodore64.Cia {
                     case Register.R_0x08_TOD_TENTH_SECONDS:
                         _todIsHalted = false;
                         return ToBcd(_todHaltedTenths);
+
+                    case Register.R_0x01_PORT_B:
+                        Debug.WriteLine("Reading PORTB");
+                        return _registers[i];
 
                     default:
                         return _registers[i];
