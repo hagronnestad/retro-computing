@@ -601,6 +601,7 @@ namespace ComputerSystem.Commodore64 {
                 KeysDown.Remove(e.KeyCode);
             }
 
+            if (e.Alt) e.SuppressKeyPress = true;
 
             Debug.WriteLine("KeyUp: " + String.Join(", ", KeysDown.Select(x => x.ToString())));
         }
@@ -706,6 +707,7 @@ namespace ComputerSystem.Commodore64 {
                 if (!KeysDown.Contains(e.KeyCode)) KeysDown.Add(e.KeyCode);
             }
 
+            if (e.Alt) e.SuppressKeyPress = true;
 
             Debug.WriteLine("KeyDown: " + String.Join(", ", KeysDown.Select(x => x.ToString())));
         }

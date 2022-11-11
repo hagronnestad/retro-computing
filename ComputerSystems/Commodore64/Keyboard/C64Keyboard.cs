@@ -15,7 +15,7 @@ namespace Commodore64.Keyboard
             { Keys.D9, Keys.I, Keys.J, Keys.D0, Keys.M, Keys.K, Keys.O, Keys.N },
             { Keys.Oemplus, Keys.P, Keys.L, Keys.Oem4, Keys.OemPeriod, Keys.Oem3, Keys.Oem6, Keys.Oemcomma },
             { Keys.Oem102, Keys.Oem1, Keys.Oem7, Keys.Home, Keys.ShiftKey, Keys.Oem2, Keys.PageUp, Keys.OemMinus },
-            { Keys.D1, Keys.Escape, Keys.LControlKey, Keys.D2, Keys.Space, Keys.RControlKey, Keys.Q, Keys.Pause },
+            { Keys.D1, Keys.Escape, Keys.ControlKey, Keys.D2, Keys.Space, Keys.Menu, Keys.Q, Keys.Pause },
         };
 
         // This shows the actual keyboard matrix for a C64 keyboard.
