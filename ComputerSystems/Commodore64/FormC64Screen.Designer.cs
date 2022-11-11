@@ -34,7 +34,6 @@ namespace ComputerSystem.Commodore64 {
             this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblKeyboardDisabled = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
             this.btnReset = new System.Windows.Forms.ToolStripButton();
@@ -124,8 +123,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblCpuClockSpeedMultiplier,
             this.lblCycles,
             this.lblInstructions,
-            this.lblIllegalInstructions,
-            this.lblKeyboardDisabled});
+            this.lblIllegalInstructions});
             this.statusMain.Location = new System.Drawing.Point(0, 701);
             this.statusMain.Name = "statusMain";
             this.statusMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
@@ -189,15 +187,6 @@ namespace ComputerSystem.Commodore64 {
             this.lblIllegalInstructions.Name = "lblIllegalInstructions";
             this.lblIllegalInstructions.Size = new System.Drawing.Size(82, 19);
             this.lblIllegalInstructions.Text = "0 instructions";
-            // 
-            // lblKeyboardDisabled
-            // 
-            this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
-            this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(444, 19);
-            this.lblKeyboardDisabled.Spring = true;
-            this.lblKeyboardDisabled.Text = "Keyboard Disabled";
-            this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // toolMain
             // 
@@ -678,10 +667,9 @@ namespace ComputerSystem.Commodore64 {
             this.Name = "FormC64Screen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Retrocomputing.NET - Commodore 64";
-            this.Activated += new System.EventHandler(this.FormC64Screen_Activated);
-            this.Deactivate += new System.EventHandler(this.FormC64Screen_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormC64Screen_FormClosing);
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).EndInit();
             this.statusMain.ResumeLayout(false);
@@ -717,7 +705,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripStatusLabel lblInstructions;
         private System.Windows.Forms.ToolStripButton btnDebugger;
         private System.Windows.Forms.ToolStripButton btnPause;
-        private System.Windows.Forms.ToolStripStatusLabel lblKeyboardDisabled;
         private System.Windows.Forms.ToolStripButton btnReset;
         private System.Windows.Forms.ToolStripSeparator separator4;
         private System.Windows.Forms.StatusStrip statusStrip1;

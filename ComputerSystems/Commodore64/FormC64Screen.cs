@@ -18,10 +18,11 @@ using System.Threading.Tasks;
 using Commodore64.Cartridge.FileFormats.Raw;
 using Commodore64.Cartridge;
 using Commodore64.Vic.Colors;
+using Commodore64.Keyboard;
 
 namespace ComputerSystem.Commodore64 {
-    public partial class FormC64Screen : Form {
-
+    public partial class FormC64Screen : Form, IC64KeyboardInputProvider
+    {
         public C64 C64 { get; set; }
 
         private readonly Stopwatch _stopWatch = new Stopwatch();
@@ -49,6 +50,11 @@ namespace ComputerSystem.Commodore64 {
         private bool _fswBusy = false;
 
 
+        public bool IsKeyDown(Keys key)
+        {
+            return KeysDown.Contains(key);
+        }
+
         public FormC64Screen(C64 c64) {
             InitializeComponent();
 
@@ -56,6 +62,7 @@ namespace ComputerSystem.Commodore64 {
             _osdManager.AddItem("Power On");
 
             C64 = c64;
+            C64.C64KeyboardInputProvider = this;
 
             _crtImage = Image.FromFile("Images\\crt-overlay-03.png");
 
@@ -76,7 +83,6 @@ namespace ComputerSystem.Commodore64 {
                         lblCycles.Text = $"{c64.Cpu.TotalCycles:N0} cycles";
                         lblInstructions.Text = $"{c64.Cpu.TotalInstructions:N0} instructions";
                         lblIllegalInstructions.Text = $"{c64.Cpu.TotalIllegalInstructions:N0} illegal instructions";
-                        lblKeyboardDisabled.Visible = !c64.KeyboardActivated;
 
                         lblFps.Text = $"{((int)_fpsActual):D2} fps";
                         lblVicCycles.Text = $"{c64.Vic.TotalCycles:N0} cycles";
@@ -271,14 +277,6 @@ namespace ComputerSystem.Commodore64 {
                 _osdManager.AddItem("Resume");
             }
 
-        }
-
-        private void FormC64Screen_Activated(object sender, EventArgs e) {
-            C64.KeyboardActivated = true;
-        }
-
-        private void FormC64Screen_Deactivate(object sender, EventArgs e) {
-            C64.KeyboardActivated = false;
         }
 
         private async void BtnReset_Click(object sender, EventArgs e) {
@@ -587,6 +585,24 @@ namespace ComputerSystem.Commodore64 {
                 var text = Clipboard.GetText();
                 PasteText(text);
             }
+
+            if (e.KeyCode == Keys.Up)
+            {
+                KeysDown.Remove(Keys.ShiftKey);
+                KeysDown.Remove(Keys.Down);
+            }
+            else if (e.KeyCode == Keys.Left)
+            {
+                KeysDown.Remove(Keys.ShiftKey);
+                KeysDown.Remove(Keys.Right);
+            }
+            else
+            {
+                KeysDown.Remove(e.KeyCode);
+            }
+
+
+            Debug.WriteLine("KeyUp: " + String.Join(", ", KeysDown.Select(x => x.ToString())));
         }
 
         private void PasteText(string text) {
@@ -670,5 +686,30 @@ namespace ComputerSystem.Commodore64 {
         {
             if (btnShowOnScreenDisplay.Checked) _osdManager.AddItem("On Screen Display On");
         }
+
+
+
+        private void FormC64Screen_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up)
+            {
+                if (!KeysDown.Contains(Keys.ShiftKey)) KeysDown.Add(Keys.ShiftKey);
+                if (!KeysDown.Contains(Keys.Down)) KeysDown.Add(Keys.Down);
+            }
+            else if (e.KeyCode == Keys.Left)
+            {
+                if (!KeysDown.Contains(Keys.ShiftKey)) KeysDown.Add(Keys.ShiftKey);
+                if (!KeysDown.Contains(Keys.Right)) KeysDown.Add(Keys.Right);
+            }
+            else
+            {
+                if (!KeysDown.Contains(e.KeyCode)) KeysDown.Add(e.KeyCode);
+            }
+
+
+            Debug.WriteLine("KeyDown: " + String.Join(", ", KeysDown.Select(x => x.ToString())));
+        }
+
+        public List<Keys> KeysDown = new List<Keys>();
     }
 }

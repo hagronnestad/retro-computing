@@ -2,7 +2,6 @@ using MicroProcessor.Cpu6502;
 using System.Diagnostics;
 using System.Threading;
 using Extensions.Byte;
-using System.Windows.Input;
 using Hardware.Mos6526Cia;
 using System.Threading.Tasks;
 using System;
@@ -11,6 +10,8 @@ using Commodore64.Vic;
 using Commodore64.Cia;
 using Commodore64.Cartridge;
 using Commodore64.Properties;
+using System.Windows.Forms;
+using Commodore64.Keyboard;
 
 namespace Commodore64 {
     public class C64 {
@@ -44,7 +45,7 @@ namespace Commodore64 {
         public Cpu Cpu { get; private set; }
         public ICartridge Cartridge { get; set; }
 
-        public bool KeyboardActivated { get; set; } = false;
+        public IC64KeyboardInputProvider C64KeyboardInputProvider { get; set; }
 
         public C64() {
             
@@ -113,7 +114,6 @@ namespace Commodore64 {
 
             });
 
-            t.SetApartmentState(ApartmentState.STA);
             t.Start();
         }
 
@@ -138,7 +138,44 @@ namespace Commodore64 {
         }
 
         private void CiaReadDataPortB(object sender, EventArgs e) {
-            if (Cia.DataDirectionA == 0xFF) ScanKeyboard();
+            // Keyboard Scanning
+            if (Cia.DataDirectionA == 0xFF)
+            {
+                // The BASIC keyboard scanning routine checks if any key is pressed at all.
+                // This is done by checking all rows at once.
+                if (Cia.DataPortA == 0)
+                {
+                    Cia.DataPortB = 0x00;
+                    return;
+                }
+
+                // No keys should be pressed when all rows are unset.
+                if (Cia.DataPortA == 0xFF)
+                {
+                    Cia.DataPortB = 0xFF;
+                    return;
+                }
+
+                var rowIndexes = ((byte)~Cia.DataPortA).GetSetBitsIndexes();
+
+                foreach (var ri in rowIndexes)
+                {
+                    byte data = 0;
+
+                    for (int ci = 0; ci < 8; ci++)
+                    {
+                        var key = C64Keyboard.Matrix[ri, ci];
+                        if (key == Keys.None) continue;
+
+                        if (C64KeyboardInputProvider != null && C64KeyboardInputProvider.IsKeyDown(key))
+                        {
+                            data |= (byte)(1 << ci);
+                        }
+                    }
+
+                    Cia.DataPortB = (byte)~data;
+                }
+            }
         }
 
         private void CiaInterrupt(object sender, EventArgs e) {
@@ -148,43 +185,5 @@ namespace Commodore64 {
         private void Vic_OnGenerateRasterLineInterrupt(object sender, EventArgs e) {
             Cpu.Interrupt();
         }
-
-
-        public void ScanKeyboard() {
-            if (!KeyboardActivated) return;
-
-            // The BASIC keyboard scanning routine checks if any key is pressed at all.
-            // This is done by checking all rows at once.
-            if (Cia.DataPortA == 0) {
-                Cia.DataPortB = 0x00;
-                return;
-            }
-
-            // No keys should be pressed when all rows are unset.
-            if (Cia.DataPortA == 0xFF) {
-                Cia.DataPortB = 0xFF;
-                return;
-            }
-
-            var rowIndexes = ((byte)~Cia.DataPortA).GetSetBitsIndexes();
-
-            foreach (var ri in rowIndexes) {
-                byte data = 0;
-
-                for (int ci = 0; ci < 8; ci++) {
-
-                    var key = C64Keyboard.Matrix[ri, ci];
-                    if (key == Key.None) continue;
-
-                    if (Keyboard.IsKeyDown(key)) {
-                        data |= (byte)(1 << ci);
-                    }
-
-                }
-
-                Cia.DataPortB = (byte)~data;
-            }
-        }
-
     }
 }
