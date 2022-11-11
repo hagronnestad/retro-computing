@@ -49,11 +49,11 @@ namespace ComputerSystem.Commodore64 {
         private bool _formIsClosing = false;
         private bool _fswBusy = false;
 
+        /// <summary>
+        /// Keeps track of the currently pressed keys, used by IC64KeyboardInputProvider
+        /// </summary>
+        private List<Keys> _keysDown = new List<Keys>();
 
-        public bool IsKeyDown(Keys key)
-        {
-            return KeysDown.Contains(key);
-        }
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
@@ -580,32 +580,6 @@ namespace ComputerSystem.Commodore64 {
             ResizeToCorrectAspectRatio();
         }
 
-        private void FormC64Screen_KeyUp(object sender, KeyEventArgs e) {
-            if (e.Control && e.KeyCode == Keys.V) {
-                var text = Clipboard.GetText();
-                PasteText(text);
-            }
-
-            if (e.KeyCode == Keys.Up)
-            {
-                KeysDown.Remove(Keys.ShiftKey);
-                KeysDown.Remove(Keys.Down);
-            }
-            else if (e.KeyCode == Keys.Left)
-            {
-                KeysDown.Remove(Keys.ShiftKey);
-                KeysDown.Remove(Keys.Right);
-            }
-            else
-            {
-                KeysDown.Remove(e.KeyCode);
-            }
-
-            if (e.Alt) e.SuppressKeyPress = true;
-
-            Debug.WriteLine("KeyUp: " + String.Join(", ", KeysDown.Select(x => x.ToString())));
-        }
-
         private void PasteText(string text) {
             if (string.IsNullOrWhiteSpace(text)) return;
 
@@ -688,30 +662,73 @@ namespace ComputerSystem.Commodore64 {
             if (btnShowOnScreenDisplay.Checked) _osdManager.AddItem("On Screen Display On");
         }
 
-
-
         private void FormC64Screen_KeyDown(object sender, KeyEventArgs e)
         {
+            // Handle up arrow key
             if (e.KeyCode == Keys.Up)
             {
-                if (!KeysDown.Contains(Keys.ShiftKey)) KeysDown.Add(Keys.ShiftKey);
-                if (!KeysDown.Contains(Keys.Down)) KeysDown.Add(Keys.Down);
+                if (!_keysDown.Contains(Keys.ShiftKey)) _keysDown.Add(Keys.ShiftKey);
+                if (!_keysDown.Contains(Keys.Down)) _keysDown.Add(Keys.Down);
             }
+            // Handle left arrow key
             else if (e.KeyCode == Keys.Left)
             {
-                if (!KeysDown.Contains(Keys.ShiftKey)) KeysDown.Add(Keys.ShiftKey);
-                if (!KeysDown.Contains(Keys.Right)) KeysDown.Add(Keys.Right);
+                if (!_keysDown.Contains(Keys.ShiftKey)) _keysDown.Add(Keys.ShiftKey);
+                if (!_keysDown.Contains(Keys.Right)) _keysDown.Add(Keys.Right);
             }
+            // Handle 1-to-1 mapped keys
             else
             {
-                if (!KeysDown.Contains(e.KeyCode)) KeysDown.Add(e.KeyCode);
+                if (!_keysDown.Contains(e.KeyCode)) _keysDown.Add(e.KeyCode);
             }
 
+            // Suppress the Alt (Menu) key to prevent menu bar focus
             if (e.Alt) e.SuppressKeyPress = true;
 
-            Debug.WriteLine("KeyDown: " + String.Join(", ", KeysDown.Select(x => x.ToString())));
+            // Debug.WriteLine("KeyDown: " + string.Join(", ", _keysDown.Select(x => x.ToString())));
         }
 
-        public List<Keys> KeysDown = new List<Keys>();
+        private void FormC64Screen_KeyUp(object sender, KeyEventArgs e)
+        {
+            // Handle pasting
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                var text = Clipboard.GetText();
+                PasteText(text);
+            }
+
+            // Handle up arrow key
+            if (e.KeyCode == Keys.Up)
+            {
+                _keysDown.Remove(Keys.ShiftKey);
+                _keysDown.Remove(Keys.Down);
+            }
+            // Handle left arrow key
+            else if (e.KeyCode == Keys.Left)
+            {
+                _keysDown.Remove(Keys.ShiftKey);
+                _keysDown.Remove(Keys.Right);
+            }
+            // Handle 1-to-1 mapped keys
+            else
+            {
+                _keysDown.Remove(e.KeyCode);
+            }
+
+            // Suppress the Alt (Menu) key to prevent menu bar focus
+            if (e.Alt) e.SuppressKeyPress = true;
+
+            // Debug.WriteLine("KeyUp: " + string.Join(", ", _keysDown.Select(x => x.ToString())));
+        }
+
+        /// <summary>
+        /// IC64KeyboardInputProvider Implementation
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool IsKeyDown(Keys key)
+        {
+            return _keysDown.Contains(key);
+        }
     }
 }
