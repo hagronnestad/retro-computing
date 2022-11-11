@@ -129,7 +129,7 @@ namespace Hardware.Mos6526Cia {
 
                     default:
                         // TODO: Implement all registers
-                        Debug.WriteLine($"[READ] CIA register not implemented: 0xDC{index:X2}");
+                        //Debug.WriteLine($"[READ] CIA register not implemented: 0xDC{index:X2}");
                         //throw new IndexOutOfRangeException();
                         return 0;
                 }
@@ -164,7 +164,7 @@ namespace Hardware.Mos6526Cia {
                         
                     default:
                         // TODO: Implement all registers
-                        Debug.WriteLine($"[WRITE] CIA register not implemented: 0xDC{index:X2} (Value: 0x{value:X2})");
+                        //Debug.WriteLine($"[WRITE] CIA register not implemented: 0xDC{index:X2} (Value: 0x{value:X2})");
                         //throw new IndexOutOfRangeException();
                         break;
                 }

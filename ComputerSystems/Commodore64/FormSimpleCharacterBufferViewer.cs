@@ -46,14 +46,14 @@ namespace ComputerSystem.Commodore64 {
 
                     sw2.Reset();
                     sw2.Start();
-                    Invoke(new Action(() => { Invalidate(); }));
+                    BeginInvoke(new MethodInvoker(() => { Invalidate(); }));
                     Thread.Sleep(TimeSpan.FromMilliseconds(_fpsWaitTime));
 
                     sw2.Stop();
 
                     _fpsAdjusted = 1000f / sw2.Elapsed.TotalMilliseconds;
 
-                    Invoke(new Action(() => { Text = $"{_fpsActual:F0} fps max, {_fpsAdjusted:F0} fps adjusted"; }));
+                    BeginInvoke(new MethodInvoker(() => { Text = $"{_fpsActual:F0} fps max, {_fpsAdjusted:F0} fps adjusted"; }));
                 }   
             }).Start();
         }

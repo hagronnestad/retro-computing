@@ -123,11 +123,12 @@ namespace Debugger {
                 try {
                     pictureBox1.Invalidate();
 
-                    //Invoke(new Action(() => {
+                    //BeginInvoke(new MethodInvoker(() => {
                     //    pictureBox1.Invalidate();
                     //}));
 
-                } catch (Exception) {
+                }
+                catch (Exception) {
                     return;
                 }
 

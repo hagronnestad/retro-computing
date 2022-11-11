@@ -74,7 +74,7 @@ namespace ComputerSystem.Commodore64 {
             _uiRefreshTimer = new Timer((e) => {
 
                 try {
-                    Invoke(new Action(() => {
+                    BeginInvoke(new MethodInvoker(() => {
                         lblClockSpeed.Text = $"{c64.CpuClockSpeedHz / 1000000:F4} MHz";
                         lblClockSpeedReal.Text = $"{c64.CpuClockSpeedRealHz / 1000000:F4} MHz";
                         lblClockSpeedRealPercent.Text = $"{c64.CpuClockSpeedPercent:F2} %";
@@ -138,7 +138,7 @@ namespace ComputerSystem.Commodore64 {
 
                 try
                 {
-                    Invoke(new Action(() =>
+                    BeginInvoke(new MethodInvoker(() =>
                     {
                         pScreen.Invalidate();
                     }));
