@@ -12,8 +12,10 @@ using Commodore64.Cartridge;
 using Commodore64.Properties;
 using System.Windows.Forms;
 using Commodore64.Keyboard;
+using Commodore64.Sid.NAudio;
 
-namespace Commodore64 {
+namespace Commodore64
+{
     public class C64 {
 
         public const int CLOCK_PAL = 985248;
@@ -41,6 +43,7 @@ namespace Commodore64 {
         public Cia1 Cia { get; private set; }
         public Cia2 Cia2 { get; private set; }
         public VicIi Vic { get; private set; }
+        public NAudioSid Sid { get; set; }
         public C64Bus Memory { get; private set; }
         public Cpu Cpu { get; private set; }
         public ICartridge Cartridge { get; set; }
@@ -59,7 +62,10 @@ namespace Commodore64 {
             Vic = new VicIi(TvSystem.PAL) {
                 C64 = this
             };
-            Memory = new C64Bus(Cia, Cia2, Vic);
+            
+            Sid = new NAudioSid();
+
+            Memory = new C64Bus(Cia, Cia2, Vic, Sid);
             Cpu = new Cpu(Memory);
 
             if (Cartridge != null) Memory.InsertCartridge(Cartridge);
@@ -83,6 +89,7 @@ namespace Commodore64 {
             if (Settings.Default.KernalWhiteTextColor) PatchKernalRomTextColor(0x01);
 
             Cpu.Reset();
+            Sid.Play();
 
             _isRunnning = true;
             _tcsStop = new TaskCompletionSource<bool>();

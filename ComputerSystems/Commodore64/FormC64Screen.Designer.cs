@@ -65,6 +65,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnShowRasterLineInterrupt = new System.Windows.Forms.ToolStripButton();
             this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
             this.separator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnToggleSound = new System.Windows.Forms.ToolStripButton();
             this.ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -219,7 +220,8 @@ namespace ComputerSystem.Commodore64 {
             this.btnShowScanLinePosition,
             this.btnShowRasterLineInterrupt,
             this.btnShowFullFrameVideo,
-            this.separator6});
+            this.separator6,
+            this.btnToggleSound});
             this.toolMain.Location = new System.Drawing.Point(0, 24);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(832, 25);
@@ -496,6 +498,16 @@ namespace ComputerSystem.Commodore64 {
             this.separator6.Name = "separator6";
             this.separator6.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnToggleSound
+            // 
+            this.btnToggleSound.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnToggleSound.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleSound.Image")));
+            this.btnToggleSound.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnToggleSound.Name = "btnToggleSound";
+            this.btnToggleSound.Size = new System.Drawing.Size(23, 22);
+            this.btnToggleSound.Text = "toolStripButton1";
+            this.btnToggleSound.Click += new System.EventHandler(this.btnShowSidDebugWindow_Click);
+            // 
             // ofdOpenFile
             // 
             this.ofdOpenFile.Filter = "PRG-files|*.prg|All files|*.*";
@@ -749,5 +761,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton btnShowOnScreenDisplay;
         private System.IO.FileSystemWatcher fsw;
+        private System.Windows.Forms.ToolStripButton btnToggleSound;
     }
 }

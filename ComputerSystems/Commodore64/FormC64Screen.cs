@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Commodore64.Cartridge.FileFormats.Raw;
 using Commodore64.Cartridge;
 using Commodore64.Vic.Colors;
+using Commodore64.Sid.Debug;
 using Commodore64.Keyboard;
 using System.Text;
 
@@ -227,6 +228,8 @@ namespace ComputerSystem.Commodore64 {
         private async void BtnRestart_Click(object sender, EventArgs e) {
             _osdManager.AddItem("Power Cycle");
             await C64.PowerOff();
+            C64.Sid.Stop();
+            C64.Sid.Reset();
             C64.PowerOn();
         }
 
@@ -269,12 +272,14 @@ namespace ComputerSystem.Commodore64 {
         private async void BtnPause_ClickAsync(object sender, EventArgs e) {
 
             if (btnPause.Checked) {
+                C64.Sid.Pause();
                 var r = await C64.Cpu.Pause();
                 _osdManager.AddItem("Pause");
 
             } else {
 
                 C64.Cpu.Resume();
+                C64.Sid.Play();
                 _osdManager.AddItem("Resume");
             }
 
@@ -283,6 +288,8 @@ namespace ComputerSystem.Commodore64 {
         private async void BtnReset_Click(object sender, EventArgs e) {
             await C64.Cpu.Pause();
             C64.Cpu.Reset();
+            C64.Sid.Reset();
+
             C64.Cpu.Resume();
 
             _osdManager.AddItem("Reset");
@@ -668,6 +675,11 @@ namespace ComputerSystem.Commodore64 {
             });
 
 
+        }
+
+        private void btnShowSidDebugWindow_Click(object sender, EventArgs e)
+        {
+            new FormSidDebug(C64.Sid).Show();
         }
 
         private void btnShowOnScreenDisplay_Click(object sender, EventArgs e)
