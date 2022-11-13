@@ -698,6 +698,12 @@ namespace ComputerSystem.Commodore64 {
                 if (!_keysDown.Contains(Keys.ShiftKey)) _keysDown.Add(Keys.ShiftKey);
                 if (!_keysDown.Contains(Keys.Right)) _keysDown.Add(Keys.Right);
             }
+            // Handle insert key
+            else if (e.KeyCode == Keys.Insert)
+            {
+                if (!_keysDown.Contains(Keys.ShiftKey)) _keysDown.Add(Keys.ShiftKey);
+                if (!_keysDown.Contains(Keys.Back)) _keysDown.Add(Keys.Back);
+            }
             // Handle 1-to-1 mapped keys
             else
             {
@@ -723,6 +729,12 @@ namespace ComputerSystem.Commodore64 {
             {
                 _keysDown.Remove(Keys.ShiftKey);
                 _keysDown.Remove(Keys.Right);
+            }
+            // Handle insert key
+            else if (e.KeyCode == Keys.Insert)
+            {
+                _keysDown.Remove(Keys.ShiftKey);
+                _keysDown.Remove(Keys.Back);
             }
             // Handle 1-to-1 mapped keys
             else
