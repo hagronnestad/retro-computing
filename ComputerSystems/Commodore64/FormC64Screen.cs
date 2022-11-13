@@ -19,6 +19,7 @@ using Commodore64.Cartridge.FileFormats.Raw;
 using Commodore64.Cartridge;
 using Commodore64.Vic.Colors;
 using Commodore64.Keyboard;
+using System.Text;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form, IC64KeyboardInputProvider
@@ -418,7 +419,7 @@ namespace ComputerSystem.Commodore64 {
                 C64.Memory._memory[0x0278] = (byte)'U';
                 C64.Memory._memory[0x0279] = (byte)'N';
                 C64.Memory._memory[0x027A] = 13; // {RETURN}
-                C64.Memory._memory[0x00C6] = 4;
+                C64.Memory._memory[0x00C6] = 4; // Keyboard buffer length
             }
         }
 
@@ -580,17 +581,29 @@ namespace ComputerSystem.Commodore64 {
             ResizeToCorrectAspectRatio();
         }
 
-        private void PasteText(string text) {
+        private async Task PasteText(string text) {
             if (string.IsNullOrWhiteSpace(text)) return;
 
-            for (int i = 0; i < text.Length; i++) {
-                C64.Memory._memory[0x0277] = (byte)text[i];
-                C64.Memory._memory[0x00C6] = 1;
+            // Remove \n chars
+            text = text.Replace("\r\n", "\r");
 
+            // 0x0277: Keyboard buffer (10 bytes, 10 entries).
+            int chunkLength = 10;
+            int offset = 0;
+
+            while (offset < text.Length)
+            {
+                if (offset + chunkLength > text.Length) chunkLength = text.Length - offset;
+                Array.Copy(Encoding.ASCII.GetBytes(text), offset, C64.Memory._memory, 0x0277, chunkLength);
+
+                // Wait for BASIC to process the keyboard buffer
+                C64.Memory._memory[0x00C6] = (byte)chunkLength;
                 while (C64.Memory._memory[0x00C6] != 0)
                 {
-                    Thread.Sleep(1);
+                    await Task.Delay(1);
                 }
+
+                offset += chunkLength;
             }
         }
 
@@ -664,6 +677,15 @@ namespace ComputerSystem.Commodore64 {
 
         private void FormC64Screen_KeyDown(object sender, KeyEventArgs e)
         {
+            // Handle pasting
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                var text = Clipboard.GetText();
+                _ = PasteText(text);
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             // Handle up arrow key
             if (e.KeyCode == Keys.Up)
             {
@@ -690,13 +712,6 @@ namespace ComputerSystem.Commodore64 {
 
         private void FormC64Screen_KeyUp(object sender, KeyEventArgs e)
         {
-            // Handle pasting
-            if (e.Control && e.KeyCode == Keys.V)
-            {
-                var text = Clipboard.GetText();
-                PasteText(text);
-            }
-
             // Handle up arrow key
             if (e.KeyCode == Keys.Up)
             {
