@@ -673,13 +673,11 @@ namespace ComputerSystem.Commodore64 {
                     C64.PowerOn();
                 }
             });
-
-
         }
 
         private void btnShowSidDebugWindow_Click(object sender, EventArgs e)
         {
-            new FormSidDebug(C64.Sid).Show();
+            new FormSidDebug(C64.Sid).Show(this);
         }
 
         private void btnShowOnScreenDisplay_Click(object sender, EventArgs e)

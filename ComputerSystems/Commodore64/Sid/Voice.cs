@@ -112,5 +112,7 @@ namespace Commodore64.Sid
                 _waveForm = value;
             }
         }
+
+        public bool Filtered { get; set; }
     }
 }

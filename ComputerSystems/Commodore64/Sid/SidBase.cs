@@ -11,6 +11,7 @@ namespace Commodore64.Sid
         protected byte[] _registers = new byte[0x20];
 
         public event EventHandler<SidRegister> RegisterChanged;
+        public event EventHandler<SidRegister> FilterChanged;
         public event EventHandler<Voice> Voice1Changed;
         public event EventHandler<Voice> Voice2Changed;
         public event EventHandler<Voice> Voice3Changed;
@@ -22,6 +23,9 @@ namespace Commodore64.Sid
         public bool FilterLowPassEnabled { get; set; }
         public bool FilterBandPassEnabled { get; set; }
         public bool FilterHighPassEnabled { get; set; }
+
+        public int FilterFrequency { get; set; }
+        public int FilterResonance { get; set; }
 
         public double SidVolume { get; set; }
 
@@ -51,9 +55,9 @@ namespace Commodore64.Sid
                 switch (register)
                 {
                     case SidRegister.VOICE1_FREQ_LOW:
-                    case SidRegister.VOICE1_FREQ_HIGH:
+                    //case SidRegister.VOICE1_FREQ_HIGH:
                         {
-                            var frequency = (4000f / 65535f) *
+                            double frequency = (4000f / (ushort.MaxValue + 1)) *
                                 (_registers[(int)SidRegister.VOICE1_FREQ_HIGH] << 8 |
                                 _registers[(int)SidRegister.VOICE1_FREQ_LOW]);
 
@@ -63,9 +67,9 @@ namespace Commodore64.Sid
                         break;
 
                     case SidRegister.VOICE1_PULSE_WIDTH_LOW:
-                    case SidRegister.VOICE1_PULSE_WIDTH_HIGH:
+                    //case SidRegister.VOICE1_PULSE_WIDTH_HIGH:
                         {
-                            var pulseWidth =
+                            float pulseWidth = (1.0f / 4096) *
                                 ((_registers[(int)SidRegister.VOICE1_PULSE_WIDTH_HIGH] & 0b00001111) << 8 |
                                 _registers[(int)SidRegister.VOICE1_PULSE_WIDTH_LOW]);
 
@@ -102,9 +106,9 @@ namespace Commodore64.Sid
 
 
                     case SidRegister.VOICE2_FREQ_LOW:
-                    case SidRegister.VOICE2_FREQ_HIGH:
+                    //case SidRegister.VOICE2_FREQ_HIGH:
                         {
-                            var frequency = (4000f / 65535f) *
+                            double frequency = (4000f / (ushort.MaxValue + 1)) *
                                 (_registers[(int)SidRegister.VOICE2_FREQ_HIGH] << 8 |
                                 _registers[(int)SidRegister.VOICE2_FREQ_LOW]);
 
@@ -114,9 +118,9 @@ namespace Commodore64.Sid
                         break;
 
                     case SidRegister.VOICE2_PULSE_WIDTH_LOW:
-                    case SidRegister.VOICE2_PULSE_WIDTH_HIGH:
+                    //case SidRegister.VOICE2_PULSE_WIDTH_HIGH:
                         {
-                            var pulseWidth =
+                            float pulseWidth = (1.0f / 4096) *
                                 ((_registers[(int)SidRegister.VOICE2_PULSE_WIDTH_HIGH] & 0b00001111) << 8 |
                                 _registers[(int)SidRegister.VOICE2_PULSE_WIDTH_LOW]);
 
@@ -153,9 +157,9 @@ namespace Commodore64.Sid
 
 
                     case SidRegister.VOICE3_FREQ_LOW:
-                    case SidRegister.VOICE3_FREQ_HIGH:
+                    //case SidRegister.VOICE3_FREQ_HIGH:
                         {
-                            var frequency = (4000f / 65535f) *
+                            double frequency = (4000f / (ushort.MaxValue + 1)) *
                                 (_registers[(int)SidRegister.VOICE3_FREQ_HIGH] << 8 |
                                 _registers[(int)SidRegister.VOICE3_FREQ_LOW]);
 
@@ -165,9 +169,9 @@ namespace Commodore64.Sid
                         break;
 
                     case SidRegister.VOICE3_PULSE_WIDTH_LOW:
-                    case SidRegister.VOICE3_PULSE_WIDTH_HIGH:
+                    //case SidRegister.VOICE3_PULSE_WIDTH_HIGH:
                         {
-                            var pulseWidth =
+                            float pulseWidth = (1.0f / 4096) *
                                 ((_registers[(int)SidRegister.VOICE3_PULSE_WIDTH_HIGH] & 0b00001111) << 8 |
                                 _registers[(int)SidRegister.VOICE3_PULSE_WIDTH_LOW]);
 
@@ -204,12 +208,23 @@ namespace Commodore64.Sid
 
 
                     case SidRegister.FILTER_CUT_OFF_FREQ_LOW:
-                        break;
+                    //case SidRegister.FILTER_CUT_OFF_FREQ_HIGH:
+                        var filterFrequency =
+                            ((_registers[(int)SidRegister.FILTER_CUT_OFF_FREQ_HIGH] << 3) |
+                            (_registers[(int)SidRegister.FILTER_CUT_OFF_FREQ_LOW] & 0b00000111));
 
-                    case SidRegister.FILTER_CUT_OFF_FREQ_HIGH:
+                        FilterFrequency = filterFrequency;
+                        Task.Run(() => FilterChanged?.Invoke(this, register));
                         break;
 
                     case SidRegister.FILTER_CONTROL:
+                        Voice1.Filtered = value.IsBitSet((BitFlag)FilterControlFlags.VOICE1_FILTERED);
+                        Voice2.Filtered = value.IsBitSet((BitFlag)FilterControlFlags.VOICE2_FILTERED);
+                        Voice3.Filtered = value.IsBitSet((BitFlag)FilterControlFlags.VOICE3_FILTERED);
+
+                        FilterResonance = (_registers[(int)SidRegister.FILTER_CONTROL] >> 4);
+
+                        Task.Run(() => FilterChanged?.Invoke(this, register));
                         break;
 
                     case SidRegister.VOLUME_FILTER_MODES:
@@ -228,8 +243,9 @@ namespace Commodore64.Sid
 
                         // Bit #7: 1 = Voice #3 disabled.
                         Voice3.Disabled = value.IsBitSet(BitIndex.BIT_7);
-                        Task.Run(() => Voice3Changed?.Invoke(this, Voice3));
 
+                        Task.Run(() => Voice3Changed?.Invoke(this, Voice3));
+                        Task.Run(() => FilterChanged?.Invoke(this, register));
                         break;
 
                     case SidRegister.PADDLE_X_VALUE:

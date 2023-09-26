@@ -12,7 +12,7 @@ using Commodore64.Cartridge;
 using Commodore64.Properties;
 using System.Windows.Forms;
 using Commodore64.Keyboard;
-using Commodore64.Sid.NAudio;
+using Commodore64.Sid.NAudioImpl;
 
 namespace Commodore64
 {
@@ -126,6 +126,8 @@ namespace Commodore64
 
         public Task<bool> PowerOff() {
             if (_isRunnning == false) return Task.FromResult(true);
+
+            Sid.Stop();
 
             _isRunnning = false;
             return _tcsStop.Task;

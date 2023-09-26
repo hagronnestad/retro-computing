@@ -1,4 +1,4 @@
-﻿namespace Commodore64.Sid.NAudio
+﻿namespace Commodore64.Sid.NAudioImpl
 {
     public enum WavePlayerType
     {
