@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 
@@ -7,6 +7,25 @@ namespace Commodore64.Vic.Colors
     public class ColorManager
     {
         public static Dictionary<byte, Color> ColorMap;
+
+        public static string[] ColorNames = new string[16] {
+            "Black",
+            "White",
+            "Red",
+            "Cyan",
+            "Violet / Purple",
+            "Green",
+            "Blue",
+            "Yellow",
+            "Orange",
+            "Brown",
+            "Light Red",
+            "Dark Grey",
+            "Grey",
+            "Light Green",
+            "Light Blue",
+            "Light Grey"
+        };
 
         public static Color FromByte(byte number)
         {
