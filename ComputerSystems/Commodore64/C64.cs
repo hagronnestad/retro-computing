@@ -2,7 +2,6 @@ using MicroProcessor.Cpu6502;
 using System.Diagnostics;
 using System.Threading;
 using Extensions.Byte;
-using System.Windows.Input;
 using Hardware.Mos6526Cia;
 using System.Threading.Tasks;
 using System;
@@ -11,8 +10,12 @@ using Commodore64.Vic;
 using Commodore64.Cia;
 using Commodore64.Cartridge;
 using Commodore64.Properties;
+using System.Windows.Forms;
+using Commodore64.Keyboard;
+using Commodore64.Sid.NAudioImpl;
 
-namespace Commodore64 {
+namespace Commodore64
+{
     public class C64 {
 
         public const int CLOCK_PAL = 985248;
@@ -40,11 +43,12 @@ namespace Commodore64 {
         public Cia1 Cia { get; private set; }
         public Cia2 Cia2 { get; private set; }
         public VicIi Vic { get; private set; }
+        public NAudioSid Sid { get; set; }
         public C64Bus Memory { get; private set; }
         public Cpu Cpu { get; private set; }
         public ICartridge Cartridge { get; set; }
 
-        public bool KeyboardActivated { get; set; } = false;
+        public IC64KeyboardInputProvider C64KeyboardInputProvider { get; set; }
 
         public C64() {
             
@@ -58,7 +62,10 @@ namespace Commodore64 {
             Vic = new VicIi(TvSystem.PAL) {
                 C64 = this
             };
-            Memory = new C64Bus(Cia, Cia2, Vic);
+            
+            Sid = new NAudioSid();
+
+            Memory = new C64Bus(Cia, Cia2, Vic, Sid);
             Cpu = new Cpu(Memory);
 
             if (Cartridge != null) Memory.InsertCartridge(Cartridge);
@@ -82,6 +89,7 @@ namespace Commodore64 {
             if (Settings.Default.KernalWhiteTextColor) PatchKernalRomTextColor(0x01);
 
             Cpu.Reset();
+            Sid.Play();
 
             _isRunnning = true;
             _tcsStop = new TaskCompletionSource<bool>();
@@ -113,12 +121,13 @@ namespace Commodore64 {
 
             });
 
-            t.SetApartmentState(ApartmentState.STA);
             t.Start();
         }
 
         public Task<bool> PowerOff() {
             if (_isRunnning == false) return Task.FromResult(true);
+
+            Sid.Stop();
 
             _isRunnning = false;
             return _tcsStop.Task;
@@ -138,7 +147,44 @@ namespace Commodore64 {
         }
 
         private void CiaReadDataPortB(object sender, EventArgs e) {
-            if (Cia.DataDirectionA == 0xFF) ScanKeyboard();
+            // Keyboard Scanning
+            if (Cia.DataDirectionA == 0xFF)
+            {
+                // The BASIC keyboard scanning routine checks if any key is pressed at all.
+                // This is done by checking all rows at once.
+                if (Cia.DataPortA == 0)
+                {
+                    Cia.DataPortB = 0x00;
+                    return;
+                }
+
+                // No keys should be pressed when all rows are unset.
+                if (Cia.DataPortA == 0xFF)
+                {
+                    Cia.DataPortB = 0xFF;
+                    return;
+                }
+
+                var rowIndexes = ((byte)~Cia.DataPortA).GetSetBitsIndexes();
+
+                foreach (var ri in rowIndexes)
+                {
+                    byte data = 0;
+
+                    for (int ci = 0; ci < 8; ci++)
+                    {
+                        var key = C64Keyboard.Matrix[ri, ci];
+                        if (key == Keys.None) continue;
+
+                        if (C64KeyboardInputProvider != null && C64KeyboardInputProvider.IsKeyDown(key))
+                        {
+                            data |= (byte)(1 << ci);
+                        }
+                    }
+
+                    Cia.DataPortB = (byte)~data;
+                }
+            }
         }
 
         private void CiaInterrupt(object sender, EventArgs e) {
@@ -148,43 +194,5 @@ namespace Commodore64 {
         private void Vic_OnGenerateRasterLineInterrupt(object sender, EventArgs e) {
             Cpu.Interrupt();
         }
-
-
-        public void ScanKeyboard() {
-            if (!KeyboardActivated) return;
-
-            // The BASIC keyboard scanning routine checks if any key is pressed at all.
-            // This is done by checking all rows at once.
-            if (Cia.DataPortA == 0) {
-                Cia.DataPortB = 0x00;
-                return;
-            }
-
-            // No keys should be pressed when all rows are unset.
-            if (Cia.DataPortA == 0xFF) {
-                Cia.DataPortB = 0xFF;
-                return;
-            }
-
-            var rowIndexes = ((byte)~Cia.DataPortA).GetSetBitsIndexes();
-
-            foreach (var ri in rowIndexes) {
-                byte data = 0;
-
-                for (int ci = 0; ci < 8; ci++) {
-
-                    var key = C64Keyboard.Matrix[ri, ci];
-                    if (key == Key.None) continue;
-
-                    if (Keyboard.IsKeyDown(key)) {
-                        data |= (byte)(1 << ci);
-                    }
-
-                }
-
-                Cia.DataPortB = (byte)~data;
-            }
-        }
-
     }
 }

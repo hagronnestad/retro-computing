@@ -9,6 +9,8 @@ using Commodore64.Cartridge;
 using Extensions.Byte;
 using Extensions.Enums;
 using Commodore64.Enums;
+using Commodore64.Sid;
+using Commodore64.Sid.Enums;
 
 namespace Commodore64 {
 
@@ -42,10 +44,10 @@ namespace Commodore64 {
         private Cia1 _cia;
         private Cia2 _cia2;
         private readonly VicIi _vic;
-
+        private readonly SidBase _sid;
         private ICartridge _cartridge;
 
-        public C64Bus(Cia1 cia, Cia2 cia2, VicIi vic) : base(0x10000) {
+        public C64Bus(Cia1 cia, Cia2 cia2, VicIi vic, SidBase sid) : base(0x10000) {
             //_memory.FillWithRandomData();
 
             // Intialize processor addressing mode with default values
@@ -60,6 +62,7 @@ namespace Commodore64 {
             _cia = cia;
             _cia2 = cia2;
             _vic = vic;
+            _sid = sid;
         }
 
         public void InsertCartridge(ICartridge cartridge) {
@@ -209,6 +212,17 @@ namespace Commodore64 {
 
                         }
 
+                        // SID (0xD400 - 0xD7FF, VIC-II register images repeated every $20, 32 bytes)
+                        if (address >= 0xD400 && address <= 0xD7FF)
+                        {
+
+                            // The SID class has its own indexer which makes it easy to map
+                            // addresses into the VIC-II. The `% 0x20` makes sure that the
+                            // registers available in the VIC-II are mirrored all the way up to
+                            // 0xD7FF.
+                            return _sid[(SidRegister)((address - 0xD400) % 0x20)];
+                        }
+
                         // CIA 1
                         if (address >= 0xDC00 && address <= 0xDCFF) {
 
@@ -321,7 +335,17 @@ namespace Commodore64 {
                     // registers available in the VIC-II are mirrored all the way up to
                     // 0xD3FF.
                     _vic[(Register)((address - 0xD000) % 0x40)] = value;
+                }
 
+                // SID (0xD400 - 0xD7FF, VIC-II register images repeated every $20, 32 bytes)
+                if (address >= 0xD400 && address <= 0xD7FF)
+                {
+
+                    // The SID class has its own indexer which makes it easy to map
+                    // addresses into the VIC-II. The `% 0x20` makes sure that the
+                    // registers available in the VIC-II are mirrored all the way up to
+                    // 0xD7FF.
+                    _sid[(SidRegister)((address - 0xD400) % 0x20)] = value;
                 }
 
                 // CIA 1

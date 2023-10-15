@@ -34,7 +34,6 @@ namespace ComputerSystem.Commodore64 {
             this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblKeyboardDisabled = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolMain = new System.Windows.Forms.ToolStrip();
             this.btnRestart = new System.Windows.Forms.ToolStripButton();
             this.btnReset = new System.Windows.Forms.ToolStripButton();
@@ -66,6 +65,7 @@ namespace ComputerSystem.Commodore64 {
             this.btnShowRasterLineInterrupt = new System.Windows.Forms.ToolStripButton();
             this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
             this.separator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnToggleSound = new System.Windows.Forms.ToolStripButton();
             this.ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -124,8 +124,7 @@ namespace ComputerSystem.Commodore64 {
             this.lblCpuClockSpeedMultiplier,
             this.lblCycles,
             this.lblInstructions,
-            this.lblIllegalInstructions,
-            this.lblKeyboardDisabled});
+            this.lblIllegalInstructions});
             this.statusMain.Location = new System.Drawing.Point(0, 701);
             this.statusMain.Name = "statusMain";
             this.statusMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
@@ -190,15 +189,6 @@ namespace ComputerSystem.Commodore64 {
             this.lblIllegalInstructions.Size = new System.Drawing.Size(82, 19);
             this.lblIllegalInstructions.Text = "0 instructions";
             // 
-            // lblKeyboardDisabled
-            // 
-            this.lblKeyboardDisabled.ForeColor = System.Drawing.Color.Red;
-            this.lblKeyboardDisabled.Name = "lblKeyboardDisabled";
-            this.lblKeyboardDisabled.Size = new System.Drawing.Size(444, 19);
-            this.lblKeyboardDisabled.Spring = true;
-            this.lblKeyboardDisabled.Text = "Keyboard Disabled";
-            this.lblKeyboardDisabled.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // toolMain
             // 
             this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -230,7 +220,8 @@ namespace ComputerSystem.Commodore64 {
             this.btnShowScanLinePosition,
             this.btnShowRasterLineInterrupt,
             this.btnShowFullFrameVideo,
-            this.separator6});
+            this.separator6,
+            this.btnToggleSound});
             this.toolMain.Location = new System.Drawing.Point(0, 24);
             this.toolMain.Name = "toolMain";
             this.toolMain.Size = new System.Drawing.Size(832, 25);
@@ -507,6 +498,16 @@ namespace ComputerSystem.Commodore64 {
             this.separator6.Name = "separator6";
             this.separator6.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnToggleSound
+            // 
+            this.btnToggleSound.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnToggleSound.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleSound.Image")));
+            this.btnToggleSound.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnToggleSound.Name = "btnToggleSound";
+            this.btnToggleSound.Size = new System.Drawing.Size(23, 22);
+            this.btnToggleSound.Text = "toolStripButton1";
+            this.btnToggleSound.Click += new System.EventHandler(this.btnShowSidDebugWindow_Click);
+            // 
             // ofdOpenFile
             // 
             this.ofdOpenFile.Filter = "PRG-files|*.prg|All files|*.*";
@@ -678,10 +679,9 @@ namespace ComputerSystem.Commodore64 {
             this.Name = "FormC64Screen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Retrocomputing.NET - Commodore 64";
-            this.Activated += new System.EventHandler(this.FormC64Screen_Activated);
-            this.Deactivate += new System.EventHandler(this.FormC64Screen_Deactivate);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormC64Screen_FormClosing);
             this.Load += new System.EventHandler(this.FormC64Screen_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.pScreen)).EndInit();
             this.statusMain.ResumeLayout(false);
@@ -717,7 +717,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripStatusLabel lblInstructions;
         private System.Windows.Forms.ToolStripButton btnDebugger;
         private System.Windows.Forms.ToolStripButton btnPause;
-        private System.Windows.Forms.ToolStripStatusLabel lblKeyboardDisabled;
         private System.Windows.Forms.ToolStripButton btnReset;
         private System.Windows.Forms.ToolStripSeparator separator4;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -762,5 +761,6 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton btnShowOnScreenDisplay;
         private System.IO.FileSystemWatcher fsw;
+        private System.Windows.Forms.ToolStripButton btnToggleSound;
     }
 }

@@ -18,10 +18,13 @@ using System.Threading.Tasks;
 using Commodore64.Cartridge.FileFormats.Raw;
 using Commodore64.Cartridge;
 using Commodore64.Vic.Colors;
+using Commodore64.Sid.Debug;
+using Commodore64.Keyboard;
+using System.Text;
 
 namespace ComputerSystem.Commodore64 {
-    public partial class FormC64Screen : Form {
-
+    public partial class FormC64Screen : Form, IC64KeyboardInputProvider
+    {
         public C64 C64 { get; set; }
 
         private readonly Stopwatch _stopWatch = new Stopwatch();
@@ -48,6 +51,11 @@ namespace ComputerSystem.Commodore64 {
         private bool _formIsClosing = false;
         private bool _fswBusy = false;
 
+        /// <summary>
+        /// Keeps track of the currently pressed keys, used by IC64KeyboardInputProvider
+        /// </summary>
+        private List<Keys> _keysDown = new List<Keys>();
+
 
         public FormC64Screen(C64 c64) {
             InitializeComponent();
@@ -56,6 +64,7 @@ namespace ComputerSystem.Commodore64 {
             _osdManager.AddItem("Power On");
 
             C64 = c64;
+            C64.C64KeyboardInputProvider = this;
 
             _crtImage = Image.FromFile("Images\\crt-overlay-03.png");
 
@@ -67,7 +76,7 @@ namespace ComputerSystem.Commodore64 {
             _uiRefreshTimer = new Timer((e) => {
 
                 try {
-                    Invoke(new Action(() => {
+                    BeginInvoke(new MethodInvoker(() => {
                         lblClockSpeed.Text = $"{c64.CpuClockSpeedHz / 1000000:F4} MHz";
                         lblClockSpeedReal.Text = $"{c64.CpuClockSpeedRealHz / 1000000:F4} MHz";
                         lblClockSpeedRealPercent.Text = $"{c64.CpuClockSpeedPercent:F2} %";
@@ -76,7 +85,6 @@ namespace ComputerSystem.Commodore64 {
                         lblCycles.Text = $"{c64.Cpu.TotalCycles:N0} cycles";
                         lblInstructions.Text = $"{c64.Cpu.TotalInstructions:N0} instructions";
                         lblIllegalInstructions.Text = $"{c64.Cpu.TotalIllegalInstructions:N0} illegal instructions";
-                        lblKeyboardDisabled.Visible = !c64.KeyboardActivated;
 
                         lblFps.Text = $"{((int)_fpsActual):D2} fps";
                         lblVicCycles.Text = $"{c64.Vic.TotalCycles:N0} cycles";
@@ -132,7 +140,7 @@ namespace ComputerSystem.Commodore64 {
 
                 try
                 {
-                    Invoke(new Action(() =>
+                    BeginInvoke(new MethodInvoker(() =>
                     {
                         pScreen.Invalidate();
                     }));
@@ -220,6 +228,8 @@ namespace ComputerSystem.Commodore64 {
         private async void BtnRestart_Click(object sender, EventArgs e) {
             _osdManager.AddItem("Power Cycle");
             await C64.PowerOff();
+            C64.Sid.Stop();
+            C64.Sid.Reset();
             C64.PowerOn();
         }
 
@@ -262,28 +272,24 @@ namespace ComputerSystem.Commodore64 {
         private async void BtnPause_ClickAsync(object sender, EventArgs e) {
 
             if (btnPause.Checked) {
+                C64.Sid.Pause();
                 var r = await C64.Cpu.Pause();
                 _osdManager.AddItem("Pause");
 
             } else {
 
                 C64.Cpu.Resume();
+                C64.Sid.Play();
                 _osdManager.AddItem("Resume");
             }
 
         }
 
-        private void FormC64Screen_Activated(object sender, EventArgs e) {
-            C64.KeyboardActivated = true;
-        }
-
-        private void FormC64Screen_Deactivate(object sender, EventArgs e) {
-            C64.KeyboardActivated = false;
-        }
-
         private async void BtnReset_Click(object sender, EventArgs e) {
             await C64.Cpu.Pause();
             C64.Cpu.Reset();
+            C64.Sid.Reset();
+
             C64.Cpu.Resume();
 
             _osdManager.AddItem("Reset");
@@ -420,7 +426,7 @@ namespace ComputerSystem.Commodore64 {
                 C64.Memory._memory[0x0278] = (byte)'U';
                 C64.Memory._memory[0x0279] = (byte)'N';
                 C64.Memory._memory[0x027A] = 13; // {RETURN}
-                C64.Memory._memory[0x00C6] = 4;
+                C64.Memory._memory[0x00C6] = 4; // Keyboard buffer length
             }
         }
 
@@ -582,24 +588,29 @@ namespace ComputerSystem.Commodore64 {
             ResizeToCorrectAspectRatio();
         }
 
-        private void FormC64Screen_KeyUp(object sender, KeyEventArgs e) {
-            if (e.Control && e.KeyCode == Keys.V) {
-                var text = Clipboard.GetText();
-                PasteText(text);
-            }
-        }
-
-        private void PasteText(string text) {
+        private async Task PasteText(string text) {
             if (string.IsNullOrWhiteSpace(text)) return;
 
-            for (int i = 0; i < text.Length; i++) {
-                C64.Memory._memory[0x0277] = (byte)text[i];
-                C64.Memory._memory[0x00C6] = 1;
+            // Remove \n chars
+            text = text.Replace("\r\n", "\r");
 
+            // 0x0277: Keyboard buffer (10 bytes, 10 entries).
+            int chunkLength = 10;
+            int offset = 0;
+
+            while (offset < text.Length)
+            {
+                if (offset + chunkLength > text.Length) chunkLength = text.Length - offset;
+                Array.Copy(Encoding.ASCII.GetBytes(text), offset, C64.Memory._memory, 0x0277, chunkLength);
+
+                // Wait for BASIC to process the keyboard buffer
+                C64.Memory._memory[0x00C6] = (byte)chunkLength;
                 while (C64.Memory._memory[0x00C6] != 0)
                 {
-                    Thread.Sleep(1);
+                    await Task.Delay(1);
                 }
+
+                offset += chunkLength;
             }
         }
 
@@ -662,13 +673,99 @@ namespace ComputerSystem.Commodore64 {
                     C64.PowerOn();
                 }
             });
+        }
 
-
+        private void btnShowSidDebugWindow_Click(object sender, EventArgs e)
+        {
+            new FormSidDebug(C64.Sid).Show(this);
         }
 
         private void btnShowOnScreenDisplay_Click(object sender, EventArgs e)
         {
             if (btnShowOnScreenDisplay.Checked) _osdManager.AddItem("On Screen Display On");
+        }
+
+        private void FormC64Screen_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Handle pasting
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                var text = Clipboard.GetText();
+                _ = PasteText(text);
+                e.SuppressKeyPress = true;
+                return;
+            }
+
+            // Handle up arrow key
+            if (e.KeyCode == Keys.Up)
+            {
+                if (!_keysDown.Contains(Keys.ShiftKey)) _keysDown.Add(Keys.ShiftKey);
+                if (!_keysDown.Contains(Keys.Down)) _keysDown.Add(Keys.Down);
+            }
+            // Handle left arrow key
+            else if (e.KeyCode == Keys.Left)
+            {
+                if (!_keysDown.Contains(Keys.ShiftKey)) _keysDown.Add(Keys.ShiftKey);
+                if (!_keysDown.Contains(Keys.Right)) _keysDown.Add(Keys.Right);
+            }
+            // Handle insert key
+            else if (e.KeyCode == Keys.Insert)
+            {
+                if (!_keysDown.Contains(Keys.ShiftKey)) _keysDown.Add(Keys.ShiftKey);
+                if (!_keysDown.Contains(Keys.Back)) _keysDown.Add(Keys.Back);
+            }
+            // Handle 1-to-1 mapped keys
+            else
+            {
+                if (!_keysDown.Contains(e.KeyCode)) _keysDown.Add(e.KeyCode);
+            }
+
+            // Suppress the Alt (Menu) key to prevent menu bar focus
+            if (e.Alt) e.SuppressKeyPress = true;
+
+            // Debug.WriteLine("KeyDown: " + string.Join(", ", _keysDown.Select(x => x.ToString())));
+        }
+
+        private void FormC64Screen_KeyUp(object sender, KeyEventArgs e)
+        {
+            // Handle up arrow key
+            if (e.KeyCode == Keys.Up)
+            {
+                _keysDown.Remove(Keys.ShiftKey);
+                _keysDown.Remove(Keys.Down);
+            }
+            // Handle left arrow key
+            else if (e.KeyCode == Keys.Left)
+            {
+                _keysDown.Remove(Keys.ShiftKey);
+                _keysDown.Remove(Keys.Right);
+            }
+            // Handle insert key
+            else if (e.KeyCode == Keys.Insert)
+            {
+                _keysDown.Remove(Keys.ShiftKey);
+                _keysDown.Remove(Keys.Back);
+            }
+            // Handle 1-to-1 mapped keys
+            else
+            {
+                _keysDown.Remove(e.KeyCode);
+            }
+
+            // Suppress the Alt (Menu) key to prevent menu bar focus
+            if (e.Alt) e.SuppressKeyPress = true;
+
+            // Debug.WriteLine("KeyUp: " + string.Join(", ", _keysDown.Select(x => x.ToString())));
+        }
+
+        /// <summary>
+        /// IC64KeyboardInputProvider Implementation
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool IsKeyDown(Keys key)
+        {
+            return _keysDown.Contains(key);
         }
     }
 }

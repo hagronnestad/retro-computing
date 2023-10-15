@@ -1,20 +1,21 @@
-﻿using System.Windows.Input;
+﻿using System.Windows.Forms;
 
-namespace Commodore64 {
-    public class C64Keyboard {
-
+namespace Commodore64.Keyboard
+{
+    public class C64Keyboard
+    {
         /// <summary>
         /// This keyboard matrix maps KeyCodes to rows/columns for the C64.
         /// </summary>
-        public static Key[,] Matrix = new Key[8, 8] {
-            { Key.Back, Key.Return, Key.Right, Key.F7, Key.F1, Key.F3, Key.F5, Key.Down },
-            { Key.D3, Key.W, Key.A, Key.D4, Key.Z, Key.S, Key.E, Key.LeftShift },
-            { Key.D5, Key.R, Key.D, Key.D6, Key.C, Key.F, Key.T, Key.X },
-            { Key.D7, Key.Y, Key.G, Key.D8, Key.B, Key.H, Key.U, Key.V },
-            { Key.D9, Key.I, Key.J, Key.D0, Key.M, Key.K, Key.O, Key.N },
-            { Key.OemPlus, Key.P, Key.L, Key.Oem4, Key.OemPeriod, Key.Oem3, Key.Oem6, Key.OemComma },
-            { Key.Oem102, Key.Oem1, Key.Oem7, Key.Home, Key.RightShift, Key.Oem2, Key.PageUp, Key.OemMinus },
-            { Key.D1, Key.Escape, Key.LeftCtrl, Key.D2, Key.Space, Key.RightCtrl, Key.Q, Key.Pause },
+        public static Keys[,] Matrix = new Keys[8, 8] {
+            { Keys.Back, Keys.Return, Keys.Right, Keys.F7, Keys.F1, Keys.F3, Keys.F5, Keys.Down },
+            { Keys.D3, Keys.W, Keys.A, Keys.D4, Keys.Z, Keys.S, Keys.E, Keys.ShiftKey },
+            { Keys.D5, Keys.R, Keys.D, Keys.D6, Keys.C, Keys.F, Keys.T, Keys.X },
+            { Keys.D7, Keys.Y, Keys.G, Keys.D8, Keys.B, Keys.H, Keys.U, Keys.V },
+            { Keys.D9, Keys.I, Keys.J, Keys.D0, Keys.M, Keys.K, Keys.O, Keys.N },
+            { Keys.Oemplus, Keys.P, Keys.L, Keys.Oem4, Keys.OemPeriod, Keys.Oem3, Keys.Oem6, Keys.Oemcomma },
+            { Keys.Oem102, Keys.Oem1, Keys.Oem7, Keys.Home, Keys.ShiftKey, Keys.Oem2, Keys.PageUp, Keys.OemMinus },
+            { Keys.D1, Keys.Escape, Keys.ControlKey, Keys.D2, Keys.Space, Keys.Menu, Keys.Q, Keys.Pause },
         };
 
         // This shows the actual keyboard matrix for a C64 keyboard.

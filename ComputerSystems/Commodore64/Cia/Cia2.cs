@@ -45,7 +45,7 @@ namespace Commodore64.Cia {
                         return ToBcd(_todHaltedTenths);
 
                     case Register.R_0x01_PORT_B:
-                        Debug.WriteLine("Reading PORTB");
+                        //Debug.WriteLine("Reading PORTB");
                         return _registers[i];
 
                     default:
