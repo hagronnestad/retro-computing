@@ -1,5 +1,7 @@
-﻿namespace Commodore64 {
-    public static class C64MemoryValues {
+﻿namespace Commodore64
+{
+    public static class C64MemoryValues
+    {
 
         public const byte CURRENT_OUTPUT_DEVICE_SCREEN = 0x03;
 

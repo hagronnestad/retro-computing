@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Hardware.Memory;
+using MicroProcessor.Cpu6502;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Hardware.Memory;
-using MicroProcessor.Cpu6502;
 
-namespace NesTest6502 {
-    class Program {
+namespace NesTest6502
+{
+    class Program
+    {
 
         static MemoryBase<byte> Memory = new MemoryBase<byte>(0xFFFFFF);
         static Cpu Cpu = new Cpu(Memory);
@@ -17,19 +19,21 @@ namespace NesTest6502 {
         static bool Break = false;
 
 
-        static void Main(string[] args) {
+        static void Main(string[] args)
+        {
             Console.WriteLine("NES Test");
 
             Cpu.OnStep += Cpu_OnStep;
 
             // Load golden log
-            
+
 
             // Load NES Test "ROM"
             var file = File.ReadAllBytes("nestest.nes");
             var data = file.Skip(0x10).ToArray();
 
-            for (int i = 0; i < data.Length; i++) {
+            for (int i = 0; i < data.Length; i++)
+            {
                 Memory[0xC000 + i] = data[i];
             }
 
@@ -38,7 +42,8 @@ namespace NesTest6502 {
 
             // Cycle CPU until all official op codes has been tested
             Console.WriteLine("\nRunning official op code test...");
-            while (Break == false && Cpu.PC != 0xC6BD) {
+            while (Break == false && Cpu.PC != 0xC6BD)
+            {
                 Cpu.Cycle();
                 Thread.Sleep(TimeSpan.FromTicks(9000));
             }
@@ -47,12 +52,16 @@ namespace NesTest6502 {
 
             // Cycle CPU until all unofficial op codes has been tested
             Console.WriteLine("\nRunning unofficial op code test...");
-            while (Break == false && Cpu.PC != 0x0001) {
-                try {
+            while (Break == false && Cpu.PC != 0x0001)
+            {
+                try
+                {
                     Cpu.Cycle();
                     Thread.Sleep(TimeSpan.FromTicks(9000));
-                    
-                } catch (Exception) {
+
+                }
+                catch (Exception)
+                {
                     Console.WriteLine($"MISSING OP CODE: 0x{Memory._memory[Cpu.PC]:X2}");
 
                     Break = true;
@@ -63,13 +72,15 @@ namespace NesTest6502 {
             Console.WriteLine($"PROGRESS: {CurrentLogLine}/{GoldenLog.Length} ({(CurrentLogLine * 100f / GoldenLog.Length):F1}%)");
         }
 
-        private static void Cpu_OnStep(object sender, OpCode e) {
+        private static void Cpu_OnStep(object sender, OpCode e)
+        {
             var opCodeBytes = string.Join(" ", Memory._memory.Skip(e.OpCodeAddress).Take(e.Length).Select(x => $"{x:X2}")).PadRight(8);
             var logLine = $"{e.OpCodeAddress:X4}  {opCodeBytes} {e.Name.Replace("_", "*").PadLeft(4)}  A:{Cpu.AR:X2} X:{Cpu.XR:X2} Y:{Cpu.YR:X2} P:{Cpu.SR.Register:X2} SP:{Cpu.SP:X2}";
             Console.WriteLine($"Current log line: {logLine}");
             Console.CursorTop--;
 
-            if (logLine != GoldenLog[CurrentLogLine]) {
+            if (logLine != GoldenLog[CurrentLogLine])
+            {
                 Console.WriteLine($"MISMATCH!!!");
                 Console.WriteLine($"RESULT: {logLine}");
                 Console.WriteLine($"GOLDEN: {GoldenLog[CurrentLogLine]}");

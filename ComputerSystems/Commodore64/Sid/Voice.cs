@@ -1,6 +1,4 @@
-﻿using Commodore64.Sid.Enums;
-
-namespace Commodore64.Sid
+﻿namespace Commodore64.Sid
 {
     public enum VoiceOffset
     {

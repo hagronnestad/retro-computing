@@ -4,9 +4,11 @@ using System;
 using System.Diagnostics;
 using System.Timers;
 
-namespace Hardware.Mos6526Cia {
+namespace Hardware.Mos6526Cia
+{
 
-    public class Cia1 {
+    public class Cia1
+    {
 
         private const double INTERRUPT_INTERVAL = 1000.0f / 60.0f;
 
@@ -37,35 +39,46 @@ namespace Hardware.Mos6526Cia {
         public byte DataDirectionB { get; set; }
 
 
-        public byte TimeOfDayHoursBcd {
-            get {
+        public byte TimeOfDayHoursBcd
+        {
+            get
+            {
                 return (byte)_timeOfDay.Hour;
             }
-            set {
+            set
+            {
             }
         }
 
-        public byte TimeOfDayMinutesBcd {
-            get {
+        public byte TimeOfDayMinutesBcd
+        {
+            get
+            {
                 return (byte)_timeOfDay.Minute;
             }
-            set {
+            set
+            {
             }
         }
 
-        public byte TimeOfDaySecondsBcd {
-            get {
+        public byte TimeOfDaySecondsBcd
+        {
+            get
+            {
                 return (byte)_timeOfDay.Second;
             }
-            set {
+            set
+            {
             }
         }
 
-        public Cia1() {
+        public Cia1()
+        {
             _timeOfDay = DateTime.Now;
 
             _timer = new Timer(100);
-            _timer.Elapsed += (object sender, ElapsedEventArgs e) => {
+            _timer.Elapsed += (object sender, ElapsedEventArgs e) =>
+            {
                 _timeOfDay = _timeOfDay.AddMilliseconds(_timer.Interval);
             };
             _timer.Start();
@@ -81,12 +94,14 @@ namespace Hardware.Mos6526Cia {
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static byte[] ToBcd(int value) {
+        public static byte[] ToBcd(int value)
+        {
             if (value < 0 || value > 99999999) throw new ArgumentOutOfRangeException(nameof(value));
 
             byte[] ret = new byte[4];
 
-            for (int i = 0; i < ret.Length; i++) {
+            for (int i = 0; i < ret.Length; i++)
+            {
                 ret[i] = (byte)(value % 10);
                 value /= 10;
                 ret[i] |= (byte)((value % 10) << 4);
@@ -97,9 +112,12 @@ namespace Hardware.Mos6526Cia {
         }
 
 
-        public byte this[int index] {
-            get {
-                switch (index) {
+        public byte this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
                     case 0:
                         ReadDataPortA?.Invoke(this, null);
                         return DataPortA;
@@ -117,11 +135,13 @@ namespace Hardware.Mos6526Cia {
                     // 0xDC0D
                     case 0x0D:
                         byte b = 0;
-                        if (LatchInterruptTimerA) {
+                        if (LatchInterruptTimerA)
+                        {
                             LatchInterruptTimerA = false;
                             b = b.SetBit(BitFlag.BIT_7, true);
                         }
-                        if (LatchUnderflowTimerA) {
+                        if (LatchUnderflowTimerA)
+                        {
                             LatchUnderflowTimerA = false;
                             b = b.SetBit(BitFlag.BIT_0, true);
                         }
@@ -134,8 +154,10 @@ namespace Hardware.Mos6526Cia {
                         return 0;
                 }
             }
-            set {
-                switch (index) {
+            set
+            {
+                switch (index)
+                {
                     case 0:
                         DataPortA = value;
                         break;
@@ -161,7 +183,7 @@ namespace Hardware.Mos6526Cia {
                         if (value.IsBitSet(BitFlag.BIT_2)) EnableInterruptTodAlarm = fillBit;
 
                         break;
-                        
+
                     default:
                         // TODO: Implement all registers
                         //Debug.WriteLine($"[WRITE] CIA register not implemented: 0xDC{index:X2} (Value: 0x{value:X2})");
@@ -171,13 +193,16 @@ namespace Hardware.Mos6526Cia {
             }
         }
 
-        public void Clock() {
+        public void Clock()
+        {
 
             // Should interrupt?
-            if (_swInterrupt.Elapsed.TotalMilliseconds > INTERRUPT_INTERVAL) {
+            if (_swInterrupt.Elapsed.TotalMilliseconds > INTERRUPT_INTERVAL)
+            {
                 LatchUnderflowTimerA = true;
 
-                if (EnableInterruptTimerA) {
+                if (EnableInterruptTimerA)
+                {
                     LatchInterruptTimerA = true;
                     Interrupt?.Invoke(this, null);
                 }

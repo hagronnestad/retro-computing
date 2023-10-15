@@ -3,9 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Commodore64.Cartridge.FileFormats.Crt {
+namespace Commodore64.Cartridge.FileFormats.Crt
+{
 
-    public class CrtHeader {
+    public class CrtHeader
+    {
 
         public string Identifier { get; set; }
         public UInt32 Length { get; set; }
@@ -15,7 +17,8 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
         public byte GameLine { get; set; }
         public string Name { get; set; }
 
-        public static CrtHeader FromBytes(byte[] data) {
+        public static CrtHeader FromBytes(byte[] data)
+        {
 
             if (data.Length < 0x40) throw new ArgumentOutOfRangeException(nameof(data), "Length is less than minimum .CRT header length.");
 

@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace Extensions.Enums {
+namespace Extensions.Enums
+{
 
     [Flags]
-    public enum BitFlag : byte {
+    public enum BitFlag : byte
+    {
         BIT_0 = 0b00000001,
         BIT_1 = 0b00000010,
         BIT_2 = 0b00000100,

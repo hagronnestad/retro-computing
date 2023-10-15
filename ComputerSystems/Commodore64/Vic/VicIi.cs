@@ -1,14 +1,15 @@
-using System;
-using System.Drawing;
 using Commodore64.Properties;
 using Commodore64.Vic.Colors;
 using Commodore64.Vic.Enums;
 using Extensions.Byte;
 using Extensions.Enums;
+using System;
+using System.Drawing;
 
 namespace Commodore64.Vic
 {
-    public class VicIi {
+    public class VicIi
+    {
 
         /// <summary>
         /// http://www.zimmers.net/cbmpics/cbm/c64/vic-ii.txt
@@ -24,8 +25,10 @@ namespace Commodore64.Vic
         public C64 C64;
 
         public Color[,] ScreenBufferPixels { get; }
-        public int RasterLineToGenerateInterruptAt {
-            get {
+        public int RasterLineToGenerateInterruptAt
+        {
+            get
+            {
                 var rl = 0;
                 rl = _rasterLineToGenerateInterruptAtBitEight << 8 | _rasterLineToGenerateInterruptAtBitZeroToSeven;
                 return rl & 0b111111111;
@@ -49,9 +52,12 @@ namespace Commodore64.Vic
             _interruptLatchLightPenSignal;
 
 
-        public byte this[Register index] {
-            get {
-                switch (index) {
+        public byte this[Register index]
+        {
+            get
+            {
+                switch (index)
+                {
 
                     case Register.REGISTER_0x11_SCREEN_CONTROL_1:
                         // Bit #7 of 0x11 is set if current raster line > 255
@@ -76,9 +82,11 @@ namespace Commodore64.Vic
                         return _registers[(int)index];
                 }
             }
-            set {
+            set
+            {
                 var reg = (int)index;
-                switch (index) {
+                switch (index)
+                {
                     // Raster line to generate interrupt at (bits #0-#7).
                     // There's an additional bit used (bit #7) in 0x11 for values > 255
                     case Register.REGISTER_0x12_RASTER_COUNTER:
@@ -110,7 +118,8 @@ namespace Commodore64.Vic
             }
         }
 
-        public enum TvSystem {
+        public enum TvSystem
+        {
             NTSC,
             PAL
         }
@@ -159,7 +168,8 @@ namespace Commodore64.Vic
         public Rectangle DisplayFrame;
 
 
-        public VicIi(TvSystem tvSystem) {
+        public VicIi(TvSystem tvSystem)
+        {
             ColorManager.LoadPalette(PaletteDefinition.FromFile(Settings.Default.CurrentColorPalette));
 
             _tvSystem = tvSystem;
@@ -174,11 +184,13 @@ namespace Commodore64.Vic
             ScreenBufferPixels = new Color[fullHeight, FULL_WIDTH];
         }
 
-        public void Cycle() {
+        public void Cycle()
+        {
             // Every cycle draws 8 pixels to the screen
 
             // Generate raster interrupt if the current line equals interrupt line
-            if (CurrentLineCycle == 0 && InterruptControlRegisterRasterInterruptEnabled && CurrentLine == RasterLineToGenerateInterruptAt) {
+            if (CurrentLineCycle == 0 && InterruptControlRegisterRasterInterruptEnabled && CurrentLine == RasterLineToGenerateInterruptAt)
+            {
                 _interruptLatchRasterLine = true;
                 OnGenerateRasterLineInterrupt?.Invoke(this, null);
                 //Debug.WriteLine($"OnGenerateRasterLineInterrupt: {_rasterLineToGenerateInterruptAt}");
@@ -187,9 +199,11 @@ namespace Commodore64.Vic
 
             var p = GetScanlinePoint();
 
-            if (IsInDisplay(p) && ScreenControlRegisterScreenOffOn) {
+            if (IsInDisplay(p) && ScreenControlRegisterScreenOffOn)
+            {
 
-                switch (GetCurrentGraphicsMode()) {
+                switch (GetCurrentGraphicsMode())
+                {
                     case GraphicsMode.StandardCharacterMode:
                         RenderStandardCharacterMode();
                         break;
@@ -218,9 +232,12 @@ namespace Commodore64.Vic
                         break;
                 }
 
-            } else {
+            }
+            else
+            {
 
-                if (IsInBorder(p)) {
+                if (IsInBorder(p))
+                {
                     RenderBorder();
                 }
 
@@ -230,12 +247,14 @@ namespace Commodore64.Vic
             CurrentLineCycle++;
 
             // Every line takes 63 cycles
-            if (CurrentLineCycle == 63) {
+            if (CurrentLineCycle == 63)
+            {
                 CurrentLineCycle = 0;
 
                 CurrentLine++;
 
-                if (CurrentLine == _fullHeight) {
+                if (CurrentLine == _fullHeight)
+                {
                     CurrentLine = 0;
 
                     OnLastScanLine?.Invoke(this, null);
@@ -249,7 +268,8 @@ namespace Commodore64.Vic
         /// <summary>
         /// Render 40x25 Standard Character Mode
         /// </summary>
-        private void RenderStandardCharacterMode() {
+        private void RenderStandardCharacterMode()
+        {
             var p = GetScanlinePoint();
 
             var line = (CurrentLine - DisplayFrame.Y) / 8;
@@ -267,7 +287,8 @@ namespace Commodore64.Vic
             var bgColor = ColorManager.FromByte((byte)(this[Register.REGISTER_0x21_BACKGROUND_COLOR_0] & 0b00001111));
             var fgColor = ColorManager.FromByte((byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111));
 
-            for (int col = 0; col <= 7; col++) {
+            for (int col = 0; col <= 7; col++)
+            {
                 var pixel = charRowData.IsBitSet(7 - (BitIndex)col) ? fgColor : bgColor;
                 ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col] = pixel;
             }
@@ -277,7 +298,8 @@ namespace Commodore64.Vic
         /// <summary>
         /// Render MultiColorCharacterMode
         /// </summary>
-        private void RenderMultiColorCharacterMode() {
+        private void RenderMultiColorCharacterMode()
+        {
             var p = GetScanlinePoint();
 
             var line = (CurrentLine - DisplayFrame.Y) / 8;
@@ -296,15 +318,18 @@ namespace Commodore64.Vic
             var bgColor2 = ColorManager.FromByte((byte)(this[Register.REGISTER_0x22_BACKGROUND_COLOR_1] & 0b00001111));
             var bgColor3 = ColorManager.FromByte((byte)(this[Register.REGISTER_0x23_BACKGROUND_COLOR_2] & 0b00001111));
             var fgColor = (byte)(C64.Memory[C64MemoryOffsets.SCREEN_COLOR_RAM + charOffsetInMemory] & 0b00001111);
-            
+
             var pixelColor = Color.Red;
 
-            for (int col = 0; col <= 7; col++) {
+            for (int col = 0; col <= 7; col++)
+            {
 
-                if (fgColor.IsBitSet(BitFlag.BIT_3)) {
+                if (fgColor.IsBitSet(BitFlag.BIT_3))
+                {
 
                     var bitPair = (charRowData >> (6 - col)) & 0b11;
-                    switch (bitPair) {
+                    switch (bitPair)
+                    {
                         case 0b00:
                             pixelColor = bgColor1;
                             break;
@@ -325,7 +350,9 @@ namespace Commodore64.Vic
 
                     col++;
 
-                } else {
+                }
+                else
+                {
                     var pixel = charRowData.IsBitSet(7 - (BitIndex)col) ? ColorManager.FromByte(fgColor) : bgColor1;
                     ScreenBufferPixels[DisplayFrame.Y + line * 8 + charRow, DisplayFrame.X + column * 8 + col] = pixel;
                 }
@@ -336,7 +363,8 @@ namespace Commodore64.Vic
         /// <summary>
         /// Render MulticolorBitmapMode
         /// </summary>
-        private void RenderMulticolorBitmapMode() {
+        private void RenderMulticolorBitmapMode()
+        {
             var p = GetScanlinePoint();
 
             var line = (CurrentLine - DisplayFrame.Y) / 8;
@@ -358,10 +386,12 @@ namespace Commodore64.Vic
 
             var pixelColor = Color.Red;
 
-            for (int col = 0; col <= 7; col += 2) {
+            for (int col = 0; col <= 7; col += 2)
+            {
 
                 var bitPair = (charRowData >> (6 - col)) & 0b11;
-                switch (bitPair) {
+                switch (bitPair)
+                {
                     case 0b00:
                         pixelColor = bgColor;
                         break;
@@ -388,15 +418,18 @@ namespace Commodore64.Vic
         /// <summary>
         /// Render Border
         /// </summary>
-        private void RenderBorder() {
+        private void RenderBorder()
+        {
             var bgColor = ColorManager.FromByte((byte)(this[Register.REGISTER_0x20_BORDER_COLOR] & 0b00001111));
 
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++)
+            {
                 ScreenBufferPixels[CurrentLine, CurrentLineCycle * 8 + i] = bgColor;
             }
         }
 
-        public GraphicsMode GetCurrentGraphicsMode() {
+        public GraphicsMode GetCurrentGraphicsMode()
+        {
             var ecm_bmm_r0x11_b65 = this[Register.REGISTER_0x11_SCREEN_CONTROL_1] >> 5 & 0b00000011;
             var mcm_r0x16_b4 = this[Register.REGISTER_0x16_SCREEN_CONTROL_2] >> 4 & 0b00000001;
 
@@ -404,8 +437,10 @@ namespace Commodore64.Vic
             return (GraphicsMode)graphicsMode;
         }
 
-        public Point GetScanlinePoint() {
-            var p = new Point {
+        public Point GetScanlinePoint()
+        {
+            var p = new Point
+            {
                 X = CurrentLineCycle * 8,
                 Y = CurrentLine
             };
@@ -413,18 +448,22 @@ namespace Commodore64.Vic
             return p;
         }
 
-        private bool IsInBorder(Point p) {
+        private bool IsInBorder(Point p)
+        {
             return BorderFrame.Contains(p);
         }
 
-        private bool IsInDisplay(Point p) {
+        private bool IsInDisplay(Point p)
+        {
             return DisplayFrame.Contains(p);
         }
 
-        public int getScreenMemoryPointer() {
+        public int getScreenMemoryPointer()
+        {
             var bit4to7 = this[Register.REGISTER_0x18_MEMORY_POINTERS] >> 4 & 0b00001111;
 
-            switch (bit4to7) {
+            switch (bit4to7)
+            {
                 case 0b0000:
                     return 0x0000;
                 case 0b0001:
@@ -463,10 +502,12 @@ namespace Commodore64.Vic
             throw new NotImplementedException();
         }
 
-        public int getCharacterMemoryPointer() {
+        public int getCharacterMemoryPointer()
+        {
             var bit1to3 = this[Register.REGISTER_0x18_MEMORY_POINTERS] >> 1 & 0b00000111;
 
-            switch (bit1to3) {
+            switch (bit1to3)
+            {
                 case 0b000:
                     return 0x0000;
                 case 0b001:
@@ -488,16 +529,19 @@ namespace Commodore64.Vic
             throw new NotImplementedException();
         }
 
-        public byte vicRead(ushort address) {
+        public byte vicRead(ushort address)
+        {
 
             var vicBankOffset = 0;
 
-            switch (C64.Memory.Read(0xDD00) & 0b11) {
+            switch (C64.Memory.Read(0xDD00) & 0b11)
+            {
 
                 case 0b11:
                     vicBankOffset = 0;
 
-                    if (address >= 0x1000 && address <= 0x1FFF) {
+                    if (address >= 0x1000 && address <= 0x1FFF)
+                    {
                         return C64.Memory._romCharacter[address - 0x1000];
                     }
 
@@ -510,7 +554,8 @@ namespace Commodore64.Vic
                 case 0b01:
                     vicBankOffset = 0x8000;
 
-                    if (address >= 0x1000 && address <= 0x1FFF) {
+                    if (address >= 0x1000 && address <= 0x1FFF)
+                    {
                         return C64.Memory._romCharacter[address - 0x1000];
                     }
 

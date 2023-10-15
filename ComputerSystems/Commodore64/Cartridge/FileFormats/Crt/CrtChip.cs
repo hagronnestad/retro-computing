@@ -3,9 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Commodore64.Cartridge.FileFormats.Crt {
+namespace Commodore64.Cartridge.FileFormats.Crt
+{
 
-    public class CrtChip {
+    public class CrtChip
+    {
 
         public string Identifier { get; set; }
         public UInt32 ChipLength { get; set; }
@@ -17,7 +19,8 @@ namespace Commodore64.Cartridge.FileFormats.Crt {
         public byte[] Data { get; set; }
 
 
-        public static CrtChip FromBytes(byte[] data) {
+        public static CrtChip FromBytes(byte[] data)
+        {
 
             var c = new CrtChip();
 

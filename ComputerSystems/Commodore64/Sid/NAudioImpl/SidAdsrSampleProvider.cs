@@ -106,13 +106,13 @@ namespace Commodore64.Sid.NAudioImpl
                 {
                     return lastLevel = (float)Math.Pow(position / (double)attackSamples, 0.3f); // Exponential Attack
                 }
-                
+
                 int decayPosition = position - attackSamples;
                 if (decayPosition < decaySamples)
                 {
                     return lastLevel *= (float)Math.Pow(sustainLevel / lastLevel, 1.0f / decaySamples); // Exponential Decay
                 }
-                
+
                 return lastLevel = sustainLevel; // Sustain
             }
             else // Release

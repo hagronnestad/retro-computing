@@ -1,9 +1,11 @@
 ﻿using Memory;
 using System;
 
-namespace Hardware.Memory {
+namespace Hardware.Memory
+{
 
-    public interface IMemory<TValue> {
+    public interface IMemory<TValue>
+    {
         event EventHandler<MemoryReadEventArgs<TValue>> OnRead;
         event EventHandler<MemoryWriteEventArgs<TValue>> OnWrite;
 

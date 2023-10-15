@@ -1,9 +1,11 @@
-﻿namespace Commodore64.Vic.Enums {
+﻿namespace Commodore64.Vic.Enums
+{
 
     /// <summary>
     /// VIC-II REGISTER ADDRESSES 0xD0xx
     /// </summary>
-    public enum Register : byte {
+    public enum Register : byte
+    {
         REGISTER_0x00_X_SPRITE_0 = 0x00,
         REGISTER_0x01_Y_SPRITE_0 = 0x01,
         REGISTER_0x02_X_SPRITE_1 = 0x02,

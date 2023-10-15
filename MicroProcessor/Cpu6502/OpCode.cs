@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MicroProcessor.Cpu6502 {
+namespace MicroProcessor.Cpu6502
+{
 
-    public class OpCode : OpCodeDefinitionAttribute {
+    public class OpCode : OpCodeDefinitionAttribute
+    {
 
         public int OpCodeAddress { get; set; }
         public List<byte> Operands { get; set; } = new List<byte>();
@@ -14,20 +16,24 @@ namespace MicroProcessor.Cpu6502 {
         public Action Run { get; set; }
 
 
-        public OpCode() : base() {
+        public OpCode() : base()
+        {
 
         }
 
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return ToString();
         }
 
-        public string ToString(bool showComments = false) {
+        public string ToString(bool showComments = false)
+        {
             var operands = $"{string.Join(" ", Operands.Select(x => $"{x:X2}"))}";
             var s = $"{OpCodeAddress:X4}\t{Code:X2} {operands.PadRight(5, ' ')}\t{Name}";
 
-            switch (AddressingMode) {
+            switch (AddressingMode)
+            {
                 case Enums.AddressingMode.Accumulator:
                     s = $"{s} A";
                     break;
@@ -65,7 +71,7 @@ namespace MicroProcessor.Cpu6502 {
                     break;
 
                 case Enums.AddressingMode.Relative:
-                    s = $"{s} ${(OpCodeAddress + Length + ((sbyte) Operands[0])):X2}";
+                    s = $"{s} ${(OpCodeAddress + Length + ((sbyte)Operands[0])):X2}";
                     break;
 
                 case Enums.AddressingMode.Zeropage:
@@ -90,8 +96,10 @@ namespace MicroProcessor.Cpu6502 {
         }
 
 
-        public static OpCode FromOpCodeDefinitionAttribute(Action action, Action getAddress, OpCodeDefinitionAttribute a) {
-            return new OpCode {
+        public static OpCode FromOpCodeDefinitionAttribute(Action action, Action getAddress, OpCodeDefinitionAttribute a)
+        {
+            return new OpCode
+            {
                 GetAddress = getAddress,
                 Run = action,
                 AddCycleIfBoundaryCrossed = a.AddCycleIfBoundaryCrossed,

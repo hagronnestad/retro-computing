@@ -5,8 +5,10 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace ComputerSystem.Commodore64 {
-    public partial class FormSimpleCharacterBufferViewer : Form {
+namespace ComputerSystem.Commodore64
+{
+    public partial class FormSimpleCharacterBufferViewer : Form
+    {
 
         public C64 C64 { get; set; }
 
@@ -30,7 +32,8 @@ namespace ComputerSystem.Commodore64 {
 
         private Font fFont = new Font("Consolas", 16);
 
-        public FormSimpleCharacterBufferViewer(C64 c64) {
+        public FormSimpleCharacterBufferViewer(C64 c64)
+        {
             InitializeComponent();
 
             C64 = c64;
@@ -39,9 +42,12 @@ namespace ComputerSystem.Commodore64 {
             g = Graphics.FromImage(bBuffer);
         }
 
-        private void FormSimpleCharacterBufferViewer_Load(object sender, EventArgs e) {
-            new Thread(() => {
-                while (true) {
+        private void FormSimpleCharacterBufferViewer_Load(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                while (true)
+                {
                     if (!Visible) return;
 
                     sw2.Reset();
@@ -54,11 +60,12 @@ namespace ComputerSystem.Commodore64 {
                     _fpsAdjusted = 1000f / sw2.Elapsed.TotalMilliseconds;
 
                     BeginInvoke(new MethodInvoker(() => { Text = $"{_fpsActual:F0} fps max, {_fpsAdjusted:F0} fps adjusted"; }));
-                }   
+                }
             }).Start();
         }
 
-        protected override void OnPaintBackground(PaintEventArgs e) {
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
             base.OnPaintBackground(e);
 
             sw.Reset();
@@ -73,15 +80,18 @@ namespace ComputerSystem.Commodore64 {
 
             _fpsActual = 1000f / _lastFrameTime;
 
-            if (_fpsActual > _fpsTarget) {
+            if (_fpsActual > _fpsTarget)
+            {
                 _fpsWaitTime = (1000f / _fpsTarget) - _lastFrameTime;
             }
         }
 
-        public new void Update() {
+        public new void Update()
+        {
             g.Clear(Color.Blue);
 
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 1000; i++)
+            {
                 byte data = C64.Cpu.Memory[(ushort)(C64MemoryOffsets.SCREEN_BUFFER + i)];
 
                 if (data < 0x20) data += 0x40;
@@ -91,17 +101,21 @@ namespace ComputerSystem.Commodore64 {
 
                 // 0xA0 is the cursor character
                 // Let's just cheat and draw it as a filled rectangle
-                if (data == 0xA0) {
+                if (data == 0xA0)
+                {
                     g.FillRectangle(bWhite, x, y, 16, 16);
 
-                // Draw other characters as ASCII
-                } else {
+                    // Draw other characters as ASCII
+                }
+                else
+                {
                     g.DrawString(new string((char)data, 1), fFont, bWhite, x - 2, y - 5);
                 }
             }
 
             // Let's make some fake scanlines for fun 😎
-            for (int i = 0; i < bBuffer.Height; i += 3) {
+            for (int i = 0; i < bBuffer.Height; i += 3)
+            {
                 g.DrawLine(pScanLine, 0, i, bBuffer.Width, i);
             }
         }

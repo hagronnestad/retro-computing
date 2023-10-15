@@ -1,6 +1,8 @@
-﻿namespace Extensions.Enums {
+﻿namespace Extensions.Enums
+{
 
-    public enum BitIndex {
+    public enum BitIndex
+    {
         BIT_0 = 0,
         BIT_1 = 1,
         BIT_2 = 2,

@@ -1,5 +1,7 @@
-﻿namespace Commodore64 {
-    public static class C64MemoryLocations {
+﻿namespace Commodore64
+{
+    public static class C64MemoryLocations
+    {
 
         /// <summary>
         /// Current output device number

@@ -1,17 +1,19 @@
 ﻿using System;
 
-namespace MicroProcessor.Cpu6502.Enums {
+namespace MicroProcessor.Cpu6502.Enums
+{
 
     [Flags]
-    public enum ProcessorStatusFlags : byte {
-        Carry        = 0b00000001,
-        Zero         = 0b00000010,
-        IrqDisable   = 0b00000100,
-        DecimalMode  = 0b00001000,
+    public enum ProcessorStatusFlags : byte
+    {
+        Carry = 0b00000001,
+        Zero = 0b00000010,
+        IrqDisable = 0b00000100,
+        DecimalMode = 0b00001000,
         BreakCommand = 0b00010000,
-        Reserved     = 0b00100000,
-        Overflow     = 0b01000000,
-        Negative     = 0b10000000,
+        Reserved = 0b00100000,
+        Overflow = 0b01000000,
+        Negative = 0b10000000,
     }
 
 }

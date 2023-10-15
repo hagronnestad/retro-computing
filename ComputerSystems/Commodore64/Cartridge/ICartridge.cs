@@ -1,8 +1,10 @@
 ﻿using Hardware.Memory;
 
-namespace Commodore64.Cartridge {
+namespace Commodore64.Cartridge
+{
 
-    public interface ICartridge : IMemory<byte> {
+    public interface ICartridge : IMemory<byte>
+    {
 
         string Id { get; }
         bool ControlLineExRom { get; }

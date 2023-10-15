@@ -1,8 +1,10 @@
 ﻿using System;
 
-namespace Commodore64.Cartridge.FileFormats.Crt {
+namespace Commodore64.Cartridge.FileFormats.Crt
+{
 
-    public enum CrtHardwareType : UInt16 {
+    public enum CrtHardwareType : UInt16
+    {
         NORMAL_CARTRIDGE = 0,
         ACTION_REPLAY = 1,
         KCS_POWER_CARTRIDGE = 2,

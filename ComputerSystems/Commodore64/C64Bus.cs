@@ -1,20 +1,22 @@
-using Hardware.Memory;
-using Hardware.Mos6526Cia;
-using System.IO;
-using System;
-using Commodore64.Vic;
-using Commodore64.Vic.Enums;
-using Commodore64.Cia;
 using Commodore64.Cartridge;
-using Extensions.Byte;
-using Extensions.Enums;
+using Commodore64.Cia;
 using Commodore64.Enums;
 using Commodore64.Sid;
 using Commodore64.Sid.Enums;
+using Commodore64.Vic;
+using Commodore64.Vic.Enums;
+using Extensions.Byte;
+using Extensions.Enums;
+using Hardware.Memory;
+using Hardware.Mos6526Cia;
+using System;
+using System.IO;
 
-namespace Commodore64 {
+namespace Commodore64
+{
 
-    public class C64Bus : MemoryBase<byte> {
+    public class C64Bus : MemoryBase<byte>
+    {
 
 
         // The bank switching technique in the C64 also handles external ROM in the form of a
@@ -47,7 +49,8 @@ namespace Commodore64 {
         private readonly SidBase _sid;
         private ICartridge _cartridge;
 
-        public C64Bus(Cia1 cia, Cia2 cia2, VicIi vic, SidBase sid) : base(0x10000) {
+        public C64Bus(Cia1 cia, Cia2 cia2, VicIi vic, SidBase sid) : base(0x10000)
+        {
             //_memory.FillWithRandomData();
 
             // Intialize processor addressing mode with default values
@@ -65,11 +68,13 @@ namespace Commodore64 {
             _sid = sid;
         }
 
-        public void InsertCartridge(ICartridge cartridge) {
+        public void InsertCartridge(ICartridge cartridge)
+        {
             _cartridge = cartridge;
         }
 
-        public override byte Read(int address) {
+        public override byte Read(int address)
+        {
             // Handle the C64 memory map and the bank switching capabilities of the 6510
             // http://sta.c64.org/cbm64mem.html
             // https://www.c64-wiki.com/wiki/Bank_Switching
@@ -84,7 +89,8 @@ namespace Commodore64 {
 
 
             // Always RAM (page 0-15)
-            if (address >= 0x0000 && address <= 0x0FFF) {
+            if (address >= 0x0000 && address <= 0x0FFF)
+            {
                 return base.Read(address);
             }
 
@@ -92,10 +98,12 @@ namespace Commodore64 {
             // Always RAM (page 16-127)
             // Except when EXROM==1 and GAME==0
             // Some exceptions for cartridge rom, not implemented yet
-            if (address >= 0x1000 && address <= 0x7FFF) {
+            if (address >= 0x1000 && address <= 0x7FFF)
+            {
 
                 // UNMAPPED
-                if (_exRom && !_game) {
+                if (_exRom && !_game)
+                {
                     throw new AccessViolationException();
                 }
 
@@ -106,9 +114,11 @@ namespace Commodore64 {
 
             // Page 128-159
             // RAM OR CART ROM LO
-            if (address >= 0x8000 && address <= 0x9FFF) {
+            if (address >= 0x8000 && address <= 0x9FFF)
+            {
 
-                switch (bankState) {
+                switch (bankState)
+                {
 
                     // CART ROM LO
                     case BankMode.BANK_MODE_23:
@@ -134,15 +144,18 @@ namespace Commodore64 {
 
 
             // BASIC ROM, RAM or CARTRIDGE ROM (page 160-191)
-            if (address >= 0xA000 && address <= 0xBFFF) {
+            if (address >= 0xA000 && address <= 0xBFFF)
+            {
 
                 // UNMAPPED
-                if (_exRom && !_game) {
+                if (_exRom && !_game)
+                {
                     throw new AccessViolationException();
                 }
 
 
-                switch (bankState) {
+                switch (bankState)
+                {
 
                     // BASIC
                     case BankMode.BANK_MODE_31:
@@ -166,10 +179,12 @@ namespace Commodore64 {
 
 
             // Always RAM (page 192-207)
-            if (address >= 0xC000 && address <= 0xCFFF) {
+            if (address >= 0xC000 && address <= 0xCFFF)
+            {
 
                 // UNMAPPED
-                if (_exRom && !_game) {
+                if (_exRom && !_game)
+                {
                     throw new AccessViolationException();
                 }
 
@@ -179,9 +194,11 @@ namespace Commodore64 {
 
 
             // I/O, RAM, CHAR ROM (page 208-223)
-            if (address >= 0xD000 && address <= 0xDFFF) {
+            if (address >= 0xD000 && address <= 0xDFFF)
+            {
 
-                switch (bankState) {
+                switch (bankState)
+                {
                     // IO
                     case BankMode.BANK_MODE_31:
                     case BankMode.BANK_MODE_30:
@@ -202,7 +219,8 @@ namespace Commodore64 {
                     case BankMode.BANK_MODE_05:
 
                         // VIC-II (0xD000 - 0xD3FF, VIC-II register images repeated every $40, 64 bytes)
-                        if (address >= 0xD000 && address <= 0xD3FF) {
+                        if (address >= 0xD000 && address <= 0xD3FF)
+                        {
 
                             // The VIC-II class has its own indexer which makes it easy to map
                             // addresses into the VIC-II. The `% 0x40` makes sure that the
@@ -224,9 +242,11 @@ namespace Commodore64 {
                         }
 
                         // CIA 1
-                        if (address >= 0xDC00 && address <= 0xDCFF) {
+                        if (address >= 0xDC00 && address <= 0xDCFF)
+                        {
 
-                            switch (address) {
+                            switch (address)
+                            {
                                 case 0xDC09:
                                     return _cia.TimeOfDaySecondsBcd;
                                 case 0xDC0A:
@@ -245,7 +265,8 @@ namespace Commodore64 {
                         }
 
                         // CIA 2
-                        if (address >= 0xDD00 && address <= 0xDDFF) {
+                        if (address >= 0xDD00 && address <= 0xDDFF)
+                        {
                             return _cia2[(Cia.Enums.Register)((address - 0xDD00) % 0x10)];
                             //return base.Read(address);
                         }
@@ -275,9 +296,11 @@ namespace Commodore64 {
 
             // KERNAL ROM, RAM, CARTRIDGE ROM (page 224-255)
             // Some exceptions for I/O and cartridge rom, not implemented yet
-            if (address >= 0xE000 && address <= 0xFFFF) {
+            if (address >= 0xE000 && address <= 0xFFFF)
+            {
 
-                switch (bankState) {
+                switch (bankState)
+                {
 
                     // KERNAL ROM
                     case BankMode.BANK_MODE_31:
@@ -316,19 +339,23 @@ namespace Commodore64 {
             return base.Read(address);
         }
 
-        public override void Write(int address, byte value) {
+        public override void Write(int address, byte value)
+        {
             var processorPortMemoryConfiguration = _memory[1] & 0b00000111;
 
-            if (address == 0x0001) {
+            if (address == 0x0001)
+            {
                 base.Write(address, (byte)(value | ((byte)(value & _memory[0x0000]))));
                 return;
             }
 
             // I/O
-            if (processorPortMemoryConfiguration == 0b101 || processorPortMemoryConfiguration == 0b111 || processorPortMemoryConfiguration == 0b110) {
+            if (processorPortMemoryConfiguration == 0b101 || processorPortMemoryConfiguration == 0b111 || processorPortMemoryConfiguration == 0b110)
+            {
 
                 // VIC-II (0xD000 - 0xD3FF, VIC-II register images repeated every $40, 64 bytes)
-                if (address >= 0xD000 && address <= 0xD3FF) {
+                if (address >= 0xD000 && address <= 0xD3FF)
+                {
 
                     // The VIC-II class has its own indexer which makes it easy to map
                     // addresses into the VIC-II. The `% 0x40` makes sure that the
@@ -349,7 +376,8 @@ namespace Commodore64 {
                 }
 
                 // CIA 1
-                if (address >= 0xDC00 && address <= 0xDCFF) {
+                if (address >= 0xDC00 && address <= 0xDCFF)
+                {
                     // The CIA class has its own indexer which makes it easy to map
                     // addresses into the CIA. The `% 0x10` makes sure that the
                     // 16 registers available in the CIA are mirrored all the way up to
@@ -359,7 +387,8 @@ namespace Commodore64 {
                 }
 
                 // CIA 2
-                if (address >= 0xDD00 && address <= 0xDDFF) {
+                if (address >= 0xDD00 && address <= 0xDDFF)
+                {
                     //base.Write(address, value);
                     //Debug.WriteLine($"Unimplemented CIA2.Write (using base.Write) Address: 0x{address:X4}, Value: 0x{value:X2}");
                     _cia2[(Cia.Enums.Register)((address - 0xDD00) % 0x10)] = value;

@@ -1,22 +1,23 @@
-using MicroProcessor.Cpu6502;
-using System.Diagnostics;
-using System.Threading;
+using Commodore64.Cartridge;
+using Commodore64.Cia;
+using Commodore64.Keyboard;
+using Commodore64.Properties;
+using Commodore64.Sid.NAudioImpl;
+using Commodore64.Vic;
 using Extensions.Byte;
 using Hardware.Mos6526Cia;
-using System.Threading.Tasks;
+using MicroProcessor.Cpu6502;
 using System;
-using static Commodore64.Vic.VicIi;
-using Commodore64.Vic;
-using Commodore64.Cia;
-using Commodore64.Cartridge;
-using Commodore64.Properties;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using Commodore64.Keyboard;
-using Commodore64.Sid.NAudioImpl;
+using static Commodore64.Vic.VicIi;
 
 namespace Commodore64
 {
-    public class C64 {
+    public class C64
+    {
 
         public const int CLOCK_PAL = 985248;
         public const int CLOCK_NTSC = 1022727;
@@ -33,7 +34,7 @@ namespace Commodore64
 
         public double CpuClockSpeedHz { get; set; } = CLOCK_PAL;
         public double CpuPeriodMilliseconds => ((1f / (CpuClockSpeedHz * CpuClockSpeedMultiplier)) * 1000f);
-        
+
         public double CpuClockSpeedRealHz = 0f;
         public double CpuPeriodMillisecondsReal = 0f;
 
@@ -50,19 +51,22 @@ namespace Commodore64
 
         public IC64KeyboardInputProvider C64KeyboardInputProvider { get; set; }
 
-        public C64() {
-            
+        public C64()
+        {
+
         }
 
-        public void Initialize() {
+        public void Initialize()
+        {
             RemoveEventHandlers();
 
             Cia = new Cia1();
             Cia2 = new Cia2();
-            Vic = new VicIi(TvSystem.PAL) {
+            Vic = new VicIi(TvSystem.PAL)
+            {
                 C64 = this
             };
-            
+
             Sid = new NAudioSid();
 
             Memory = new C64Bus(Cia, Cia2, Vic, Sid);
@@ -80,7 +84,8 @@ namespace Commodore64
             Memory._romKernal.IsReadOnly = true;
         }
 
-        public void PowerOn() {
+        public void PowerOn()
+        {
             if (_isRunnning) return;
 
             Initialize();
@@ -96,14 +101,17 @@ namespace Commodore64
 
             var swCpuClock = Stopwatch.StartNew();
 
-            var t = new Thread(() => {
-                while (_isRunnning) {
+            var t = new Thread(() =>
+            {
+                while (_isRunnning)
+                {
 
                     // CPU clock
-                    if (swCpuClock.Elapsed.TotalMilliseconds >= CpuPeriodMilliseconds) {
+                    if (swCpuClock.Elapsed.TotalMilliseconds >= CpuPeriodMilliseconds)
+                    {
                         CpuPeriodMillisecondsReal = swCpuClock.Elapsed.TotalMilliseconds;
                         CpuClockSpeedRealHz = 1 / (CpuPeriodMillisecondsReal / 1000.0f);
-                        
+
                         swCpuClock.Restart();
 
                         // Clock CIA 1
@@ -124,7 +132,8 @@ namespace Commodore64
             t.Start();
         }
 
-        public Task<bool> PowerOff() {
+        public Task<bool> PowerOff()
+        {
             if (_isRunnning == false) return Task.FromResult(true);
 
             Sid.Stop();
@@ -134,19 +143,22 @@ namespace Commodore64
         }
 
 
-        private void AddEventHandlers() {
+        private void AddEventHandlers()
+        {
             Cia.ReadDataPortB += CiaReadDataPortB;
             Cia.Interrupt += CiaInterrupt;
             Vic.OnGenerateRasterLineInterrupt += Vic_OnGenerateRasterLineInterrupt;
         }
 
-        private void RemoveEventHandlers() {
+        private void RemoveEventHandlers()
+        {
             if (Cia != null) Cia.ReadDataPortB -= CiaReadDataPortB;
             if (Cia != null) Cia.Interrupt -= CiaInterrupt;
             if (Vic != null) Vic.OnGenerateRasterLineInterrupt -= Vic_OnGenerateRasterLineInterrupt;
         }
 
-        private void CiaReadDataPortB(object sender, EventArgs e) {
+        private void CiaReadDataPortB(object sender, EventArgs e)
+        {
             // Keyboard Scanning
             if (Cia.DataDirectionA == 0xFF)
             {
@@ -187,11 +199,13 @@ namespace Commodore64
             }
         }
 
-        private void CiaInterrupt(object sender, EventArgs e) {
+        private void CiaInterrupt(object sender, EventArgs e)
+        {
             Cpu.Interrupt();
         }
 
-        private void Vic_OnGenerateRasterLineInterrupt(object sender, EventArgs e) {
+        private void Vic_OnGenerateRasterLineInterrupt(object sender, EventArgs e)
+        {
             Cpu.Interrupt();
         }
     }

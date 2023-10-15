@@ -1,5 +1,7 @@
-﻿namespace Commodore64.Enums {
-    public enum BankMode {
+﻿namespace Commodore64.Enums
+{
+    public enum BankMode
+    {
         BANK_MODE_00 = 0b00000,
         BANK_MODE_01 = 0b00001,
         BANK_MODE_02 = 0b00010,

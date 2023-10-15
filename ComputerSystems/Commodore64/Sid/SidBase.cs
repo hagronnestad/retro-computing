@@ -1,7 +1,7 @@
 ﻿using Commodore64.Sid.Enums;
-using System;
 using Extensions.Byte;
 using Extensions.Enums;
+using System;
 using System.Threading.Tasks;
 
 namespace Commodore64.Sid

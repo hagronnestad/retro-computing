@@ -1,6 +1,8 @@
-﻿namespace MicroProcessor.Cpu6502.Enums {
+﻿namespace MicroProcessor.Cpu6502.Enums
+{
 
-    public enum AddressingMode {
+    public enum AddressingMode
+    {
         Accumulator,    // Accumulator	 	        OPC A	 	    operand is AC (implied single byte instruction)
         Absolute,       // absolute	 	            OPC $LLHH	 	operand is address $HHLL *
         AbsoluteX,      // absolute, X-indexed	 	OPC $LLHH,X	 	operand is address; effective address is address incremented by X with carry **

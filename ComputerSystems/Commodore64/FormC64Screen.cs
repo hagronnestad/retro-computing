@@ -1,31 +1,32 @@
 using Commodore64;
+using Commodore64.Cartridge;
+using Commodore64.Cartridge.FileFormats.Crt;
+using Commodore64.Cartridge.FileFormats.Raw;
+using Commodore64.Keyboard;
+using Commodore64.Properties;
+using Commodore64.Sid.Debug;
+using Commodore64.Vic;
+using Commodore64.Vic.Colors;
+using Debugger;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Windows.Forms;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using Commodore64.Properties;
-using Timer = System.Threading.Timer;
-using Debugger;
-using System.Threading;
-using System.Drawing.Imaging;
-using System.Drawing.Drawing2D;
-using Commodore64.Vic;
-using Commodore64.Cartridge.FileFormats.Crt;
-using System.Threading.Tasks;
-using Commodore64.Cartridge.FileFormats.Raw;
-using Commodore64.Cartridge;
-using Commodore64.Vic.Colors;
-using Commodore64.Sid.Debug;
-using Commodore64.Keyboard;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Image = System.Drawing.Image;
 using Path = System.IO.Path;
 using Rectangle = System.Drawing.Rectangle;
+using Timer = System.Threading.Timer;
 
-namespace ComputerSystem.Commodore64 {
+namespace ComputerSystem.Commodore64
+{
     public partial class FormC64Screen : Form, IC64KeyboardInputProvider
     {
         public C64 C64 { get; set; }
@@ -60,7 +61,8 @@ namespace ComputerSystem.Commodore64 {
         private List<Keys> _keysDown = new List<Keys>();
 
 
-        public FormC64Screen(C64 c64) {
+        public FormC64Screen(C64 c64)
+        {
             InitializeComponent();
 
             _osdManager = new OsdManager();
@@ -76,10 +78,13 @@ namespace ComputerSystem.Commodore64 {
             _bC64ScreenOutputBuffer = new Bitmap(pScreen.Width, pScreen.Height, PixelFormat.Format24bppRgb);
             _gC64ScreenOutputBuffer = Graphics.FromImage(_bC64ScreenOutputBuffer);
 
-            _uiRefreshTimer = new Timer((e) => {
+            _uiRefreshTimer = new Timer((e) =>
+            {
 
-                try {
-                    BeginInvoke(new MethodInvoker(() => {
+                try
+                {
+                    BeginInvoke(new MethodInvoker(() =>
+                    {
                         lblClockSpeed.Text = $"{c64.CpuClockSpeedHz / 1000000:F4} MHz";
                         lblClockSpeedReal.Text = $"{c64.CpuClockSpeedRealHz / 1000000:F4} MHz";
                         lblClockSpeedRealPercent.Text = $"{c64.CpuClockSpeedPercent:F2} %";
@@ -98,7 +103,8 @@ namespace ComputerSystem.Commodore64 {
                         lblVicGraphicsMode.Text = "Mode: " + C64.Vic.GetCurrentGraphicsMode().ToString();
                         lblVicScreenOn.Text = C64.Vic.ScreenControlRegisterScreenOffOn ? "Screen: On" : "Screen: Off";
                     }));
-                } catch { }
+                }
+                catch { }
 
             }, null, TimeSpan.FromMilliseconds(1000), TimeSpan.FromMilliseconds(50));
 
@@ -122,7 +128,8 @@ namespace ComputerSystem.Commodore64 {
             Settings.Default.Save();
         }
 
-        private void FormC64Screen_Load(object sender, EventArgs e) {
+        private void FormC64Screen_Load(object sender, EventArgs e)
+        {
             LoadSettings();
 
             pScreen.AllowDrop = true;
@@ -131,12 +138,14 @@ namespace ComputerSystem.Commodore64 {
             _invalidateScreenThread.Start();
         }
 
-        private void InvalidateScreen() {
+        private void InvalidateScreen()
+        {
             var sw = Stopwatch.StartNew();
 
             var period = 1000.0f / _fpsTarget;
 
-            while (!_formIsClosing) {
+            while (!_formIsClosing)
+            {
                 if (!Visible || WindowState == FormWindowState.Minimized) continue;
 
                 sw.Restart();
@@ -158,32 +167,40 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        public void ApplyCrtFilter() {
+        public void ApplyCrtFilter()
+        {
             _gC64ScreenOutputBuffer.DrawImage(_crtImage, 0, 0,
                 _bC64ScreenOutputBuffer.Width + 1, _bC64ScreenOutputBuffer.Height + 1);
         }
 
-        private void PScreen_Paint(object sender, PaintEventArgs e) {
+        private void PScreen_Paint(object sender, PaintEventArgs e)
+        {
             SetPixels(_bC64ScreenBuffer, C64.Vic.ScreenBufferPixels);
 
-            if (btnShowVideoFrameOutlines.Checked) {
+            if (btnShowVideoFrameOutlines.Checked)
+            {
                 _gC64ScreenBuffer.DrawRectangle(_penWhite, C64.Vic.FullFrame.X, C64.Vic.FullFrame.Y, C64.Vic.FullFrame.Width, C64.Vic.FullFrame.Height);
                 _gC64ScreenBuffer.DrawRectangle(_penWhite, C64.Vic.BorderFrame.X, C64.Vic.BorderFrame.Y, C64.Vic.BorderFrame.Width, C64.Vic.BorderFrame.Height);
                 _gC64ScreenBuffer.DrawRectangle(_penWhite, C64.Vic.DisplayFrame.X, C64.Vic.DisplayFrame.Y, C64.Vic.DisplayFrame.Width, C64.Vic.DisplayFrame.Height);
             }
 
-            if (btnShowRasterLineInterrupt.Checked && C64.Vic.InterruptControlRegisterRasterInterruptEnabled) {
+            if (btnShowRasterLineInterrupt.Checked && C64.Vic.InterruptControlRegisterRasterInterruptEnabled)
+            {
                 _gC64ScreenBuffer.DrawLine(_penRaster, 0, C64.Vic.RasterLineToGenerateInterruptAt, C64.Vic.FullFrame.Width, C64.Vic.RasterLineToGenerateInterruptAt);
             }
 
-            if (btnShowScanLinePosition.Checked) {
+            if (btnShowScanLinePosition.Checked)
+            {
                 var p = C64.Vic.GetScanlinePoint();
                 _gC64ScreenBuffer.DrawLine(_penWhite, p.X, p.Y, p.X + 8, p.Y);
             }
 
-            if (btnShowFullFrameVideo.Checked) {
+            if (btnShowFullFrameVideo.Checked)
+            {
                 _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, 0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height);
-            } else {
+            }
+            else
+            {
                 _gC64ScreenOutputBuffer.DrawImage(_bC64ScreenBuffer, new Rectangle(0, 0, _bC64ScreenOutputBuffer.Width, _bC64ScreenOutputBuffer.Height),
                     new Rectangle(C64.Vic.BorderFrame.X, C64.Vic.BorderFrame.Y, C64.Vic.BorderFrame.Width, C64.Vic.BorderFrame.Height), GraphicsUnit.Pixel);
             }
@@ -202,7 +219,8 @@ namespace ComputerSystem.Commodore64 {
             _fpsActual = 1000f / _fpsValues.Average(x => x);
         }
 
-        private void PScreen_Resize(object sender, EventArgs e) {
+        private void PScreen_Resize(object sender, EventArgs e)
+        {
             if (!_isInitialized) return;
             if (WindowState == FormWindowState.Minimized) return;
 
@@ -217,7 +235,8 @@ namespace ComputerSystem.Commodore64 {
             //_gC64ScreenOutputBuffer.PixelOffsetMode = PixelOffsetMode.HighSpeed;
         }
 
-        private void FormC64Screen_FormClosing(object sender, FormClosingEventArgs e) {
+        private void FormC64Screen_FormClosing(object sender, FormClosingEventArgs e)
+        {
             _formIsClosing = true;
 
             _gC64ScreenOutputBuffer.Dispose();
@@ -228,7 +247,8 @@ namespace ComputerSystem.Commodore64 {
             SaveSettings();
         }
 
-        private async void BtnRestart_Click(object sender, EventArgs e) {
+        private async void BtnRestart_Click(object sender, EventArgs e)
+        {
             _osdManager.AddItem("Power Cycle");
             await C64.PowerOff();
             C64.Sid.Stop();
@@ -237,19 +257,23 @@ namespace ComputerSystem.Commodore64 {
         }
 
 
-        private void BtnSave_Click(object sender, EventArgs e) {
-            if (sfd.ShowDialog() == DialogResult.OK) {
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
                 var basicAreaLength = C64MemoryOffsets.DEFAULT_BASIC_AREA_END - C64MemoryOffsets.DEFAULT_BASIC_AREA_START;
                 var data = new List<byte>();
 
                 data.AddRange(BitConverter.GetBytes((ushort)0x0801));
 
-                for (int i = 0; i < basicAreaLength; i++) {
+                for (int i = 0; i < basicAreaLength; i++)
+                {
                     data.Add(C64.Memory[C64MemoryOffsets.DEFAULT_BASIC_AREA_START + i]);
 
                     // TODO: Fix this horrible check
                     // The BASIC program ends with 3 NULL-bytes, so break when we find them
-                    if (data.Count >= 3 && data.Skip(data.Count - 3).Take(3).All(x => x == 0x00)) {
+                    if (data.Count >= 3 && data.Skip(data.Count - 3).Take(3).All(x => x == 0x00))
+                    {
                         break;
                     }
                 }
@@ -258,27 +282,34 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        private void BtnCopyOutput_ButtonClick(object sender, EventArgs e) {
+        private void BtnCopyOutput_ButtonClick(object sender, EventArgs e)
+        {
             Clipboard.SetImage(_bC64ScreenOutputBuffer);
         }
 
-        private void BtnCopyRawOutput_Click(object sender, EventArgs e) {
+        private void BtnCopyRawOutput_Click(object sender, EventArgs e)
+        {
             Clipboard.SetImage(_bC64ScreenBuffer);
         }
 
-        private void BtnMemoryWatch_Click(object sender, EventArgs e) {
+        private void BtnMemoryWatch_Click(object sender, EventArgs e)
+        {
             var f = new FormDebugger(C64.Cpu, C64.Memory);
             f.Show();
         }
 
-        private async void BtnPause_ClickAsync(object sender, EventArgs e) {
+        private async void BtnPause_ClickAsync(object sender, EventArgs e)
+        {
 
-            if (btnPause.Checked) {
+            if (btnPause.Checked)
+            {
                 C64.Sid.Pause();
                 var r = await C64.Cpu.Pause();
                 _osdManager.AddItem("Pause");
 
-            } else {
+            }
+            else
+            {
                 C64.Cpu.Resume();
                 C64.Sid.Play();
                 _osdManager.AddItem("Resume");
@@ -286,7 +317,8 @@ namespace ComputerSystem.Commodore64 {
 
         }
 
-        private async void BtnReset_Click(object sender, EventArgs e) {
+        private async void BtnReset_Click(object sender, EventArgs e)
+        {
             await C64.Cpu.Pause();
             C64.Cpu.Reset();
             C64.Sid.Reset();
@@ -474,7 +506,8 @@ namespace ComputerSystem.Commodore64 {
             C64.PowerOn();
         }
 
-        public void SetPixels(Bitmap b, Color[,] pixels) {
+        public void SetPixels(Bitmap b, Color[,] pixels)
+        {
             var width = b.Width;
             var height = b.Height;
 
@@ -482,12 +515,15 @@ namespace ComputerSystem.Commodore64 {
 
             int stride = data.Stride;
 
-            unsafe {
+            unsafe
+            {
                 byte* ptr = (byte*)data.Scan0;
 
-                for (int y = 0; y < height; y++) {
+                for (int y = 0; y < height; y++)
+                {
 
-                    for (int x = 0; x < width; x++) {
+                    for (int x = 0; x < width; x++)
+                    {
 
                         var index = (y * width) + x;
 
@@ -519,11 +555,13 @@ namespace ComputerSystem.Commodore64 {
             }
         }
 
-        private void btnSlowDown_Click(object sender, EventArgs e) {
+        private void btnSlowDown_Click(object sender, EventArgs e)
+        {
             AdjustSpeedMultiplier(-0.01f);
         }
 
-        private void btnClockSpeedFaster_Click(object sender, EventArgs e) {
+        private void btnClockSpeedFaster_Click(object sender, EventArgs e)
+        {
             AdjustSpeedMultiplier(0.01f);
         }
 
@@ -542,24 +580,28 @@ namespace ComputerSystem.Commodore64 {
             C64.CpuClockSpeedMultiplier = 1f;
         }
 
-        private void pScreen_DoubleClick(object sender, EventArgs e) {
+        private void pScreen_DoubleClick(object sender, EventArgs e)
+        {
             ResizeToCorrectAspectRatio();
         }
 
 
-        private void ResizeToCorrectAspectRatio() {
+        private void ResizeToCorrectAspectRatio()
+        {
             var height = (int)((pScreen.Width / 4.0f) * 3.0f);
 
             if (height < pScreen.Height) Height -= pScreen.Height - height;
             if (height > pScreen.Height) Height += height - pScreen.Height;
 
             // Compensate for full frame mode
-            if (btnShowFullFrameVideo.Checked) {
+            if (btnShowFullFrameVideo.Checked)
+            {
                 Width += C64.Vic.FullFrame.Width - C64.Vic.BorderFrame.Width;
             }
         }
 
-        private void ToggleFullscreen() {
+        private void ToggleFullscreen()
+        {
             FormBorderStyle = FormBorderStyle == FormBorderStyle.Sizable ? FormBorderStyle.None : FormBorderStyle.Sizable;
             WindowState = WindowState == FormWindowState.Normal ? FormWindowState.Maximized : FormWindowState.Normal;
 
@@ -571,23 +613,28 @@ namespace ComputerSystem.Commodore64 {
             pScreen.Anchor = FormBorderStyle != FormBorderStyle.None ? AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right : AnchorStyles.Top | AnchorStyles.Left;
         }
 
-        private void pScreen_MouseMove(object sender, MouseEventArgs e) {
-            if (FormBorderStyle == FormBorderStyle.None) {
+        private void pScreen_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (FormBorderStyle == FormBorderStyle.None)
+            {
                 toolMain.Visible = e.Y < 5 ? true : false;
                 statusMain.Visible = e.Y > pScreen.Height - 5 ? true : false;
                 statusStrip1.Visible = e.Y > pScreen.Height - 5 ? true : false;
             }
         }
 
-        private void btnToggleFullscreen_Click(object sender, EventArgs e) {
+        private void btnToggleFullscreen_Click(object sender, EventArgs e)
+        {
             ToggleFullscreen();
         }
 
-        private void btnShowFullFrameVideo_Click(object sender, EventArgs e) {
+        private void btnShowFullFrameVideo_Click(object sender, EventArgs e)
+        {
             ResizeToCorrectAspectRatio();
         }
 
-        private async Task PasteText(string text) {
+        private async Task PasteText(string text)
+        {
             if (string.IsNullOrWhiteSpace(text)) return;
 
             // Remove \n chars
@@ -777,12 +824,14 @@ namespace ComputerSystem.Commodore64 {
             Settings.Default.KernalWhiteTextColor = !Settings.Default.KernalWhiteTextColor;
             mnuKernalWhiteTextColor.Checked = Settings.Default.KernalWhiteTextColor;
 
-            await Task.Run(async () => {
+            await Task.Run(async () =>
+            {
                 if (MessageBox.Show(
                     "This setting requires a restart. Do you want to restart now?",
                     "Restart",
                     MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question) == DialogResult.Yes) {
+                    MessageBoxIcon.Question) == DialogResult.Yes)
+                {
 
                     await C64.PowerOff();
                     C64.PowerOn();

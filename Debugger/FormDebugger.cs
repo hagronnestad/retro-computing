@@ -1,16 +1,18 @@
-﻿using System.Windows.Forms;
-using System.Globalization;
-using System;
-using MicroProcessor.Cpu6502;
-using Hardware.Memory;
+﻿using Hardware.Memory;
 using Memory;
+using MicroProcessor.Cpu6502;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Threading;
+using System.Windows.Forms;
 
-namespace Debugger {
-    public partial class FormDebugger : Form {
+namespace Debugger
+{
+    public partial class FormDebugger : Form
+    {
 
         private readonly Cpu _cpu;
         private readonly IMemory<byte> _memory;
@@ -24,7 +26,8 @@ namespace Debugger {
 
         private Thread t;
 
-        public FormDebugger(Cpu cpu, IMemory<byte> memory) {
+        public FormDebugger(Cpu cpu, IMemory<byte> memory)
+        {
             InitializeComponent();
 
             _cpu = cpu;
@@ -34,46 +37,57 @@ namespace Debugger {
             _memory.OnRead += _memory_OnRead;
         }
 
-        private void _cpu_OnStep(object sender, OpCode e) {
+        private void _cpu_OnStep(object sender, OpCode e)
+        {
             lastOpCodes.Add(e);
             if (lastOpCodes.Count > 10) lastOpCodes.RemoveAt(0);
         }
 
-        private void _memory_OnWrite(object sender, MemoryWriteEventArgs<byte> e) {
+        private void _memory_OnWrite(object sender, MemoryWriteEventArgs<byte> e)
+        {
             if (!_watchItems.ContainsKey(e.Address)) return;
             _watchItems[e.Address].Value = e.Value;
         }
 
-        private void _memory_OnRead(object sender, MemoryReadEventArgs<byte> e) {
+        private void _memory_OnRead(object sender, MemoryReadEventArgs<byte> e)
+        {
 
         }
 
-        private void BtnStep_Click(object sender, EventArgs e) {
+        private void BtnStep_Click(object sender, EventArgs e)
+        {
             _cpu.Step();
         }
 
-        private int? StringToInt(string intString) {
+        private int? StringToInt(string intString)
+        {
             int address;
 
-            if (intString.ToLower().StartsWith("0x") || intString.ToLower().StartsWith("&h")) {
+            if (intString.ToLower().StartsWith("0x") || intString.ToLower().StartsWith("&h"))
+            {
                 if (int.TryParse(intString.Substring(2), NumberStyles.HexNumber, null, out address)) return address;
 
-            } else {
+            }
+            else
+            {
                 if (int.TryParse(intString, out address)) return address;
             }
 
             return null;
         }
 
-        private void BtnReset_Click(object sender, EventArgs e) {
+        private void BtnReset_Click(object sender, EventArgs e)
+        {
             _cpu.Reset();
         }
 
-        private void DgWatch_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
+        private void DgWatch_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
             string addressString;
             int? address;
 
-            switch (e.ColumnIndex) {
+            switch (e.ColumnIndex)
+            {
                 case 0: // Address
                     addressString = dgWatch.Rows[e.RowIndex].Cells[0].Value as string;
                     if (addressString == null || string.IsNullOrWhiteSpace(addressString)) break;
@@ -82,7 +96,8 @@ namespace Debugger {
                     if (address == null) break;
 
                     if (_watchItems.ContainsKey(address.Value)) break;
-                    _watchItems.TryAdd(address.Value, new WatchItem() {
+                    _watchItems.TryAdd(address.Value, new WatchItem()
+                    {
                         Address = address.Value,
                     });
 
@@ -105,7 +120,8 @@ namespace Debugger {
             }
         }
 
-        private void FormDebugger_Load(object sender, EventArgs e) {
+        private void FormDebugger_Load(object sender, EventArgs e)
+        {
             _cpu.OnStep += _cpu_OnStep;
 
             t = new Thread(InvalidateScreen);
@@ -113,14 +129,18 @@ namespace Debugger {
             t.Start();
         }
 
-        private void InvalidateScreen() {
-            while (true) {
-                if (!Visible || WindowState == FormWindowState.Minimized) {
+        private void InvalidateScreen()
+        {
+            while (true)
+            {
+                if (!Visible || WindowState == FormWindowState.Minimized)
+                {
                     Thread.Sleep(1000);
                     continue;
                 }
 
-                try {
+                try
+                {
                     pictureBox1.Invalidate();
 
                     //BeginInvoke(new MethodInvoker(() => {
@@ -128,7 +148,8 @@ namespace Debugger {
                     //}));
 
                 }
-                catch (Exception) {
+                catch (Exception)
+                {
                     return;
                 }
 
@@ -136,11 +157,14 @@ namespace Debugger {
             }
         }
 
-        private void PictureBox1_Paint(object sender, PaintEventArgs e) {
+        private void PictureBox1_Paint(object sender, PaintEventArgs e)
+        {
             e.Graphics.Clear(pictureBox1.BackColor);
 
-            lock (lastOpCodes.SyncRoot) {
-                for (int i = 0; i < lastOpCodes.Count; i++) {
+            lock (lastOpCodes.SyncRoot)
+            {
+                for (int i = 0; i < lastOpCodes.Count; i++)
+                {
                     e.Graphics.DrawString(lastOpCodes?[i]?.ToString() ?? "", f, b, 0, i * f.Height + 3);
                 }
             }

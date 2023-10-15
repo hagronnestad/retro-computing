@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MicroProcessor.Cpu6502 {
-    public class Cpu {
+namespace MicroProcessor.Cpu6502
+{
+    public class Cpu
+    {
 
         public event EventHandler<OpCode> OnStep;
 
@@ -86,7 +88,8 @@ namespace MicroProcessor.Cpu6502 {
         /// <summary>
         /// Status Register. This register contains a set of flags.
         /// </summary>
-        public StatusRegister SR = new StatusRegister() {
+        public StatusRegister SR = new StatusRegister()
+        {
             Reserved = true
         };
 
@@ -102,15 +105,21 @@ namespace MicroProcessor.Cpu6502 {
         /// The current Value to operate on based on the Address or the Accumulator,
         /// depending on the current addressing mode.
         /// </summary>
-        public byte Value {
-            get {
+        public byte Value
+        {
+            get
+            {
                 return OpCode.AddressingMode == AddressingMode.Accumulator ? AR : Memory.Read(Address);
             }
-            set {
-                if (OpCode.AddressingMode == AddressingMode.Accumulator) {
+            set
+            {
+                if (OpCode.AddressingMode == AddressingMode.Accumulator)
+                {
                     AR = value;
 
-                } else {
+                }
+                else
+                {
                     Memory.Write(Address, value);
                 }
             }
@@ -120,13 +129,15 @@ namespace MicroProcessor.Cpu6502 {
         /// The MOS6502 CPU.
         /// </summary>
         /// <param name="memory"></param>
-        public Cpu(IMemory<byte> memory) {
+        public Cpu(IMemory<byte> memory)
+        {
             Memory = memory;
 
             var opCodesMethods = GetType()
                 .GetMethods()
                 .SelectMany(m => m.GetCustomAttributes(typeof(OpCodeDefinitionAttribute), true)
-                .Select(a => new {
+                .Select(a => new
+                {
                     Attribute = a as OpCodeDefinitionAttribute,
                     Method = m
                 }));
@@ -134,7 +145,8 @@ namespace MicroProcessor.Cpu6502 {
             var addressingMethods = GetType()
                 .GetMethods()
                 .SelectMany(m => m.GetCustomAttributes(typeof(AddressingModeAttribute), true)
-                .Select(a => new {
+                .Select(a => new
+                {
                     Attribute = a as AddressingModeAttribute,
                     Method = m
                 })).ToDictionary(x => x.Attribute.AddressingMode, x => x);
@@ -153,7 +165,8 @@ namespace MicroProcessor.Cpu6502 {
         /// Pauses the CPU cycling after finishing all cycles for the current instruction.
         /// </summary>
         /// <returns></returns>
-        public Task<bool> Pause() {
+        public Task<bool> Pause()
+        {
             if (_pausedWaiting) return Task.FromResult(false);
 
             _pausedWaiting = true;
@@ -163,7 +176,8 @@ namespace MicroProcessor.Cpu6502 {
         /// <summary>
         /// Resumes the CPU cycling.
         /// </summary>
-        public void Resume() {
+        public void Resume()
+        {
             if (_pausedWaiting) return;
 
             _tcsPause = new TaskCompletionSource<bool>();
@@ -174,16 +188,20 @@ namespace MicroProcessor.Cpu6502 {
         /// Cycles the CPU and makes sure to take up as many cycles as
         /// the current instruction is supposed to.
         /// </summary>
-        public void Cycle() {
+        public void Cycle()
+        {
             if (_isPaused) return;
 
             DoCycle();
         }
 
-        private void DoCycle() {
-            if (_cyclesRemainingCurrentInstruction == 0) {
+        private void DoCycle()
+        {
+            if (_cyclesRemainingCurrentInstruction == 0)
+            {
 
-                if (_pausedWaiting) {
+                if (_pausedWaiting)
+                {
                     _pausedWaiting = false;
                     _isPaused = true;
 
@@ -191,17 +209,24 @@ namespace MicroProcessor.Cpu6502 {
                     return;
                 }
 
-                if (nonMaskableInterruptWaiting) {
+                if (nonMaskableInterruptWaiting)
+                {
                     DoNonMaskableInterrupt();
 
-                } else if (interruptWaiting) {
+                }
+                else if (interruptWaiting)
+                {
                     DoInterrupt();
 
-                } else {
+                }
+                else
+                {
                     Step();
                 }
 
-            } else {
+            }
+            else
+            {
                 _cyclesRemainingCurrentInstruction--;
             }
         }
@@ -210,17 +235,20 @@ namespace MicroProcessor.Cpu6502 {
         /// Steps the CPU by executing one instruction.
         /// </summary>
         /// <param name="ignoreCycles"></param>
-        public void Step(bool ignoreCycles = false) {
-            
+        public void Step(bool ignoreCycles = false)
+        {
+
             OpCode = OpCodeCache[Memory.Read(PC)];
             OpCode.OpCodeAddress = PC;
 
-            if (OnStep != null) {
+            if (OnStep != null)
+            {
                 var o = OpCode.FromOpCodeDefinitionAttribute(null, null, OpCode);
                 o.OpCodeAddress = PC;
 
                 o.Operands.Clear();
-                for (int j = 1; j < o.Length; j++) {
+                for (int j = 1; j < o.Length; j++)
+                {
                     o.Operands.Add(Memory.Read(PC + j));
                 }
 
@@ -229,7 +257,8 @@ namespace MicroProcessor.Cpu6502 {
 
             PC++;
 
-            if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator) {
+            if (OpCode.AddressingMode != AddressingMode.Implied && OpCode.AddressingMode != AddressingMode.Accumulator)
+            {
                 OpCode.GetAddress();
             }
             OpCode.Run();
@@ -246,7 +275,8 @@ namespace MicroProcessor.Cpu6502 {
             if (!ignoreCycles) _cyclesRemainingCurrentInstruction += OpCode.Cycles - 1;
         }
 
-        public void Reset() {
+        public void Reset()
+        {
             AR = XR = YR = 0x00;
 
             // SP should be 0xFD, I used to initialize it directly, but `-= 3` on a `byte` becomes 0xFD after roll over
@@ -265,19 +295,22 @@ namespace MicroProcessor.Cpu6502 {
         /// <summary>
         /// Triggers a non maskable interrupt (NMI) before executing the next instruction.
         /// </summary>
-        public void NonMaskableInterrupt() {
+        public void NonMaskableInterrupt()
+        {
             nonMaskableInterruptWaiting = true;
         }
 
         /// <summary>
         /// Triggers an interrupt (IRQ) before executing the next instruction.
         /// </summary>
-        public void Interrupt() {
+        public void Interrupt()
+        {
             if (SR.IrqDisable) return;
             interruptWaiting = true;
         }
 
-        public void DoNonMaskableInterrupt() {
+        public void DoNonMaskableInterrupt()
+        {
             // From https://youtu.be/8XmxKPJDGU0?t=3362
 
             PushStack((byte)(PC >> 8));
@@ -295,7 +328,8 @@ namespace MicroProcessor.Cpu6502 {
             nonMaskableInterruptWaiting = false;
         }
 
-        private void DoInterrupt() {
+        private void DoInterrupt()
+        {
             // From https://youtu.be/8XmxKPJDGU0?t=3362
 
             PushStack((byte)(PC >> 8));
@@ -318,7 +352,8 @@ namespace MicroProcessor.Cpu6502 {
         /// Pushes a value to the Stack and decrements the Stack-pointer.
         /// </summary>
         /// <param name="value"></param>
-        public void PushStack(byte value) {
+        public void PushStack(byte value)
+        {
             Memory.Write(0x0100 + SP, value);
             SP--;
         }
@@ -327,7 +362,8 @@ namespace MicroProcessor.Cpu6502 {
         /// Pops a value off the Stack and increments the Stack-pointer.
         /// </summary>
         /// <returns></returns>
-        public byte PopStack() {
+        public byte PopStack()
+        {
             SP++;
             var b = Memory.Read(0x0100 + SP);
             return b;
@@ -335,7 +371,8 @@ namespace MicroProcessor.Cpu6502 {
 
 
         [AddressingMode(AddressingMode = AddressingMode.Absolute)]
-        public void Absolute() {
+        public void Absolute()
+        {
             var lowAddressByte = Memory.Read(PC);
             PC++;
             var highAddressByte = Memory.Read(PC);
@@ -345,7 +382,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [AddressingMode(AddressingMode = AddressingMode.AbsoluteX)]
-        public void AbsoluteX() {
+        public void AbsoluteX()
+        {
             var lowAddressByte = Memory.Read(PC);
             PC++;
             var highAddressByte = Memory.Read(PC);
@@ -356,7 +394,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [AddressingMode(AddressingMode = AddressingMode.AbsoluteY)]
-        public void AbsoluteY() {
+        public void AbsoluteY()
+        {
             var lowAddressByte = Memory.Read(PC);
             PC++;
             var highAddressByte = Memory.Read(PC);
@@ -367,13 +406,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [AddressingMode(AddressingMode = AddressingMode.Immediate)]
-        public void Immediate() {
+        public void Immediate()
+        {
             Address = PC;
             PC++;
         }
 
         [AddressingMode(AddressingMode = AddressingMode.Indirect)]
-        public void Indirect() {
+        public void Indirect()
+        {
             var lowAddressPointer = Memory.Read(PC);
             PC++;
             var highAddressPointer = Memory.Read(PC);
@@ -381,17 +422,21 @@ namespace MicroProcessor.Cpu6502 {
 
             var addressPointer = (ushort)((highAddressPointer << 8) | lowAddressPointer);
 
-            if (lowAddressPointer == 0xFF) {
+            if (lowAddressPointer == 0xFF)
+            {
                 // This handles a hardware bug in the 6502
                 Address = (ushort)(Memory.Read(addressPointer & 0xFF00) << 8 | Memory.Read(addressPointer));
 
-            } else {
+            }
+            else
+            {
                 Address = (ushort)(Memory.Read(addressPointer + 1) << 8 | Memory.Read(addressPointer));
             }
         }
 
         [AddressingMode(AddressingMode = AddressingMode.XIndirect)]
-        public void XIndirect() {
+        public void XIndirect()
+        {
             // The ushort type below is used intentionally to allow byte rollover check
 
             ushort pageZeroAddress = Memory.Read(PC);
@@ -404,7 +449,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [AddressingMode(AddressingMode = AddressingMode.IndirectY)]
-        public void IndirectY() {
+        public void IndirectY()
+        {
             // The ushort type below is used intentionally to allow byte rollover check
 
             ushort pageZeroAddress = Memory.Read(PC);
@@ -418,20 +464,23 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [AddressingMode(AddressingMode = AddressingMode.Relative)]
-        public void Relative() {
+        public void Relative()
+        {
             sbyte rel_addr = (sbyte)Memory.Read(PC);
             PC++;
             Address = (ushort)(PC + rel_addr);
         }
 
         [AddressingMode(AddressingMode = AddressingMode.Zeropage)]
-        public void Zeropage() {
+        public void Zeropage()
+        {
             Address = Memory.Read(PC);
             PC++;
         }
 
         [AddressingMode(AddressingMode = AddressingMode.ZeropageX)]
-        public void ZeropageX() {
+        public void ZeropageX()
+        {
             // The ushort type below is used intentionally to allow byte rollover check
 
             ushort a = (ushort)(Memory.Read(PC) + XR);
@@ -440,7 +489,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [AddressingMode(AddressingMode = AddressingMode.ZeropageY)]
-        public void ZeropageY() {
+        public void ZeropageY()
+        {
             // The ushort type below is used intentionally to allow byte rollover check
 
             ushort a = (ushort)(Memory.Read(PC) + YR);
@@ -462,7 +512,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(LDA), Code = 0xB9, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Load Accumulator", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(LDA), Code = 0xA1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Load Accumulator")]
         [OpCodeDefinition(Name = nameof(LDA), Code = 0xB1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Load Accumulator", AddCycleIfBoundaryCrossed = true)]
-        public void LDA() {
+        public void LDA()
+        {
             AR = Value;
             SR.SetNegative(AR);
             SR.SetZero(AR);
@@ -473,7 +524,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(LDX), Code = 0xB6, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageY, Description = "Load X-register")]
         [OpCodeDefinition(Name = nameof(LDX), Code = 0xAE, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "Load X-register")]
         [OpCodeDefinition(Name = nameof(LDX), Code = 0xBE, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Load X-register", AddCycleIfBoundaryCrossed = true)]
-        public void LDX() {
+        public void LDX()
+        {
             XR = Value;
             SR.SetNegative(XR);
             SR.SetZero(XR);
@@ -484,7 +536,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(LDY), Code = 0xB4, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "Load Y-register")]
         [OpCodeDefinition(Name = nameof(LDY), Code = 0xAC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "Load Y-register")]
         [OpCodeDefinition(Name = nameof(LDY), Code = 0xBC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteX, Description = "Load Y-register", AddCycleIfBoundaryCrossed = true)]
-        public void LDY() {
+        public void LDY()
+        {
             YR = Value;
             SR.SetNegative(YR);
             SR.SetZero(YR);
@@ -497,59 +550,68 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(STA), Code = 0x99, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Store Accumulator", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(STA), Code = 0x81, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Store Accumulator")]
         [OpCodeDefinition(Name = nameof(STA), Code = 0x91, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Store Accumulator", AddCycleIfBoundaryCrossed = true)]
-        public void STA() {
+        public void STA()
+        {
             Value = AR;
         }
 
         [OpCodeDefinition(Name = nameof(STX), Code = 0x86, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "Store X-register")]
         [OpCodeDefinition(Name = nameof(STX), Code = 0x96, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageY, Description = "Store X-register")]
         [OpCodeDefinition(Name = nameof(STX), Code = 0x8E, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "Store X-register")]
-        public void STX() {
+        public void STX()
+        {
             Value = XR;
         }
 
         [OpCodeDefinition(Name = nameof(STY), Code = 0x84, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "Store Y-register")]
         [OpCodeDefinition(Name = nameof(STY), Code = 0x94, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "Store Y-register")]
         [OpCodeDefinition(Name = nameof(STY), Code = 0x8C, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "Store Y-register")]
-        public void STY() {
+        public void STY()
+        {
             Value = YR;
         }
 
         [OpCodeDefinition(Name = nameof(TAX), Code = 0xAA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Transfer A-register to X-register")]
-        public void TAX() {
+        public void TAX()
+        {
             SR.SetNegative(AR);
             SR.SetZero(AR);
             XR = AR;
         }
 
         [OpCodeDefinition(Name = nameof(TAY), Code = 0xA8, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Transfer A-register to Y-register")]
-        public void TAY() {
+        public void TAY()
+        {
             SR.SetNegative(AR);
             SR.SetZero(AR);
             YR = AR;
         }
 
         [OpCodeDefinition(Name = nameof(TSX), Code = 0xBA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Transfer Stack-pointer to X-register")]
-        public void TSX() {
+        public void TSX()
+        {
             SR.SetNegative(SP);
             SR.SetZero(SP);
             XR = SP;
         }
 
         [OpCodeDefinition(Name = nameof(TXA), Code = 0x8A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Transfer X-register to A-register")]
-        public void TXA() {
+        public void TXA()
+        {
             SR.SetNegative(XR);
             SR.SetZero(XR);
             AR = XR;
         }
 
         [OpCodeDefinition(Name = nameof(TXS), Code = 0x9A, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Transfer X-register to Stack-pointer")]
-        public void TXS() {
+        public void TXS()
+        {
             SP = XR;
         }
 
         [OpCodeDefinition(Name = nameof(TYA), Code = 0x98, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Transfer Y-register to A-register")]
-        public void TYA() {
+        public void TYA()
+        {
             SR.SetNegative(YR);
             SR.SetZero(YR);
             AR = YR;
@@ -567,7 +629,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(AND), Code = 0x39, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Bitwise AND with Accumulator", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(AND), Code = 0x21, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Bitwise AND with Accumulator")]
         [OpCodeDefinition(Name = nameof(AND), Code = 0x31, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Bitwise AND with Accumulator", AddCycleIfBoundaryCrossed = true)]
-        public void AND() {
+        public void AND()
+        {
             AR = (byte)(Value & AR);
 
             SR.SetNegative(AR);
@@ -579,7 +642,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(ASL), Code = 0x16, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "Arithmetic Shift Left")]
         [OpCodeDefinition(Name = nameof(ASL), Code = 0x0E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "Arithmetic Shift Left")]
         [OpCodeDefinition(Name = nameof(ASL), Code = 0x1E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "Arithmetic Shift Left")]
-        public void ASL() {
+        public void ASL()
+        {
             SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
             Value <<= 1;
             SR.SetNegative(Value);
@@ -588,7 +652,8 @@ namespace MicroProcessor.Cpu6502 {
 
         [OpCodeDefinition(Name = nameof(BIT), Code = 0x24, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "Bit Test")]
         [OpCodeDefinition(Name = nameof(BIT), Code = 0x2C, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "Bit Test")]
-        public void BIT() {
+        public void BIT()
+        {
             SR.SetZero((byte)(Value & AR));
             SR.Negative = Value.IsBitSet((BitFlag)ProcessorStatusFlags.Negative);
             SR.Overflow = Value.IsBitSet((BitFlag)ProcessorStatusFlags.Overflow);
@@ -602,7 +667,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(EOR), Code = 0x59, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Bitwise Exclusive OR", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(EOR), Code = 0x41, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Bitwise Exclusive OR")]
         [OpCodeDefinition(Name = nameof(EOR), Code = 0x51, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Bitwise Exclusive OR", AddCycleIfBoundaryCrossed = true)]
-        public void EOR() {
+        public void EOR()
+        {
             AR = (byte)(Value ^ AR);
 
             SR.SetNegative(AR);
@@ -614,7 +680,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(LSR), Code = 0x56, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "Logical Shift Right")]
         [OpCodeDefinition(Name = nameof(LSR), Code = 0x4E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "Logical Shift Right")]
         [OpCodeDefinition(Name = nameof(LSR), Code = 0x5E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "Logical Shift Right")]
-        public void LSR() {
+        public void LSR()
+        {
             SR.Carry = Value.IsBitSet(BitFlag.BIT_0);
             Value >>= 1;
             SR.SetNegative(Value);
@@ -629,7 +696,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(ORA), Code = 0x19, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Bitwise OR With Accumulator", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(ORA), Code = 0x01, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Bitwise OR With Accumulator")]
         [OpCodeDefinition(Name = nameof(ORA), Code = 0x11, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Bitwise OR With Accumulator", AddCycleIfBoundaryCrossed = true)]
-        public void ORA() {
+        public void ORA()
+        {
             AR = (byte)(Value | AR);
             SR.SetNegative(AR);
             SR.SetZero(AR);
@@ -640,7 +708,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(ROL), Code = 0x36, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "Rotate Left")]
         [OpCodeDefinition(Name = nameof(ROL), Code = 0x2E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "Rotate Left")]
         [OpCodeDefinition(Name = nameof(ROL), Code = 0x3E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "Rotate Left")]
-        public void ROL() {
+        public void ROL()
+        {
             var c = SR.Carry;
             SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
             Value <<= 1;
@@ -655,7 +724,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(ROR), Code = 0x76, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "Rotate Right")]
         [OpCodeDefinition(Name = nameof(ROR), Code = 0x6E, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "Rotate Right")]
         [OpCodeDefinition(Name = nameof(ROR), Code = 0x7E, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "Rotate Right")]
-        public void ROR() {
+        public void ROR()
+        {
             var c = SR.Carry;
             SR.Carry = Value.IsBitSet(BitFlag.BIT_0);
             Value >>= 1;
@@ -676,7 +746,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(ADC), Code = 0x79, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Add With Carry", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(ADC), Code = 0x61, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Add With Carry")]
         [OpCodeDefinition(Name = nameof(ADC), Code = 0x71, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Add With Carry", AddCycleIfBoundaryCrossed = true)]
-        public void ADC() {
+        public void ADC()
+        {
             var temp = AR + Value + (SR.Carry ? 1 : 0);
 
             SR.Carry = temp > 255;
@@ -696,7 +767,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(SBC), Code = 0xF9, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Subtract With Carry", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(SBC), Code = 0xE1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Subtract With Carry")]
         [OpCodeDefinition(Name = nameof(SBC), Code = 0xF1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Subtract With Carry", AddCycleIfBoundaryCrossed = true)]
-        public void SBC() {
+        public void SBC()
+        {
             var v = Value ^ 0x00FF;
             var temp = AR + v + (SR.Carry ? 1 : 0);
 
@@ -714,21 +786,24 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(DEC), Code = 0xD6, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "Decrement Memory")]
         [OpCodeDefinition(Name = nameof(DEC), Code = 0xCE, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "Decrement Memory")]
         [OpCodeDefinition(Name = nameof(DEC), Code = 0xDE, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "Decrement Memory")]
-        public void DEC() {
+        public void DEC()
+        {
             Value--;
             SR.SetNegative(Value);
             SR.SetZero(Value);
         }
 
         [OpCodeDefinition(Name = nameof(DEX), Code = 0xCA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Decrement X-register")]
-        public void DEX() {
+        public void DEX()
+        {
             XR--;
             SR.SetNegative(XR);
             SR.SetZero(XR);
         }
 
         [OpCodeDefinition(Name = nameof(DEY), Code = 0x88, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Decrement Y-register")]
-        public void DEY() {
+        public void DEY()
+        {
             YR--;
             SR.SetNegative(YR);
             SR.SetZero(YR);
@@ -738,21 +813,24 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(INC), Code = 0xF6, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "Increment Memory")]
         [OpCodeDefinition(Name = nameof(INC), Code = 0xEE, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "Increment Memory")]
         [OpCodeDefinition(Name = nameof(INC), Code = 0xFE, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "Increment Memory")]
-        public void INC() {
+        public void INC()
+        {
             Value++;
             SR.SetNegative(Value);
             SR.SetZero(Value);
         }
 
         [OpCodeDefinition(Name = nameof(INX), Code = 0xE8, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Increment X-register")]
-        public void INX() {
+        public void INX()
+        {
             XR++;
             SR.SetNegative(XR);
             SR.SetZero(XR);
         }
 
         [OpCodeDefinition(Name = nameof(INY), Code = 0xC8, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Increment Y-register")]
-        public void INY() {
+        public void INY()
+        {
             YR++;
             SR.SetNegative(YR);
             SR.SetZero(YR);
@@ -764,37 +842,44 @@ namespace MicroProcessor.Cpu6502 {
         // REGISTERS
 
         [OpCodeDefinition(Name = nameof(CLC), Code = 0x18, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Clear Carry")]
-        public void CLC() {
+        public void CLC()
+        {
             SR.Carry = false;
         }
 
         [OpCodeDefinition(Name = nameof(SEC), Code = 0x38, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Set Carry")]
-        public void SEC() {
+        public void SEC()
+        {
             SR.Carry = true;
         }
 
         [OpCodeDefinition(Name = nameof(CLI), Code = 0x58, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Clear Interrupt")]
-        public void CLI() {
+        public void CLI()
+        {
             SR.IrqDisable = false;
         }
 
         [OpCodeDefinition(Name = nameof(SEI), Code = 0x78, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Set Interrupt")]
-        public void SEI() {
+        public void SEI()
+        {
             SR.IrqDisable = true;
         }
 
         [OpCodeDefinition(Name = nameof(CLV), Code = 0xB8, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Clear Overflow")]
-        public void CLV() {
+        public void CLV()
+        {
             SR.Overflow = false;
         }
 
         [OpCodeDefinition(Name = nameof(CLD), Code = 0xD8, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Clear Decimal")]
-        public void CLD() {
+        public void CLD()
+        {
             SR.DecimalMode = false;
         }
 
         [OpCodeDefinition(Name = nameof(SED), Code = 0xF8, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "Set Decimal")]
-        public void SED() {
+        public void SED()
+        {
             SR.DecimalMode = true;
         }
 
@@ -805,7 +890,8 @@ namespace MicroProcessor.Cpu6502 {
         // SYSTEM
 
         [OpCodeDefinition(Name = nameof(BRK), Code = 0x00, Length = 1, Cycles = 7, AddressingMode = AddressingMode.Implied, Description = "Break")]
-        public void BRK() {
+        public void BRK()
+        {
             PushStack((byte)((PC) >> 8)); // MSB
             PushStack((byte)((PC) & 0xFF)); // LSB
             PushStack((byte)(SR.Register | (byte)ProcessorStatusFlags.BreakCommand));
@@ -816,7 +902,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(NOP), Code = 0xEA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
-        public void NOP() {
+        public void NOP()
+        {
 
         }
 
@@ -825,12 +912,14 @@ namespace MicroProcessor.Cpu6502 {
 
         [OpCodeDefinition(Name = nameof(JMP), Code = 0x4C, Length = 3, Cycles = 3, AddressingMode = AddressingMode.Absolute, Description = "Jump")]
         [OpCodeDefinition(Name = nameof(JMP), Code = 0x6C, Length = 3, Cycles = 5, AddressingMode = AddressingMode.Indirect, Description = "Jump")]
-        public void JMP() {
+        public void JMP()
+        {
             PC = Address;
         }
 
         [OpCodeDefinition(Name = nameof(JSR), Code = 0x20, Length = 3, Cycles = 6, AddressingMode = AddressingMode.Absolute, Description = "Jump to Sub Routine")]
-        public void JSR() {
+        public void JSR()
+        {
             PC--;
 
             PushStack((byte)((PC) >> 8)); // MSB
@@ -840,7 +929,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(RTI), Code = 0x40, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied, Description = "Return from Interrupt")]
-        public void RTI() {
+        public void RTI()
+        {
             var poppedSR = new StatusRegister() { Register = PopStack() };
 
             SR.Carry = poppedSR.Carry;
@@ -858,7 +948,8 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(RTS), Code = 0x60, Length = 1, Cycles = 6, AddressingMode = AddressingMode.Implied, Description = "Return from Sub Routine")]
-        public void RTS() {
+        public void RTS()
+        {
             byte lowByte = PopStack();
             byte highByte = PopStack();
 
@@ -870,24 +961,28 @@ namespace MicroProcessor.Cpu6502 {
         // STACK
 
         [OpCodeDefinition(Name = nameof(PHA), Code = 0x48, Length = 1, Cycles = 3, AddressingMode = AddressingMode.Implied, Description = "Push Accumulator")]
-        public void PHA() {
+        public void PHA()
+        {
             PushStack(AR);
         }
 
         [OpCodeDefinition(Name = nameof(PLA), Code = 0x68, Length = 1, Cycles = 4, AddressingMode = AddressingMode.Implied, Description = "Pull Accumulator")]
-        public void PLA() {
+        public void PLA()
+        {
             AR = PopStack();
             SR.SetNegative(AR);
             SR.SetZero(AR);
         }
 
         [OpCodeDefinition(Name = nameof(PHP), Code = 0x08, Length = 1, Cycles = 3, AddressingMode = AddressingMode.Implied, Description = "Push Processor Status")]
-        public void PHP() {
+        public void PHP()
+        {
             PushStack((byte)(SR.Register | (byte)ProcessorStatusFlags.BreakCommand));
         }
 
         [OpCodeDefinition(Name = nameof(PLP), Code = 0x28, Length = 1, Cycles = 4, AddressingMode = AddressingMode.Implied, Description = "Pull Processor Status")]
-        public void PLP() {
+        public void PLP()
+        {
             var poppedSR = new StatusRegister() { Register = PopStack() };
 
             SR.Carry = poppedSR.Carry;
@@ -904,11 +999,15 @@ namespace MicroProcessor.Cpu6502 {
         // BRANCHING
 
         [OpCodeDefinition(Name = nameof(BCC), Code = 0x90, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Carry Clear", AddCycleIfBoundaryCrossed = true)]
-        public void BCC() {
-            if (!SR.Carry) {
+        public void BCC()
+        {
+            if (!SR.Carry)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -916,11 +1015,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(BCS), Code = 0xB0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Carry Set", AddCycleIfBoundaryCrossed = true)]
-        public void BCS() {
-            if (SR.Carry) {
+        public void BCS()
+        {
+            if (SR.Carry)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -928,11 +1031,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(BEQ), Code = 0xF0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Equal", AddCycleIfBoundaryCrossed = true)]
-        public void BEQ() {
-            if (SR.Zero) {
+        public void BEQ()
+        {
+            if (SR.Zero)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -940,11 +1047,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(BNE), Code = 0xD0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Not Equal", AddCycleIfBoundaryCrossed = true)]
-        public void BNE() {
-            if (!SR.Zero) {
+        public void BNE()
+        {
+            if (!SR.Zero)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -952,11 +1063,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(BMI), Code = 0x30, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Minus", AddCycleIfBoundaryCrossed = true)]
-        public void BMI() {
-            if (SR.Negative) {
+        public void BMI()
+        {
+            if (SR.Negative)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -964,11 +1079,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(BPL), Code = 0x10, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Plus", AddCycleIfBoundaryCrossed = true)]
-        public void BPL() {
-            if (!SR.Negative) {
+        public void BPL()
+        {
+            if (!SR.Negative)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -976,11 +1095,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(BVC), Code = 0x50, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Overflow Clear", AddCycleIfBoundaryCrossed = true)]
-        public void BVC() {
-            if (!SR.Overflow) {
+        public void BVC()
+        {
+            if (!SR.Overflow)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -988,11 +1111,15 @@ namespace MicroProcessor.Cpu6502 {
         }
 
         [OpCodeDefinition(Name = nameof(BVS), Code = 0x70, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Relative, Description = "Branch on Overflow Set", AddCycleIfBoundaryCrossed = true)]
-        public void BVS() {
-            if (SR.Overflow) {
+        public void BVS()
+        {
+            if (SR.Overflow)
+            {
                 PC = Address;
 
-            } else {
+            }
+            else
+            {
                 // Don't branch
                 TotalCycles++;
                 _cyclesRemainingCurrentInstruction++;
@@ -1011,7 +1138,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(CMP), Code = 0xD9, Length = 3, Cycles = 4, AddressingMode = AddressingMode.AbsoluteY, Description = "Compare Accumulator", AddCycleIfBoundaryCrossed = true)]
         [OpCodeDefinition(Name = nameof(CMP), Code = 0xC1, Length = 2, Cycles = 6, AddressingMode = AddressingMode.XIndirect, Description = "Compare Accumulator")]
         [OpCodeDefinition(Name = nameof(CMP), Code = 0xD1, Length = 2, Cycles = 5, AddressingMode = AddressingMode.IndirectY, Description = "Compare Accumulator", AddCycleIfBoundaryCrossed = true)]
-        public void CMP() {
+        public void CMP()
+        {
             // The int type below is used intentionally to allow byte rollover check
             int r = AR - Value;
 
@@ -1023,7 +1151,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(CPX), Code = 0xE0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "Compare X-register")]
         [OpCodeDefinition(Name = nameof(CPX), Code = 0xE4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "Compare X-register")]
         [OpCodeDefinition(Name = nameof(CPX), Code = 0xEC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "Compare X-register")]
-        public void CPX() {
+        public void CPX()
+        {
             // The int type below is used intentionally to allow byte rollover check
             int r = XR - Value;
 
@@ -1035,7 +1164,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(CPY), Code = 0xC0, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "Compare Y-register")]
         [OpCodeDefinition(Name = nameof(CPY), Code = 0xC4, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "Compare Y-register")]
         [OpCodeDefinition(Name = nameof(CPY), Code = 0xCC, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "Compare Y-register")]
-        public void CPY() {
+        public void CPY()
+        {
             // The int type below is used intentionally to allow byte rollover check
             int r = YR - Value;
 
@@ -1076,7 +1206,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xF4, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageX, Description = "No Operation")]
         [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xFA, Length = 1, Cycles = 2, AddressingMode = AddressingMode.Implied, Description = "No Operation")]
         [OpCodeDefinition(Name = nameof(_NOP), IsIllegal = true, Code = 0xFC, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteX, Description = "No Operation")]
-        public void _NOP() {
+        public void _NOP()
+        {
 
         }
 
@@ -1087,7 +1218,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xB3, Length = 2, Cycles = 5, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.IndirectY, Description = "")]
         [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xB7, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageY, Description = "")]
         [OpCodeDefinition(Name = nameof(_LAX), IsIllegal = true, Code = 0xBF, Length = 3, Cycles = 4, AddCycleIfBoundaryCrossed = true, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
-        public void _LAX() {
+        public void _LAX()
+        {
             LDA();
             LDX();
         }
@@ -1096,12 +1228,14 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_SAX), IsIllegal = true, Code = 0x87, Length = 2, Cycles = 3, AddressingMode = AddressingMode.Zeropage, Description = "")]
         [OpCodeDefinition(Name = nameof(_SAX), IsIllegal = true, Code = 0x8F, Length = 3, Cycles = 4, AddressingMode = AddressingMode.Absolute, Description = "")]
         [OpCodeDefinition(Name = nameof(_SAX), IsIllegal = true, Code = 0x97, Length = 2, Cycles = 4, AddressingMode = AddressingMode.ZeropageY, Description = "")]
-        public void _SAX() {
+        public void _SAX()
+        {
             Value = (byte)(AR & XR);
         }
 
         [OpCodeDefinition(Name = nameof(_SBC), IsIllegal = true, Code = 0xEB, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "")]
-        public void _SBC() {
+        public void _SBC()
+        {
             SBC();
         }
 
@@ -1112,7 +1246,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_DCP), IsIllegal = true, Code = 0xD7, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
         [OpCodeDefinition(Name = nameof(_DCP), IsIllegal = true, Code = 0xDB, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
         [OpCodeDefinition(Name = nameof(_DCP), IsIllegal = true, Code = 0xDF, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
-        public void _DCP() {
+        public void _DCP()
+        {
             DEC();
             CMP();
         }
@@ -1124,7 +1259,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xF7, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
         [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xFB, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
         [OpCodeDefinition(Name = nameof(_ISB), IsIllegal = true, Code = 0xFF, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
-        public void _ISB() {
+        public void _ISB()
+        {
             INC();
             SBC();
         }
@@ -1136,7 +1272,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_SLO), IsIllegal = true, Code = 0x17, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
         [OpCodeDefinition(Name = nameof(_SLO), IsIllegal = true, Code = 0x1B, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
         [OpCodeDefinition(Name = nameof(_SLO), IsIllegal = true, Code = 0x1F, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
-        public void _SLO() {
+        public void _SLO()
+        {
             ASL();
             ORA();
         }
@@ -1148,7 +1285,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x37, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
         [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x3B, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
         [OpCodeDefinition(Name = nameof(_RLA), IsIllegal = true, Code = 0x3F, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
-        public void _RLA() {
+        public void _RLA()
+        {
             ROL();
             AND();
         }
@@ -1160,7 +1298,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x57, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
         [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x5B, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
         [OpCodeDefinition(Name = nameof(_SRE), IsIllegal = true, Code = 0x5F, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
-        public void _SRE() {
+        public void _SRE()
+        {
             LSR();
             EOR();
         }
@@ -1172,7 +1311,8 @@ namespace MicroProcessor.Cpu6502 {
         [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x77, Length = 2, Cycles = 6, AddressingMode = AddressingMode.ZeropageX, Description = "")]
         [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x7B, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteY, Description = "")]
         [OpCodeDefinition(Name = nameof(_RRA), IsIllegal = true, Code = 0x7F, Length = 3, Cycles = 7, AddressingMode = AddressingMode.AbsoluteX, Description = "")]
-        public void _RRA() {
+        public void _RRA()
+        {
             ROR();
             ADC();
         }
@@ -1181,7 +1321,8 @@ namespace MicroProcessor.Cpu6502 {
         // This illegal op code is not covered by nestest.nes
         [OpCodeDefinition(Name = nameof(_ANC), IsIllegal = true, Code = 0x0B, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "")]
         [OpCodeDefinition(Name = nameof(_ANC), IsIllegal = true, Code = 0x2B, Length = 2, Cycles = 2, AddressingMode = AddressingMode.Immediate, Description = "")]
-        public void _ANC() {
+        public void _ANC()
+        {
             AND();
             SR.Carry = Value.IsBitSet(BitFlag.BIT_7);
         }

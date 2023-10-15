@@ -1,6 +1,5 @@
 ﻿using Commodore64.Sid.Enums;
 using NAudio.CoreAudioApi;
-using NAudio.Utils;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;

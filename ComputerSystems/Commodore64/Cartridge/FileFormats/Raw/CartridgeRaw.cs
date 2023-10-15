@@ -39,7 +39,8 @@ namespace Commodore64.Cartridge.FileFormats.Raw
 
         public static CartridgeRaw FromFile(string path)
         {
-            return new CartridgeRaw() {
+            return new CartridgeRaw()
+            {
                 _rom = File.ReadAllBytes(path)
             };
         }

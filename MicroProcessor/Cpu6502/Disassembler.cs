@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MicroProcessor.Cpu6502 {
+namespace MicroProcessor.Cpu6502
+{
 
-    public class Disassembler {
+    public class Disassembler
+    {
 
         public List<OpCodeDefinitionAttribute> OpCodes { get; private set; }
         public Dictionary<byte, OpCodeDefinitionAttribute> OpCodeCache { get; set; }
 
-        public Disassembler() {
+        public Disassembler()
+        {
 
             OpCodes = typeof(Cpu)
                 .GetMethods()
@@ -21,12 +24,14 @@ namespace MicroProcessor.Cpu6502 {
 
         }
 
-        public Dictionary<int, OpCode> Disassemble(byte[] machineCode, int start = 0, int? length = null) {
+        public Dictionary<int, OpCode> Disassemble(byte[] machineCode, int start = 0, int? length = null)
+        {
             if (!length.HasValue) length = machineCode.Length;
 
             var disassembly = new Dictionary<int, OpCode>();
 
-            for (int i = start; i < start + length; i++) {
+            for (int i = start; i < start + length; i++)
+            {
 
                 if (!OpCodeCache.ContainsKey(machineCode[i])) continue;
 
@@ -34,7 +39,8 @@ namespace MicroProcessor.Cpu6502 {
 
                 opCode.OpCodeAddress = i;
 
-                for (int j = 1; j < opCode.Length; j++) {
+                for (int j = 1; j < opCode.Length; j++)
+                {
                     opCode.Operands.Add(machineCode[i + j]);
                 }
 

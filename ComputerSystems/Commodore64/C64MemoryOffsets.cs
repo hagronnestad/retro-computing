@@ -1,5 +1,7 @@
-﻿namespace Commodore64 {
-    public static class C64MemoryOffsets {
+﻿namespace Commodore64
+{
+    public static class C64MemoryOffsets
+    {
         /// <summary>
         /// Default area of screen memory (1000 bytes)
         /// 0x0400 - 0x07E7

@@ -1,11 +1,10 @@
 ﻿using Commodore64.Cia.Enums;
-using Extensions.Enums;
 using Extensions.Byte;
+using Extensions.Enums;
 using System.Timers;
-using System;
-using System.Diagnostics;
 
-namespace Commodore64.Cia {
+namespace Commodore64.Cia
+{
 
     // Some information and test programs here:
     // https://sourceforge.net/p/vice-emu/code/HEAD/tree/testprogs/CIA/tod/
@@ -17,15 +16,19 @@ namespace Commodore64.Cia {
     /// TODO: ^ that and merge with Cia class in Mos6526Cia project
     /// </summary>
 
-    public class Cia2 {
+    public class Cia2
+    {
 
         public byte[] _registers = new byte[0x10];
 
-        public byte this[Register index] {
-            get { // Read
+        public byte this[Register index]
+        {
+            get
+            { // Read
                 var i = (int)index;
 
-                switch (index) {
+                switch (index)
+                {
 
                     case Register.R_0x0B_TOD_HOURS:
                         _todIsHalted = true;
@@ -52,10 +55,12 @@ namespace Commodore64.Cia {
                         return _registers[i];
                 }
             }
-            set { // Write
+            set
+            { // Write
                 var i = (int)index;
 
-                switch (index) {
+                switch (index)
+                {
                     case Register.R_0x00_PORT_A:
                         // Apply data direction register
                         // Only bits which are set in the data direction register can be set in the port register
@@ -121,7 +126,8 @@ namespace Commodore64.Cia {
         }
 
 
-        public Cia2() {
+        public Cia2()
+        {
             // This sets the default VIC bank at startup
             // The value is getting set on startup by the KERNAL, but for some reason the
             // R_0x02_PORT_A_DATA_DIRECTION register isn't set up to allow the write at that moment
@@ -134,7 +140,8 @@ namespace Commodore64.Cia {
         }
 
 
-        public void Clock() {
+        public void Clock()
+        {
 
         }
 
@@ -157,8 +164,10 @@ namespace Commodore64.Cia {
         private bool _todIsStarted = false;
         private bool _todIsHalted = false;
 
-        private void ToDInit() {
-            _todTimer = new Timer(100) {
+        private void ToDInit()
+        {
+            _todTimer = new Timer(100)
+            {
                 AutoReset = true
             };
 
@@ -168,38 +177,46 @@ namespace Commodore64.Cia {
             _todHaltedHours = 1;
         }
 
-        private void _todTimer_Elapsed(object sender, ElapsedEventArgs e) {
+        private void _todTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
             ToDUpdate();
         }
 
-        private void ToDStart() {
+        private void ToDStart()
+        {
             _todIsStarted = true;
             _todTimer.Start();
         }
 
-        private void ToDUpdate() {
+        private void ToDUpdate()
+        {
             _todTenths++;
 
-            if (_todTenths == 10) {
+            if (_todTenths == 10)
+            {
                 _todTenths = 0;
                 _todSeconds++;
             }
 
-            if (_todSeconds == 60) {
+            if (_todSeconds == 60)
+            {
                 _todSeconds = 0;
                 _todMinutes++;
             }
 
-            if (_todMinutes == 60) {
+            if (_todMinutes == 60)
+            {
                 _todMinutes = 0;
                 _todHours++;
             }
 
-            if (_todHours == 13) {
+            if (_todHours == 13)
+            {
                 _todHours = 1;
             }
 
-            if (!_todIsHalted) {
+            if (!_todIsHalted)
+            {
                 _todHaltedTenths = _todTenths;
                 _todHaltedSeconds = _todSeconds;
                 _todHaltedMinutes = _todMinutes;
@@ -208,7 +225,8 @@ namespace Commodore64.Cia {
         }
 
 
-        public static byte ToBcd(byte value) {
+        public static byte ToBcd(byte value)
+        {
             if (value > 159) return 0;
 
             var r = value % 10;
@@ -217,7 +235,8 @@ namespace Commodore64.Cia {
             return (byte)((f * 16) + r);
         }
 
-        public static byte FromBcd(byte value) {
+        public static byte FromBcd(byte value)
+        {
             if (value > 0xF9) return 0;
 
             var r = value % 16;
