@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 
@@ -41,8 +41,8 @@ namespace Commodore64.Vic.Colors
 
         private static Color FromHexString(string s)
         {
-            int argb = int.Parse(s.Replace("#", ""), NumberStyles.HexNumber);
-            return Color.FromArgb(argb);
+            var argb = int.Parse(s.Replace("#", ""), NumberStyles.HexNumber);
+            return Color.FromArgb(255, Color.FromArgb(argb));
         }
     }
 }
