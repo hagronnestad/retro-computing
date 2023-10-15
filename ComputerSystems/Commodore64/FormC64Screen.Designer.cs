@@ -1,5 +1,7 @@
-namespace ComputerSystem.Commodore64 {
-    partial class FormC64Screen {
+namespace ComputerSystem.Commodore64
+{
+    partial class FormC64Screen
+    {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -9,8 +11,10 @@ namespace ComputerSystem.Commodore64 {
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing && (components != null)) {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -22,680 +26,662 @@ namespace ComputerSystem.Commodore64 {
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormC64Screen));
-            this.pScreen = new System.Windows.Forms.PictureBox();
-            this.statusMain = new System.Windows.Forms.StatusStrip();
-            this.lblStatusCpu = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblClockSpeed = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblClockSpeedReal = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblClockSpeedRealPercent = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblCpuClockSpeedMultiplier = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolMain = new System.Windows.Forms.ToolStrip();
-            this.btnRestart = new System.Windows.Forms.ToolStripButton();
-            this.btnReset = new System.Windows.Forms.ToolStripButton();
-            this.btnPause = new System.Windows.Forms.ToolStripButton();
-            this.separator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnOpen = new System.Windows.Forms.ToolStripButton();
-            this.btnSave = new System.Windows.Forms.ToolStripButton();
-            this.separator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnInsertCartridge = new System.Windows.Forms.ToolStripButton();
-            this.separator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
-            this.btnShowOnScreenDisplay = new System.Windows.Forms.ToolStripButton();
-            this.btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
-            this.separator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
-            this.btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
-            this.separator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.lblDebug = new System.Windows.Forms.ToolStripLabel();
-            this.btnDebugger = new System.Windows.Forms.ToolStripButton();
-            this.btnClockSpeedSlowerSlower = new System.Windows.Forms.ToolStripButton();
-            this.btnClockSpeedSlower = new System.Windows.Forms.ToolStripButton();
-            this.btnClockSpeedDefault = new System.Windows.Forms.ToolStripButton();
-            this.btnClockSpeedFaster = new System.Windows.Forms.ToolStripButton();
-            this.btnClockSpeedFasterFaster = new System.Windows.Forms.ToolStripButton();
-            this.separator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.lblVicIiDebugging = new System.Windows.Forms.ToolStripLabel();
-            this.btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
-            this.btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
-            this.btnShowRasterLineInterrupt = new System.Windows.Forms.ToolStripButton();
-            this.btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
-            this.separator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnToggleSound = new System.Windows.Forms.ToolStripButton();
-            this.ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
-            this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.lblStatusVic = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblFps = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblVicCycles = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblVicCurrentLine = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblVicCurrentLineCycle = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ofdInsertCartridge = new System.Windows.Forms.OpenFileDialog();
-            this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.mnuColors = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuKernalWhiteTextColor = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuPalettes = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuOpenPaletteFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuImportVICEPaletteFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.ofdImportVicePaletteFile = new System.Windows.Forms.OpenFileDialog();
-            this.fsw = new System.IO.FileSystemWatcher();
-            ((System.ComponentModel.ISupportInitialize)(this.pScreen)).BeginInit();
-            this.statusMain.SuspendLayout();
-            this.toolMain.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.menuStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fsw)).BeginInit();
-            this.SuspendLayout();
+            pScreen = new System.Windows.Forms.PictureBox();
+            statusMain = new System.Windows.Forms.StatusStrip();
+            lblStatusCpu = new System.Windows.Forms.ToolStripStatusLabel();
+            lblClockSpeed = new System.Windows.Forms.ToolStripStatusLabel();
+            lblClockSpeedReal = new System.Windows.Forms.ToolStripStatusLabel();
+            lblClockSpeedRealPercent = new System.Windows.Forms.ToolStripStatusLabel();
+            lblCpuClockSpeedMultiplier = new System.Windows.Forms.ToolStripStatusLabel();
+            lblCycles = new System.Windows.Forms.ToolStripStatusLabel();
+            lblInstructions = new System.Windows.Forms.ToolStripStatusLabel();
+            lblIllegalInstructions = new System.Windows.Forms.ToolStripStatusLabel();
+            toolMain = new System.Windows.Forms.ToolStrip();
+            btnRestart = new System.Windows.Forms.ToolStripButton();
+            btnReset = new System.Windows.Forms.ToolStripButton();
+            btnPause = new System.Windows.Forms.ToolStripButton();
+            separator1 = new System.Windows.Forms.ToolStripSeparator();
+            btnOpen = new System.Windows.Forms.ToolStripButton();
+            btnSave = new System.Windows.Forms.ToolStripButton();
+            separator7 = new System.Windows.Forms.ToolStripSeparator();
+            btnInsertCartridge = new System.Windows.Forms.ToolStripButton();
+            separator2 = new System.Windows.Forms.ToolStripSeparator();
+            btnUseCrtFilter = new System.Windows.Forms.ToolStripButton();
+            btnShowOnScreenDisplay = new System.Windows.Forms.ToolStripButton();
+            btnToggleFullscreen = new System.Windows.Forms.ToolStripButton();
+            separator3 = new System.Windows.Forms.ToolStripSeparator();
+            btnCopyOutput = new System.Windows.Forms.ToolStripSplitButton();
+            btnCopyRawOutput = new System.Windows.Forms.ToolStripMenuItem();
+            separator4 = new System.Windows.Forms.ToolStripSeparator();
+            lblDebug = new System.Windows.Forms.ToolStripLabel();
+            btnDebugger = new System.Windows.Forms.ToolStripButton();
+            btnClockSpeedSlowerSlower = new System.Windows.Forms.ToolStripButton();
+            btnClockSpeedSlower = new System.Windows.Forms.ToolStripButton();
+            btnClockSpeedDefault = new System.Windows.Forms.ToolStripButton();
+            btnClockSpeedFaster = new System.Windows.Forms.ToolStripButton();
+            btnClockSpeedFasterFaster = new System.Windows.Forms.ToolStripButton();
+            separator5 = new System.Windows.Forms.ToolStripSeparator();
+            lblVicIiDebugging = new System.Windows.Forms.ToolStripLabel();
+            btnShowVideoFrameOutlines = new System.Windows.Forms.ToolStripButton();
+            btnShowScanLinePosition = new System.Windows.Forms.ToolStripButton();
+            btnShowRasterLineInterrupt = new System.Windows.Forms.ToolStripButton();
+            btnShowFullFrameVideo = new System.Windows.Forms.ToolStripButton();
+            separator6 = new System.Windows.Forms.ToolStripSeparator();
+            btnToggleSound = new System.Windows.Forms.ToolStripButton();
+            ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
+            sfd = new System.Windows.Forms.SaveFileDialog();
+            statusStrip1 = new System.Windows.Forms.StatusStrip();
+            lblStatusVic = new System.Windows.Forms.ToolStripStatusLabel();
+            lblFps = new System.Windows.Forms.ToolStripStatusLabel();
+            lblVicCycles = new System.Windows.Forms.ToolStripStatusLabel();
+            lblVicCurrentLine = new System.Windows.Forms.ToolStripStatusLabel();
+            lblVicCurrentLineCycle = new System.Windows.Forms.ToolStripStatusLabel();
+            lblVicGraphicsMode = new System.Windows.Forms.ToolStripStatusLabel();
+            lblVicScreenOn = new System.Windows.Forms.ToolStripStatusLabel();
+            ofdInsertCartridge = new System.Windows.Forms.OpenFileDialog();
+            menuStrip = new System.Windows.Forms.MenuStrip();
+            mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
+            mnuColors = new System.Windows.Forms.ToolStripMenuItem();
+            mnuKernalWhiteTextColor = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            mnuBorderColor = new System.Windows.Forms.ToolStripMenuItem();
+            mnuBackgroundColor = new System.Windows.Forms.ToolStripMenuItem();
+            mnuTextColor = new System.Windows.Forms.ToolStripMenuItem();
+            toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            mnuPalettes = new System.Windows.Forms.ToolStripMenuItem();
+            mnuOpenPaletteFolder = new System.Windows.Forms.ToolStripMenuItem();
+            mnuImportVICEPaletteFile = new System.Windows.Forms.ToolStripMenuItem();
+            ofdImportVicePaletteFile = new System.Windows.Forms.OpenFileDialog();
+            fsw = new System.IO.FileSystemWatcher();
+            ((System.ComponentModel.ISupportInitialize)pScreen).BeginInit();
+            statusMain.SuspendLayout();
+            toolMain.SuspendLayout();
+            statusStrip1.SuspendLayout();
+            menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fsw).BeginInit();
+            SuspendLayout();
             // 
             // pScreen
             // 
-            this.pScreen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pScreen.Location = new System.Drawing.Point(0, 49);
-            this.pScreen.Margin = new System.Windows.Forms.Padding(0);
-            this.pScreen.Name = "pScreen";
-            this.pScreen.Size = new System.Drawing.Size(832, 624);
-            this.pScreen.TabIndex = 1;
-            this.pScreen.TabStop = false;
-            this.pScreen.Click += new System.EventHandler(this.pScreen_Click);
-            this.pScreen.DragDrop += new System.Windows.Forms.DragEventHandler(this.pScreen_DragDropAsync);
-            this.pScreen.DragEnter += new System.Windows.Forms.DragEventHandler(this.pScreen_DragEnter);
-            this.pScreen.Paint += new System.Windows.Forms.PaintEventHandler(this.PScreen_Paint);
-            this.pScreen.DoubleClick += new System.EventHandler(this.pScreen_DoubleClick);
-            this.pScreen.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pScreen_MouseMove);
-            this.pScreen.Resize += new System.EventHandler(this.PScreen_Resize);
+            pScreen.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            pScreen.Location = new System.Drawing.Point(0, 49);
+            pScreen.Margin = new System.Windows.Forms.Padding(0);
+            pScreen.Name = "pScreen";
+            pScreen.Size = new System.Drawing.Size(832, 624);
+            pScreen.TabIndex = 1;
+            pScreen.TabStop = false;
+            pScreen.DragDrop += pScreen_DragDropAsync;
+            pScreen.DragEnter += pScreen_DragEnter;
+            pScreen.Paint += PScreen_Paint;
+            pScreen.DoubleClick += pScreen_DoubleClick;
+            pScreen.MouseMove += pScreen_MouseMove;
+            pScreen.Resize += PScreen_Resize;
             // 
             // statusMain
             // 
-            this.statusMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatusCpu,
-            this.lblClockSpeed,
-            this.lblClockSpeedReal,
-            this.lblClockSpeedRealPercent,
-            this.lblCpuClockSpeedMultiplier,
-            this.lblCycles,
-            this.lblInstructions,
-            this.lblIllegalInstructions});
-            this.statusMain.Location = new System.Drawing.Point(0, 701);
-            this.statusMain.Name = "statusMain";
-            this.statusMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.statusMain.Size = new System.Drawing.Size(832, 24);
-            this.statusMain.TabIndex = 2;
-            this.statusMain.Text = "statusStrip1";
+            statusMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { lblStatusCpu, lblClockSpeed, lblClockSpeedReal, lblClockSpeedRealPercent, lblCpuClockSpeedMultiplier, lblCycles, lblInstructions, lblIllegalInstructions });
+            statusMain.Location = new System.Drawing.Point(0, 701);
+            statusMain.Name = "statusMain";
+            statusMain.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            statusMain.Size = new System.Drawing.Size(832, 24);
+            statusMain.TabIndex = 2;
+            statusMain.Text = "statusStrip1";
             // 
             // lblStatusCpu
             // 
-            this.lblStatusCpu.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblStatusCpu.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblStatusCpu.Name = "lblStatusCpu";
-            this.lblStatusCpu.Size = new System.Drawing.Size(34, 19);
-            this.lblStatusCpu.Text = "CPU";
+            lblStatusCpu.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblStatusCpu.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblStatusCpu.Name = "lblStatusCpu";
+            lblStatusCpu.Size = new System.Drawing.Size(34, 19);
+            lblStatusCpu.Text = "CPU";
             // 
             // lblClockSpeed
             // 
-            this.lblClockSpeed.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblClockSpeed.Name = "lblClockSpeed";
-            this.lblClockSpeed.Size = new System.Drawing.Size(34, 19);
-            this.lblClockSpeed.Text = "0 Hz";
+            lblClockSpeed.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblClockSpeed.Name = "lblClockSpeed";
+            lblClockSpeed.Size = new System.Drawing.Size(34, 19);
+            lblClockSpeed.Text = "0 Hz";
             // 
             // lblClockSpeedReal
             // 
-            this.lblClockSpeedReal.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblClockSpeedReal.Name = "lblClockSpeedReal";
-            this.lblClockSpeedReal.Size = new System.Drawing.Size(34, 19);
-            this.lblClockSpeedReal.Text = "0 Hz";
+            lblClockSpeedReal.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblClockSpeedReal.Name = "lblClockSpeedReal";
+            lblClockSpeedReal.Size = new System.Drawing.Size(34, 19);
+            lblClockSpeedReal.Text = "0 Hz";
             // 
             // lblClockSpeedRealPercent
             // 
-            this.lblClockSpeedRealPercent.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblClockSpeedRealPercent.Name = "lblClockSpeedRealPercent";
-            this.lblClockSpeedRealPercent.Size = new System.Drawing.Size(30, 19);
-            this.lblClockSpeedRealPercent.Text = "0 %";
+            lblClockSpeedRealPercent.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblClockSpeedRealPercent.Name = "lblClockSpeedRealPercent";
+            lblClockSpeedRealPercent.Size = new System.Drawing.Size(30, 19);
+            lblClockSpeedRealPercent.Text = "0 %";
             // 
             // lblCpuClockSpeedMultiplier
             // 
-            this.lblCpuClockSpeedMultiplier.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblCpuClockSpeedMultiplier.Name = "lblCpuClockSpeedMultiplier";
-            this.lblCpuClockSpeedMultiplier.Size = new System.Drawing.Size(23, 19);
-            this.lblCpuClockSpeedMultiplier.Text = "1x";
+            lblCpuClockSpeedMultiplier.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblCpuClockSpeedMultiplier.Name = "lblCpuClockSpeedMultiplier";
+            lblCpuClockSpeedMultiplier.Size = new System.Drawing.Size(23, 19);
+            lblCpuClockSpeedMultiplier.Text = "1x";
             // 
             // lblCycles
             // 
-            this.lblCycles.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblCycles.Name = "lblCycles";
-            this.lblCycles.Size = new System.Drawing.Size(52, 19);
-            this.lblCycles.Text = "0 cycles";
+            lblCycles.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblCycles.Name = "lblCycles";
+            lblCycles.Size = new System.Drawing.Size(52, 19);
+            lblCycles.Text = "0 cycles";
             // 
             // lblInstructions
             // 
-            this.lblInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblInstructions.Name = "lblInstructions";
-            this.lblInstructions.Size = new System.Drawing.Size(82, 19);
-            this.lblInstructions.Text = "0 instructions";
+            lblInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblInstructions.Name = "lblInstructions";
+            lblInstructions.Size = new System.Drawing.Size(82, 19);
+            lblInstructions.Text = "0 instructions";
             // 
             // lblIllegalInstructions
             // 
-            this.lblIllegalInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblIllegalInstructions.Name = "lblIllegalInstructions";
-            this.lblIllegalInstructions.Size = new System.Drawing.Size(82, 19);
-            this.lblIllegalInstructions.Text = "0 instructions";
+            lblIllegalInstructions.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblIllegalInstructions.Name = "lblIllegalInstructions";
+            lblIllegalInstructions.Size = new System.Drawing.Size(82, 19);
+            lblIllegalInstructions.Text = "0 instructions";
             // 
             // toolMain
             // 
-            this.toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnRestart,
-            this.btnReset,
-            this.btnPause,
-            this.separator1,
-            this.btnOpen,
-            this.btnSave,
-            this.separator7,
-            this.btnInsertCartridge,
-            this.separator2,
-            this.btnUseCrtFilter,
-            this.btnShowOnScreenDisplay,
-            this.btnToggleFullscreen,
-            this.separator3,
-            this.btnCopyOutput,
-            this.separator4,
-            this.lblDebug,
-            this.btnDebugger,
-            this.btnClockSpeedSlowerSlower,
-            this.btnClockSpeedSlower,
-            this.btnClockSpeedDefault,
-            this.btnClockSpeedFaster,
-            this.btnClockSpeedFasterFaster,
-            this.separator5,
-            this.lblVicIiDebugging,
-            this.btnShowVideoFrameOutlines,
-            this.btnShowScanLinePosition,
-            this.btnShowRasterLineInterrupt,
-            this.btnShowFullFrameVideo,
-            this.separator6,
-            this.btnToggleSound});
-            this.toolMain.Location = new System.Drawing.Point(0, 24);
-            this.toolMain.Name = "toolMain";
-            this.toolMain.Size = new System.Drawing.Size(832, 25);
-            this.toolMain.TabIndex = 0;
-            this.toolMain.Text = "toolStrip1";
+            toolMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { btnRestart, btnReset, btnPause, separator1, btnOpen, btnSave, separator7, btnInsertCartridge, separator2, btnUseCrtFilter, btnShowOnScreenDisplay, btnToggleFullscreen, separator3, btnCopyOutput, separator4, lblDebug, btnDebugger, btnClockSpeedSlowerSlower, btnClockSpeedSlower, btnClockSpeedDefault, btnClockSpeedFaster, btnClockSpeedFasterFaster, separator5, lblVicIiDebugging, btnShowVideoFrameOutlines, btnShowScanLinePosition, btnShowRasterLineInterrupt, btnShowFullFrameVideo, separator6, btnToggleSound });
+            toolMain.Location = new System.Drawing.Point(0, 24);
+            toolMain.Name = "toolMain";
+            toolMain.Size = new System.Drawing.Size(832, 25);
+            toolMain.TabIndex = 0;
+            toolMain.Text = "toolStrip1";
             // 
             // btnRestart
             // 
-            this.btnRestart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRestart.Image = ((System.Drawing.Image)(resources.GetObject("btnRestart.Image")));
-            this.btnRestart.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRestart.Name = "btnRestart";
-            this.btnRestart.Size = new System.Drawing.Size(23, 22);
-            this.btnRestart.Text = "Restart";
-            this.btnRestart.Click += new System.EventHandler(this.BtnRestart_Click);
+            btnRestart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnRestart.Image = (System.Drawing.Image)resources.GetObject("btnRestart.Image");
+            btnRestart.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnRestart.Name = "btnRestart";
+            btnRestart.Size = new System.Drawing.Size(23, 22);
+            btnRestart.Text = "Restart";
+            btnRestart.Click += BtnRestart_Click;
             // 
             // btnReset
             // 
-            this.btnReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnReset.Image = ((System.Drawing.Image)(resources.GetObject("btnReset.Image")));
-            this.btnReset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(23, 22);
-            this.btnReset.Text = "Reset";
-            this.btnReset.Click += new System.EventHandler(this.BtnReset_Click);
+            btnReset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnReset.Image = (System.Drawing.Image)resources.GetObject("btnReset.Image");
+            btnReset.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnReset.Name = "btnReset";
+            btnReset.Size = new System.Drawing.Size(23, 22);
+            btnReset.Text = "Reset";
+            btnReset.Click += BtnReset_Click;
             // 
             // btnPause
             // 
-            this.btnPause.CheckOnClick = true;
-            this.btnPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(23, 22);
-            this.btnPause.Text = "Pause";
-            this.btnPause.Click += new System.EventHandler(this.BtnPause_ClickAsync);
+            btnPause.CheckOnClick = true;
+            btnPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnPause.Image = (System.Drawing.Image)resources.GetObject("btnPause.Image");
+            btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnPause.Name = "btnPause";
+            btnPause.Size = new System.Drawing.Size(23, 22);
+            btnPause.Text = "Pause";
+            btnPause.Click += BtnPause_ClickAsync;
             // 
             // separator1
             // 
-            this.separator1.Name = "separator1";
-            this.separator1.Size = new System.Drawing.Size(6, 25);
+            separator1.Name = "separator1";
+            separator1.Size = new System.Drawing.Size(6, 25);
             // 
             // btnOpen
             // 
-            this.btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnOpen.Image = ((System.Drawing.Image)(resources.GetObject("btnOpen.Image")));
-            this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(23, 22);
-            this.btnOpen.Text = "Open";
-            this.btnOpen.Click += new System.EventHandler(this.BtnOpen_Click);
+            btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnOpen.Image = (System.Drawing.Image)resources.GetObject("btnOpen.Image");
+            btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnOpen.Name = "btnOpen";
+            btnOpen.Size = new System.Drawing.Size(23, 22);
+            btnOpen.Text = "Open";
+            btnOpen.Click += BtnOpen_Click;
             // 
             // btnSave
             // 
-            this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSave.Image = ((System.Drawing.Image)(resources.GetObject("btnSave.Image")));
-            this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(23, 22);
-            this.btnSave.Text = "Save";
-            this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
+            btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnSave.Image = (System.Drawing.Image)resources.GetObject("btnSave.Image");
+            btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnSave.Name = "btnSave";
+            btnSave.Size = new System.Drawing.Size(23, 22);
+            btnSave.Text = "Save";
+            btnSave.Click += BtnSave_Click;
             // 
             // separator7
             // 
-            this.separator7.Name = "separator7";
-            this.separator7.Size = new System.Drawing.Size(6, 25);
+            separator7.Name = "separator7";
+            separator7.Size = new System.Drawing.Size(6, 25);
             // 
             // btnInsertCartridge
             // 
-            this.btnInsertCartridge.Image = ((System.Drawing.Image)(resources.GetObject("btnInsertCartridge.Image")));
-            this.btnInsertCartridge.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnInsertCartridge.Name = "btnInsertCartridge";
-            this.btnInsertCartridge.Size = new System.Drawing.Size(23, 22);
-            this.btnInsertCartridge.Click += new System.EventHandler(this.btnInsertCartridge_ClickAsync);
+            btnInsertCartridge.Image = (System.Drawing.Image)resources.GetObject("btnInsertCartridge.Image");
+            btnInsertCartridge.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnInsertCartridge.Name = "btnInsertCartridge";
+            btnInsertCartridge.Size = new System.Drawing.Size(23, 22);
+            btnInsertCartridge.Click += btnInsertCartridge_ClickAsync;
             // 
             // separator2
             // 
-            this.separator2.Name = "separator2";
-            this.separator2.Size = new System.Drawing.Size(6, 25);
+            separator2.Name = "separator2";
+            separator2.Size = new System.Drawing.Size(6, 25);
             // 
             // btnUseCrtFilter
             // 
-            this.btnUseCrtFilter.Checked = true;
-            this.btnUseCrtFilter.CheckOnClick = true;
-            this.btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnUseCrtFilter.Image = ((System.Drawing.Image)(resources.GetObject("btnUseCrtFilter.Image")));
-            this.btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnUseCrtFilter.Name = "btnUseCrtFilter";
-            this.btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
-            this.btnUseCrtFilter.Text = "CRT filter";
+            btnUseCrtFilter.Checked = true;
+            btnUseCrtFilter.CheckOnClick = true;
+            btnUseCrtFilter.CheckState = System.Windows.Forms.CheckState.Checked;
+            btnUseCrtFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnUseCrtFilter.Image = (System.Drawing.Image)resources.GetObject("btnUseCrtFilter.Image");
+            btnUseCrtFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnUseCrtFilter.Name = "btnUseCrtFilter";
+            btnUseCrtFilter.Size = new System.Drawing.Size(23, 22);
+            btnUseCrtFilter.Text = "CRT filter";
             // 
             // btnShowOnScreenDisplay
             // 
-            this.btnShowOnScreenDisplay.Checked = true;
-            this.btnShowOnScreenDisplay.CheckOnClick = true;
-            this.btnShowOnScreenDisplay.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.btnShowOnScreenDisplay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowOnScreenDisplay.Image = ((System.Drawing.Image)(resources.GetObject("btnShowOnScreenDisplay.Image")));
-            this.btnShowOnScreenDisplay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowOnScreenDisplay.Name = "btnShowOnScreenDisplay";
-            this.btnShowOnScreenDisplay.Size = new System.Drawing.Size(23, 22);
-            this.btnShowOnScreenDisplay.Text = "CRT filter";
-            this.btnShowOnScreenDisplay.Click += new System.EventHandler(this.btnShowOnScreenDisplay_Click);
+            btnShowOnScreenDisplay.Checked = true;
+            btnShowOnScreenDisplay.CheckOnClick = true;
+            btnShowOnScreenDisplay.CheckState = System.Windows.Forms.CheckState.Checked;
+            btnShowOnScreenDisplay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnShowOnScreenDisplay.Image = (System.Drawing.Image)resources.GetObject("btnShowOnScreenDisplay.Image");
+            btnShowOnScreenDisplay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnShowOnScreenDisplay.Name = "btnShowOnScreenDisplay";
+            btnShowOnScreenDisplay.Size = new System.Drawing.Size(23, 22);
+            btnShowOnScreenDisplay.Text = "CRT filter";
+            btnShowOnScreenDisplay.Click += btnShowOnScreenDisplay_Click;
             // 
             // btnToggleFullscreen
             // 
-            this.btnToggleFullscreen.CheckOnClick = true;
-            this.btnToggleFullscreen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnToggleFullscreen.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleFullscreen.Image")));
-            this.btnToggleFullscreen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnToggleFullscreen.Name = "btnToggleFullscreen";
-            this.btnToggleFullscreen.Size = new System.Drawing.Size(23, 22);
-            this.btnToggleFullscreen.Text = "Toggle Fullscreen";
-            this.btnToggleFullscreen.Click += new System.EventHandler(this.btnToggleFullscreen_Click);
+            btnToggleFullscreen.CheckOnClick = true;
+            btnToggleFullscreen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnToggleFullscreen.Image = (System.Drawing.Image)resources.GetObject("btnToggleFullscreen.Image");
+            btnToggleFullscreen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnToggleFullscreen.Name = "btnToggleFullscreen";
+            btnToggleFullscreen.Size = new System.Drawing.Size(23, 22);
+            btnToggleFullscreen.Text = "Toggle Fullscreen";
+            btnToggleFullscreen.Click += btnToggleFullscreen_Click;
             // 
             // separator3
             // 
-            this.separator3.Name = "separator3";
-            this.separator3.Size = new System.Drawing.Size(6, 25);
+            separator3.Name = "separator3";
+            separator3.Size = new System.Drawing.Size(6, 25);
             // 
             // btnCopyOutput
             // 
-            this.btnCopyOutput.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnCopyOutput.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnCopyRawOutput});
-            this.btnCopyOutput.Image = ((System.Drawing.Image)(resources.GetObject("btnCopyOutput.Image")));
-            this.btnCopyOutput.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCopyOutput.Name = "btnCopyOutput";
-            this.btnCopyOutput.Size = new System.Drawing.Size(32, 22);
-            this.btnCopyOutput.Text = "Copy";
-            this.btnCopyOutput.ToolTipText = "Copy screen";
-            this.btnCopyOutput.ButtonClick += new System.EventHandler(this.BtnCopyOutput_ButtonClick);
+            btnCopyOutput.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnCopyOutput.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { btnCopyRawOutput });
+            btnCopyOutput.Image = (System.Drawing.Image)resources.GetObject("btnCopyOutput.Image");
+            btnCopyOutput.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnCopyOutput.Name = "btnCopyOutput";
+            btnCopyOutput.Size = new System.Drawing.Size(32, 22);
+            btnCopyOutput.Text = "Copy";
+            btnCopyOutput.ToolTipText = "Copy screen";
+            btnCopyOutput.ButtonClick += BtnCopyOutput_ButtonClick;
             // 
             // btnCopyRawOutput
             // 
-            this.btnCopyRawOutput.Name = "btnCopyRawOutput";
-            this.btnCopyRawOutput.Size = new System.Drawing.Size(124, 22);
-            this.btnCopyRawOutput.Text = "Copy raw";
-            this.btnCopyRawOutput.ToolTipText = "Copy raw screen";
-            this.btnCopyRawOutput.Click += new System.EventHandler(this.BtnCopyRawOutput_Click);
+            btnCopyRawOutput.Name = "btnCopyRawOutput";
+            btnCopyRawOutput.Size = new System.Drawing.Size(124, 22);
+            btnCopyRawOutput.Text = "Copy raw";
+            btnCopyRawOutput.ToolTipText = "Copy raw screen";
+            btnCopyRawOutput.Click += BtnCopyRawOutput_Click;
             // 
             // separator4
             // 
-            this.separator4.Name = "separator4";
-            this.separator4.Size = new System.Drawing.Size(6, 25);
+            separator4.Name = "separator4";
+            separator4.Size = new System.Drawing.Size(6, 25);
             // 
             // lblDebug
             // 
-            this.lblDebug.Name = "lblDebug";
-            this.lblDebug.Size = new System.Drawing.Size(33, 22);
-            this.lblDebug.Text = "CPU:";
-            this.lblDebug.Visible = false;
+            lblDebug.Name = "lblDebug";
+            lblDebug.Size = new System.Drawing.Size(33, 22);
+            lblDebug.Text = "CPU:";
+            lblDebug.Visible = false;
             // 
             // btnDebugger
             // 
-            this.btnDebugger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnDebugger.Image = ((System.Drawing.Image)(resources.GetObject("btnDebugger.Image")));
-            this.btnDebugger.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnDebugger.Name = "btnDebugger";
-            this.btnDebugger.Size = new System.Drawing.Size(23, 22);
-            this.btnDebugger.Text = "Debugger";
-            this.btnDebugger.Click += new System.EventHandler(this.BtnMemoryWatch_Click);
+            btnDebugger.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnDebugger.Image = (System.Drawing.Image)resources.GetObject("btnDebugger.Image");
+            btnDebugger.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnDebugger.Name = "btnDebugger";
+            btnDebugger.Size = new System.Drawing.Size(23, 22);
+            btnDebugger.Text = "Debugger";
+            btnDebugger.Click += BtnMemoryWatch_Click;
             // 
             // btnClockSpeedSlowerSlower
             // 
-            this.btnClockSpeedSlowerSlower.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClockSpeedSlowerSlower.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedSlowerSlower.Image")));
-            this.btnClockSpeedSlowerSlower.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnClockSpeedSlowerSlower.Name = "btnClockSpeedSlowerSlower";
-            this.btnClockSpeedSlowerSlower.Size = new System.Drawing.Size(23, 22);
-            this.btnClockSpeedSlowerSlower.Text = "Speed [-]";
-            this.btnClockSpeedSlowerSlower.ToolTipText = "Clock Speed -";
-            this.btnClockSpeedSlowerSlower.Click += new System.EventHandler(this.btnClockSpeedSlowerSlower_Click);
+            btnClockSpeedSlowerSlower.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnClockSpeedSlowerSlower.Image = (System.Drawing.Image)resources.GetObject("btnClockSpeedSlowerSlower.Image");
+            btnClockSpeedSlowerSlower.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnClockSpeedSlowerSlower.Name = "btnClockSpeedSlowerSlower";
+            btnClockSpeedSlowerSlower.Size = new System.Drawing.Size(23, 22);
+            btnClockSpeedSlowerSlower.Text = "Speed [-]";
+            btnClockSpeedSlowerSlower.ToolTipText = "Clock Speed -";
+            btnClockSpeedSlowerSlower.Click += btnClockSpeedSlowerSlower_Click;
             // 
             // btnClockSpeedSlower
             // 
-            this.btnClockSpeedSlower.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClockSpeedSlower.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedSlower.Image")));
-            this.btnClockSpeedSlower.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnClockSpeedSlower.Name = "btnClockSpeedSlower";
-            this.btnClockSpeedSlower.Size = new System.Drawing.Size(23, 22);
-            this.btnClockSpeedSlower.Text = "Speed [-]";
-            this.btnClockSpeedSlower.ToolTipText = "Clock Speed -";
-            this.btnClockSpeedSlower.Click += new System.EventHandler(this.btnSlowDown_Click);
+            btnClockSpeedSlower.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnClockSpeedSlower.Image = (System.Drawing.Image)resources.GetObject("btnClockSpeedSlower.Image");
+            btnClockSpeedSlower.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnClockSpeedSlower.Name = "btnClockSpeedSlower";
+            btnClockSpeedSlower.Size = new System.Drawing.Size(23, 22);
+            btnClockSpeedSlower.Text = "Speed [-]";
+            btnClockSpeedSlower.ToolTipText = "Clock Speed -";
+            btnClockSpeedSlower.Click += btnSlowDown_Click;
             // 
             // btnClockSpeedDefault
             // 
-            this.btnClockSpeedDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClockSpeedDefault.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedDefault.Image")));
-            this.btnClockSpeedDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnClockSpeedDefault.Name = "btnClockSpeedDefault";
-            this.btnClockSpeedDefault.Size = new System.Drawing.Size(23, 22);
-            this.btnClockSpeedDefault.Text = "Speed [-]";
-            this.btnClockSpeedDefault.ToolTipText = "Clock Speed -";
-            this.btnClockSpeedDefault.Click += new System.EventHandler(this.btnClockSpeedDefault_Click);
+            btnClockSpeedDefault.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnClockSpeedDefault.Image = (System.Drawing.Image)resources.GetObject("btnClockSpeedDefault.Image");
+            btnClockSpeedDefault.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnClockSpeedDefault.Name = "btnClockSpeedDefault";
+            btnClockSpeedDefault.Size = new System.Drawing.Size(23, 22);
+            btnClockSpeedDefault.Text = "Speed [-]";
+            btnClockSpeedDefault.ToolTipText = "Clock Speed -";
+            btnClockSpeedDefault.Click += btnClockSpeedDefault_Click;
             // 
             // btnClockSpeedFaster
             // 
-            this.btnClockSpeedFaster.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClockSpeedFaster.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedFaster.Image")));
-            this.btnClockSpeedFaster.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnClockSpeedFaster.Name = "btnClockSpeedFaster";
-            this.btnClockSpeedFaster.Size = new System.Drawing.Size(23, 22);
-            this.btnClockSpeedFaster.Text = "Speed [+]";
-            this.btnClockSpeedFaster.ToolTipText = "Clock Speed +";
-            this.btnClockSpeedFaster.Click += new System.EventHandler(this.btnClockSpeedFaster_Click);
+            btnClockSpeedFaster.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnClockSpeedFaster.Image = (System.Drawing.Image)resources.GetObject("btnClockSpeedFaster.Image");
+            btnClockSpeedFaster.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnClockSpeedFaster.Name = "btnClockSpeedFaster";
+            btnClockSpeedFaster.Size = new System.Drawing.Size(23, 22);
+            btnClockSpeedFaster.Text = "Speed [+]";
+            btnClockSpeedFaster.ToolTipText = "Clock Speed +";
+            btnClockSpeedFaster.Click += btnClockSpeedFaster_Click;
             // 
             // btnClockSpeedFasterFaster
             // 
-            this.btnClockSpeedFasterFaster.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClockSpeedFasterFaster.Image = ((System.Drawing.Image)(resources.GetObject("btnClockSpeedFasterFaster.Image")));
-            this.btnClockSpeedFasterFaster.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnClockSpeedFasterFaster.Name = "btnClockSpeedFasterFaster";
-            this.btnClockSpeedFasterFaster.Size = new System.Drawing.Size(23, 22);
-            this.btnClockSpeedFasterFaster.Text = "Speed [+]";
-            this.btnClockSpeedFasterFaster.ToolTipText = "Clock Speed +";
-            this.btnClockSpeedFasterFaster.Click += new System.EventHandler(this.btnClockSpeedFasterFaster_Click);
+            btnClockSpeedFasterFaster.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnClockSpeedFasterFaster.Image = (System.Drawing.Image)resources.GetObject("btnClockSpeedFasterFaster.Image");
+            btnClockSpeedFasterFaster.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnClockSpeedFasterFaster.Name = "btnClockSpeedFasterFaster";
+            btnClockSpeedFasterFaster.Size = new System.Drawing.Size(23, 22);
+            btnClockSpeedFasterFaster.Text = "Speed [+]";
+            btnClockSpeedFasterFaster.ToolTipText = "Clock Speed +";
+            btnClockSpeedFasterFaster.Click += btnClockSpeedFasterFaster_Click;
             // 
             // separator5
             // 
-            this.separator5.Name = "separator5";
-            this.separator5.Size = new System.Drawing.Size(6, 25);
+            separator5.Name = "separator5";
+            separator5.Size = new System.Drawing.Size(6, 25);
             // 
             // lblVicIiDebugging
             // 
-            this.lblVicIiDebugging.Name = "lblVicIiDebugging";
-            this.lblVicIiDebugging.Size = new System.Drawing.Size(39, 22);
-            this.lblVicIiDebugging.Text = "VIC-II:";
-            this.lblVicIiDebugging.Visible = false;
+            lblVicIiDebugging.Name = "lblVicIiDebugging";
+            lblVicIiDebugging.Size = new System.Drawing.Size(39, 22);
+            lblVicIiDebugging.Text = "VIC-II:";
+            lblVicIiDebugging.Visible = false;
             // 
             // btnShowVideoFrameOutlines
             // 
-            this.btnShowVideoFrameOutlines.CheckOnClick = true;
-            this.btnShowVideoFrameOutlines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowVideoFrameOutlines.Image = ((System.Drawing.Image)(resources.GetObject("btnShowVideoFrameOutlines.Image")));
-            this.btnShowVideoFrameOutlines.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowVideoFrameOutlines.Name = "btnShowVideoFrameOutlines";
-            this.btnShowVideoFrameOutlines.Size = new System.Drawing.Size(23, 22);
-            this.btnShowVideoFrameOutlines.Text = "Outlines";
+            btnShowVideoFrameOutlines.CheckOnClick = true;
+            btnShowVideoFrameOutlines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnShowVideoFrameOutlines.Image = (System.Drawing.Image)resources.GetObject("btnShowVideoFrameOutlines.Image");
+            btnShowVideoFrameOutlines.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnShowVideoFrameOutlines.Name = "btnShowVideoFrameOutlines";
+            btnShowVideoFrameOutlines.Size = new System.Drawing.Size(23, 22);
+            btnShowVideoFrameOutlines.Text = "Outlines";
             // 
             // btnShowScanLinePosition
             // 
-            this.btnShowScanLinePosition.CheckOnClick = true;
-            this.btnShowScanLinePosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowScanLinePosition.Image = ((System.Drawing.Image)(resources.GetObject("btnShowScanLinePosition.Image")));
-            this.btnShowScanLinePosition.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowScanLinePosition.Name = "btnShowScanLinePosition";
-            this.btnShowScanLinePosition.Size = new System.Drawing.Size(23, 22);
-            this.btnShowScanLinePosition.Text = "Scanline Position";
+            btnShowScanLinePosition.CheckOnClick = true;
+            btnShowScanLinePosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnShowScanLinePosition.Image = (System.Drawing.Image)resources.GetObject("btnShowScanLinePosition.Image");
+            btnShowScanLinePosition.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnShowScanLinePosition.Name = "btnShowScanLinePosition";
+            btnShowScanLinePosition.Size = new System.Drawing.Size(23, 22);
+            btnShowScanLinePosition.Text = "Scanline Position";
             // 
             // btnShowRasterLineInterrupt
             // 
-            this.btnShowRasterLineInterrupt.CheckOnClick = true;
-            this.btnShowRasterLineInterrupt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowRasterLineInterrupt.Image = ((System.Drawing.Image)(resources.GetObject("btnShowRasterLineInterrupt.Image")));
-            this.btnShowRasterLineInterrupt.Name = "btnShowRasterLineInterrupt";
-            this.btnShowRasterLineInterrupt.Size = new System.Drawing.Size(23, 22);
-            this.btnShowRasterLineInterrupt.Text = "Show Raster Line Interrupt";
+            btnShowRasterLineInterrupt.CheckOnClick = true;
+            btnShowRasterLineInterrupt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnShowRasterLineInterrupt.Image = (System.Drawing.Image)resources.GetObject("btnShowRasterLineInterrupt.Image");
+            btnShowRasterLineInterrupt.Name = "btnShowRasterLineInterrupt";
+            btnShowRasterLineInterrupt.Size = new System.Drawing.Size(23, 22);
+            btnShowRasterLineInterrupt.Text = "Show Raster Line Interrupt";
             // 
             // btnShowFullFrameVideo
             // 
-            this.btnShowFullFrameVideo.CheckOnClick = true;
-            this.btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowFullFrameVideo.Image = ((System.Drawing.Image)(resources.GetObject("btnShowFullFrameVideo.Image")));
-            this.btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
-            this.btnShowFullFrameVideo.Size = new System.Drawing.Size(23, 22);
-            this.btnShowFullFrameVideo.Text = "Show Full Frame";
-            this.btnShowFullFrameVideo.Click += new System.EventHandler(this.btnShowFullFrameVideo_Click);
+            btnShowFullFrameVideo.CheckOnClick = true;
+            btnShowFullFrameVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnShowFullFrameVideo.Image = (System.Drawing.Image)resources.GetObject("btnShowFullFrameVideo.Image");
+            btnShowFullFrameVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnShowFullFrameVideo.Name = "btnShowFullFrameVideo";
+            btnShowFullFrameVideo.Size = new System.Drawing.Size(23, 22);
+            btnShowFullFrameVideo.Text = "Show Full Frame";
+            btnShowFullFrameVideo.Click += btnShowFullFrameVideo_Click;
             // 
             // separator6
             // 
-            this.separator6.Name = "separator6";
-            this.separator6.Size = new System.Drawing.Size(6, 25);
+            separator6.Name = "separator6";
+            separator6.Size = new System.Drawing.Size(6, 25);
             // 
             // btnToggleSound
             // 
-            this.btnToggleSound.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnToggleSound.Image = ((System.Drawing.Image)(resources.GetObject("btnToggleSound.Image")));
-            this.btnToggleSound.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnToggleSound.Name = "btnToggleSound";
-            this.btnToggleSound.Size = new System.Drawing.Size(23, 22);
-            this.btnToggleSound.Text = "toolStripButton1";
-            this.btnToggleSound.Click += new System.EventHandler(this.btnShowSidDebugWindow_Click);
+            btnToggleSound.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            btnToggleSound.Image = (System.Drawing.Image)resources.GetObject("btnToggleSound.Image");
+            btnToggleSound.ImageTransparentColor = System.Drawing.Color.Magenta;
+            btnToggleSound.Name = "btnToggleSound";
+            btnToggleSound.Size = new System.Drawing.Size(23, 22);
+            btnToggleSound.Text = "toolStripButton1";
+            btnToggleSound.Click += btnShowSidDebugWindow_Click;
             // 
             // ofdOpenFile
             // 
-            this.ofdOpenFile.Filter = "PRG-files|*.prg|All files|*.*";
+            ofdOpenFile.Filter = "C64-files|*.prg;*.seq;*.crt;*.bin;*.vpl|PRG-files|*.prg|SEQ-files|*.seq|Cartridges|*.crt;*.bin|Cartridge|*.crt|Raw Cartridge|*.bin|VICE Palette File|*.vpl|All files|*.*";
             // 
             // sfd
             // 
-            this.sfd.Filter = "PRG-files|*.prg";
+            sfd.Filter = "PRG-files|*.prg";
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatusVic,
-            this.lblFps,
-            this.lblVicCycles,
-            this.lblVicCurrentLine,
-            this.lblVicCurrentLineCycle,
-            this.lblVicGraphicsMode,
-            this.lblVicScreenOn});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 677);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(832, 24);
-            this.statusStrip1.TabIndex = 4;
-            this.statusStrip1.Text = "statusStrip1";
+            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { lblStatusVic, lblFps, lblVicCycles, lblVicCurrentLine, lblVicCurrentLineCycle, lblVicGraphicsMode, lblVicScreenOn });
+            statusStrip1.Location = new System.Drawing.Point(0, 677);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            statusStrip1.Size = new System.Drawing.Size(832, 24);
+            statusStrip1.TabIndex = 4;
+            statusStrip1.Text = "statusStrip1";
             // 
             // lblStatusVic
             // 
-            this.lblStatusVic.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblStatusVic.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblStatusVic.Name = "lblStatusVic";
-            this.lblStatusVic.Size = new System.Drawing.Size(43, 19);
-            this.lblStatusVic.Text = "VIC-II";
+            lblStatusVic.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblStatusVic.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblStatusVic.Name = "lblStatusVic";
+            lblStatusVic.Size = new System.Drawing.Size(43, 19);
+            lblStatusVic.Text = "VIC-II";
             // 
             // lblFps
             // 
-            this.lblFps.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblFps.Name = "lblFps";
-            this.lblFps.Size = new System.Drawing.Size(36, 19);
-            this.lblFps.Text = "0 fps";
+            lblFps.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblFps.Name = "lblFps";
+            lblFps.Size = new System.Drawing.Size(36, 19);
+            lblFps.Text = "0 fps";
             // 
             // lblVicCycles
             // 
-            this.lblVicCycles.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblVicCycles.Name = "lblVicCycles";
-            this.lblVicCycles.Size = new System.Drawing.Size(52, 19);
-            this.lblVicCycles.Text = "0 cycles";
+            lblVicCycles.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblVicCycles.Name = "lblVicCycles";
+            lblVicCycles.Size = new System.Drawing.Size(52, 19);
+            lblVicCycles.Text = "0 cycles";
             // 
             // lblVicCurrentLine
             // 
-            this.lblVicCurrentLine.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblVicCurrentLine.Name = "lblVicCurrentLine";
-            this.lblVicCurrentLine.Size = new System.Drawing.Size(36, 19);
-            this.lblVicCurrentLine.Text = "Line:";
+            lblVicCurrentLine.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblVicCurrentLine.Name = "lblVicCurrentLine";
+            lblVicCurrentLine.Size = new System.Drawing.Size(36, 19);
+            lblVicCurrentLine.Text = "Line:";
             // 
             // lblVicCurrentLineCycle
             // 
-            this.lblVicCurrentLineCycle.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblVicCurrentLineCycle.Name = "lblVicCurrentLineCycle";
-            this.lblVicCurrentLineCycle.Size = new System.Drawing.Size(33, 19);
-            this.lblVicCurrentLineCycle.Text = "Pos:";
+            lblVicCurrentLineCycle.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblVicCurrentLineCycle.Name = "lblVicCurrentLineCycle";
+            lblVicCurrentLineCycle.Size = new System.Drawing.Size(33, 19);
+            lblVicCurrentLineCycle.Text = "Pos:";
             // 
             // lblVicGraphicsMode
             // 
-            this.lblVicGraphicsMode.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblVicGraphicsMode.Name = "lblVicGraphicsMode";
-            this.lblVicGraphicsMode.Size = new System.Drawing.Size(45, 19);
-            this.lblVicGraphicsMode.Text = "Mode:";
+            lblVicGraphicsMode.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblVicGraphicsMode.Name = "lblVicGraphicsMode";
+            lblVicGraphicsMode.Size = new System.Drawing.Size(45, 19);
+            lblVicGraphicsMode.Text = "Mode:";
             // 
             // lblVicScreenOn
             // 
-            this.lblVicScreenOn.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.lblVicScreenOn.Name = "lblVicScreenOn";
-            this.lblVicScreenOn.Size = new System.Drawing.Size(49, 19);
-            this.lblVicScreenOn.Text = "Screen:";
+            lblVicScreenOn.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            lblVicScreenOn.Name = "lblVicScreenOn";
+            lblVicScreenOn.Size = new System.Drawing.Size(49, 19);
+            lblVicScreenOn.Text = "Screen:";
             // 
             // ofdInsertCartridge
             // 
-            this.ofdInsertCartridge.Filter = "Cartridges|*.crt;*.bin|Cartridge|*.crt|Raw Cartridge|*.bin|All files|*.*";
+            ofdInsertCartridge.Filter = "Cartridges|*.crt;*.bin|Cartridge|*.crt|Raw Cartridge|*.bin|All files|*.*";
             // 
             // menuStrip
             // 
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuColors});
-            this.menuStrip.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(832, 24);
-            this.menuStrip.TabIndex = 5;
-            this.menuStrip.Text = "menuStrip1";
+            menuStrip.BackColor = System.Drawing.SystemColors.Control;
+            menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { mnuFile, mnuColors });
+            menuStrip.Location = new System.Drawing.Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new System.Drawing.Size(832, 24);
+            menuStrip.TabIndex = 5;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // mnuFile
+            // 
+            mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { mnuOpen });
+            mnuFile.Name = "mnuFile";
+            mnuFile.Size = new System.Drawing.Size(37, 20);
+            mnuFile.Text = "File";
+            // 
+            // mnuOpen
+            // 
+            mnuOpen.Name = "mnuOpen";
+            mnuOpen.Size = new System.Drawing.Size(103, 22);
+            mnuOpen.Text = "Open";
+            mnuOpen.Click += mnuOpen_Click;
             // 
             // mnuColors
             // 
-            this.mnuColors.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuKernalWhiteTextColor,
-            this.toolStripSeparator2,
-            this.mnuPalettes,
-            this.mnuOpenPaletteFolder,
-            this.toolStripSeparator1,
-            this.mnuImportVICEPaletteFile});
-            this.mnuColors.Name = "mnuColors";
-            this.mnuColors.Size = new System.Drawing.Size(53, 20);
-            this.mnuColors.Text = "Colors";
-            this.mnuColors.DropDownOpening += new System.EventHandler(this.mnuColors_DropDownOpening);
+            mnuColors.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { mnuKernalWhiteTextColor, toolStripSeparator2, mnuBorderColor, mnuBackgroundColor, mnuTextColor, toolStripSeparator1, mnuPalettes, mnuOpenPaletteFolder, mnuImportVICEPaletteFile });
+            mnuColors.Name = "mnuColors";
+            mnuColors.Size = new System.Drawing.Size(53, 20);
+            mnuColors.Text = "Colors";
+            mnuColors.DropDownOpening += mnuColors_DropDownOpening;
             // 
             // mnuKernalWhiteTextColor
             // 
-            this.mnuKernalWhiteTextColor.Name = "mnuKernalWhiteTextColor";
-            this.mnuKernalWhiteTextColor.Size = new System.Drawing.Size(197, 22);
-            this.mnuKernalWhiteTextColor.Text = "White Text Color Patch";
-            this.mnuKernalWhiteTextColor.Click += new System.EventHandler(this.mnuKernalWhiteTextColor_ClickAsync);
+            mnuKernalWhiteTextColor.Name = "mnuKernalWhiteTextColor";
+            mnuKernalWhiteTextColor.Size = new System.Drawing.Size(197, 22);
+            mnuKernalWhiteTextColor.Text = "White Text Color Patch";
+            mnuKernalWhiteTextColor.Click += mnuKernalWhiteTextColor_ClickAsync;
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(194, 6);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new System.Drawing.Size(194, 6);
             // 
-            // mnuPalettes
+            // mnuBorderColor
             // 
-            this.mnuPalettes.Name = "mnuPalettes";
-            this.mnuPalettes.Size = new System.Drawing.Size(197, 22);
-            this.mnuPalettes.Text = "Palettes";
+            mnuBorderColor.BackColor = System.Drawing.SystemColors.Control;
+            mnuBorderColor.Name = "mnuBorderColor";
+            mnuBorderColor.Size = new System.Drawing.Size(197, 22);
+            mnuBorderColor.Text = "Border Color";
             // 
-            // mnuOpenPaletteFolder
+            // mnuBackgroundColor
             // 
-            this.mnuOpenPaletteFolder.Name = "mnuOpenPaletteFolder";
-            this.mnuOpenPaletteFolder.Size = new System.Drawing.Size(197, 22);
-            this.mnuOpenPaletteFolder.Text = "Open Palette Folder";
-            this.mnuOpenPaletteFolder.Click += new System.EventHandler(this.mnuOpenPaletteFolder_Click);
+            mnuBackgroundColor.BackColor = System.Drawing.SystemColors.Control;
+            mnuBackgroundColor.Name = "mnuBackgroundColor";
+            mnuBackgroundColor.Size = new System.Drawing.Size(197, 22);
+            mnuBackgroundColor.Text = "Background Color";
+            // 
+            // mnuTextColor
+            // 
+            mnuTextColor.Name = "mnuTextColor";
+            mnuTextColor.Size = new System.Drawing.Size(197, 22);
+            mnuTextColor.Text = "Text Color";
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(194, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(194, 6);
+            // 
+            // mnuPalettes
+            // 
+            mnuPalettes.Name = "mnuPalettes";
+            mnuPalettes.Size = new System.Drawing.Size(197, 22);
+            mnuPalettes.Text = "Palettes";
+            // 
+            // mnuOpenPaletteFolder
+            // 
+            mnuOpenPaletteFolder.Name = "mnuOpenPaletteFolder";
+            mnuOpenPaletteFolder.Size = new System.Drawing.Size(197, 22);
+            mnuOpenPaletteFolder.Text = "Open Palette Folder";
+            mnuOpenPaletteFolder.Click += mnuOpenPaletteFolder_Click;
             // 
             // mnuImportVICEPaletteFile
             // 
-            this.mnuImportVICEPaletteFile.Name = "mnuImportVICEPaletteFile";
-            this.mnuImportVICEPaletteFile.Size = new System.Drawing.Size(197, 22);
-            this.mnuImportVICEPaletteFile.Text = "Import VICE Palette File";
-            this.mnuImportVICEPaletteFile.Click += new System.EventHandler(this.mnuImportVICEPaletteFile_Click);
+            mnuImportVICEPaletteFile.Name = "mnuImportVICEPaletteFile";
+            mnuImportVICEPaletteFile.Size = new System.Drawing.Size(197, 22);
+            mnuImportVICEPaletteFile.Text = "Import VICE Palette File";
+            mnuImportVICEPaletteFile.Click += mnuImportVICEPaletteFile_Click;
             // 
             // ofdImportVicePaletteFile
             // 
-            this.ofdImportVicePaletteFile.Filter = "VICE Palette File|*.vpl";
+            ofdImportVicePaletteFile.Filter = "VICE Palette File|*.vpl";
             // 
             // fsw
             // 
-            this.fsw.EnableRaisingEvents = true;
-            this.fsw.NotifyFilter = ((System.IO.NotifyFilters)((((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.DirectoryName) 
-            | System.IO.NotifyFilters.LastWrite) 
-            | System.IO.NotifyFilters.CreationTime)));
-            this.fsw.SynchronizingObject = this;
-            this.fsw.Changed += new System.IO.FileSystemEventHandler(this.fsw_Changed);
+            fsw.EnableRaisingEvents = true;
+            fsw.NotifyFilter = System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.DirectoryName | System.IO.NotifyFilters.LastWrite | System.IO.NotifyFilters.CreationTime;
+            fsw.SynchronizingObject = this;
+            fsw.Changed += fsw_Changed;
             // 
             // FormC64Screen
             // 
-            this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 725);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.toolMain);
-            this.Controls.Add(this.statusMain);
-            this.Controls.Add(this.menuStrip);
-            this.Controls.Add(this.pScreen);
-            this.DoubleBuffered = true;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip;
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.Name = "FormC64Screen";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Retrocomputing.NET - Commodore 64";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormC64Screen_FormClosing);
-            this.Load += new System.EventHandler(this.FormC64Screen_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormC64Screen_KeyUp);
-            ((System.ComponentModel.ISupportInitialize)(this.pScreen)).EndInit();
-            this.statusMain.ResumeLayout(false);
-            this.statusMain.PerformLayout();
-            this.toolMain.ResumeLayout(false);
-            this.toolMain.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.menuStrip.ResumeLayout(false);
-            this.menuStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fsw)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AllowDrop = true;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(832, 725);
+            Controls.Add(statusStrip1);
+            Controls.Add(toolMain);
+            Controls.Add(statusMain);
+            Controls.Add(menuStrip);
+            Controls.Add(pScreen);
+            DoubleBuffered = true;
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "FormC64Screen";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Retrocomputing.NET - Commodore 64";
+            FormClosing += FormC64Screen_FormClosing;
+            Load += FormC64Screen_Load;
+            KeyDown += FormC64Screen_KeyDown;
+            KeyUp += FormC64Screen_KeyUp;
+            ((System.ComponentModel.ISupportInitialize)pScreen).EndInit();
+            statusMain.ResumeLayout(false);
+            statusMain.PerformLayout();
+            toolMain.ResumeLayout(false);
+            toolMain.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)fsw).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -762,5 +748,11 @@ namespace ComputerSystem.Commodore64 {
         private System.Windows.Forms.ToolStripButton btnShowOnScreenDisplay;
         private System.IO.FileSystemWatcher fsw;
         private System.Windows.Forms.ToolStripButton btnToggleSound;
+        private System.Windows.Forms.ToolStripMenuItem mnuFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuOpen;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnuBorderColor;
+        private System.Windows.Forms.ToolStripMenuItem mnuBackgroundColor;
+        private System.Windows.Forms.ToolStripMenuItem mnuTextColor;
     }
 }

@@ -21,6 +21,9 @@ using Commodore64.Vic.Colors;
 using Commodore64.Sid.Debug;
 using Commodore64.Keyboard;
 using System.Text;
+using Image = System.Drawing.Image;
+using Path = System.IO.Path;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace ComputerSystem.Commodore64 {
     public partial class FormC64Screen : Form, IC64KeyboardInputProvider
@@ -194,7 +197,7 @@ namespace ComputerSystem.Commodore64 {
             _stopWatch.Stop();
             _fpsValues.Enqueue(_stopWatch.Elapsed.TotalMilliseconds);
             _stopWatch.Restart();
-            
+
             if (_fpsValues.Count > 15) _fpsValues.Dequeue();
             _fpsActual = 1000f / _fpsValues.Average(x => x);
         }
@@ -236,7 +239,6 @@ namespace ComputerSystem.Commodore64 {
 
         private void BtnSave_Click(object sender, EventArgs e) {
             if (sfd.ShowDialog() == DialogResult.OK) {
-
                 var basicAreaLength = C64MemoryOffsets.DEFAULT_BASIC_AREA_END - C64MemoryOffsets.DEFAULT_BASIC_AREA_START;
                 var data = new List<byte>();
 
@@ -277,7 +279,6 @@ namespace ComputerSystem.Commodore64 {
                 _osdManager.AddItem("Pause");
 
             } else {
-
                 C64.Cpu.Resume();
                 C64.Sid.Play();
                 _osdManager.AddItem("Resume");
@@ -342,36 +343,37 @@ namespace ComputerSystem.Commodore64 {
 
             switch (ext.ToLower())
             {
-                case ".prg":
+                case ".prg": // Programs
                     await C64.Cpu.Pause();
                     LoadPrg(fileName, true);
                     C64.Cpu.Resume();
-                    _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
                     fsw.Path = Path.GetDirectoryName(fileName);
                     break;
 
-                case ".crt":
+                case ".crt": // Cartridges
                 case ".bin":
                     await InsertCartridge(fileName);
-                    _osdManager.AddItem($"Inserted {Path.GetFileName(fileName)}");
+                    break;
+
+                case ".seq": // Sequential files
+                    await LoadSequentialFile(fileName);
                     break;
 
                 case ".vpl": // VICE Palette file
                     ColorManager.LoadPalette(PaletteDefinition.FromVicePaletteFile(fileName));
-                    _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
+                    Settings.Default.CurrentColorPalette = $"{Path.GetFileNameWithoutExtension(fileName)}.json";
                     break;
 
                 case ".json": // Just color palettes for now
                     ColorManager.LoadPalette(PaletteDefinition.FromFile(fileName));
-                    _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
                     break;
 
                 default:
                     // Using Task.Run to prevent a bug where the window locks up when using drag and drop
-                    _osdManager.AddItem($"Unknown file format!");
-                    await Task.Run(() => MessageBox.Show("Unknown file format.", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Warning));
-                    return;
+                    await Task.Run(() => MessageBox.Show("Unknown file format.", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Warning)); return;
             }
+
+            _osdManager.AddItem($"Loaded {Path.GetFileName(fileName)}");
         }
 
         private async void fsw_Changed(object sender, FileSystemEventArgs e)
@@ -534,6 +536,7 @@ namespace ComputerSystem.Commodore64 {
         {
             AdjustSpeedMultiplier(0.10f);
         }
+
         private void btnClockSpeedDefault_Click(object sender, EventArgs e)
         {
             C64.CpuClockSpeedMultiplier = 1f;
@@ -565,7 +568,7 @@ namespace ComputerSystem.Commodore64 {
             statusMain.Visible = FormBorderStyle == FormBorderStyle.None ? false : true;
             statusStrip1.Visible = FormBorderStyle == FormBorderStyle.None ? false : true;
             pScreen.Dock = FormBorderStyle == FormBorderStyle.None ? DockStyle.Fill : DockStyle.None;
-            pScreen.Anchor = FormBorderStyle != FormBorderStyle.None ? AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right : AnchorStyles.Top | AnchorStyles.Left;            
+            pScreen.Anchor = FormBorderStyle != FormBorderStyle.None ? AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right : AnchorStyles.Top | AnchorStyles.Left;
         }
 
         private void pScreen_MouseMove(object sender, MouseEventArgs e) {
@@ -578,10 +581,6 @@ namespace ComputerSystem.Commodore64 {
 
         private void btnToggleFullscreen_Click(object sender, EventArgs e) {
             ToggleFullscreen();
-        }
-
-        private void pScreen_Click(object sender, EventArgs e) {
-
         }
 
         private void btnShowFullFrameVideo_Click(object sender, EventArgs e) {
@@ -602,6 +601,41 @@ namespace ComputerSystem.Commodore64 {
             {
                 if (offset + chunkLength > text.Length) chunkLength = text.Length - offset;
                 Array.Copy(Encoding.ASCII.GetBytes(text), offset, C64.Memory._memory, 0x0277, chunkLength);
+
+                // Wait for BASIC to process the keyboard buffer
+                C64.Memory._memory[0x00C6] = (byte)chunkLength;
+                while (C64.Memory._memory[0x00C6] != 0)
+                {
+                    await Task.Delay(1);
+                }
+
+                offset += chunkLength;
+            }
+        }
+
+        private async Task LoadSequentialFile(string file)
+        {
+            if (string.IsNullOrWhiteSpace(file)) return;
+
+            var f = new FormLoadSequentialFileOptions();
+            if (f.ShowDialog() != DialogResult.OK) return;
+
+            var data = File.ReadAllBytes(file).ToList();
+
+            var bytesToRemove = f.BytesToRemoveFromEnd;
+            if (bytesToRemove > data.Count) bytesToRemove = data.Count;
+            if (bytesToRemove > 0) data = data.SkipLast(bytesToRemove).ToList();
+
+            if (f.ClearScreen) data.Insert(0, 147); // SHIFT+CLR/HOME Clears screen
+
+            // 0x0277: Keyboard buffer (10 bytes, 10 entries).
+            int chunkLength = 10;
+            int offset = 0;
+
+            while (offset < data.Count)
+            {
+                if (offset + chunkLength > data.Count) chunkLength = data.Count - offset;
+                Array.Copy(data.ToArray(), offset, C64.Memory._memory, 0x0277, chunkLength);
 
                 // Wait for BASIC to process the keyboard buffer
                 C64.Memory._memory[0x00C6] = (byte)chunkLength;
@@ -639,16 +673,97 @@ namespace ComputerSystem.Commodore64 {
                     }
                 );
             }
+
+            // Create border color items
+            mnuBorderColor.DropDownItems.Clear();
+            for (int i = 0; i < 16; i++)
+            {
+                // Needed to capture the value of i instead of a reference
+                var colorIndex = (byte)i;
+
+                mnuBorderColor.DropDownItems.Add(
+                    new ToolStripMenuItem(
+                        ColorManager.ColorNames[colorIndex],
+                        null,
+                        (s, e) =>
+                        {
+                            C64.Memory[53280] = colorIndex;
+                        }
+                    )
+                    {
+                        Checked = C64.Memory[53280] == colorIndex,
+                        Image = CreateColorImage(ColorManager.FromByte(colorIndex)),
+                        ImageScaling = ToolStripItemImageScaling.SizeToFit,
+                        ImageAlign = ContentAlignment.MiddleCenter
+                    }
+                );
+            }
+
+            // Create background color items
+            mnuBackgroundColor.DropDownItems.Clear();
+            for (int i = 0; i < 16; i++)
+            {
+                // Needed to capture the value of i instead of a reference
+                var colorIndex = (byte)i;
+
+                mnuBackgroundColor.DropDownItems.Add(
+                    new ToolStripMenuItem(
+                        ColorManager.ColorNames[colorIndex],
+                        null,
+                        (s, e) =>
+                        {
+                            C64.Memory[53281] = colorIndex;
+                        }
+                    )
+                    {
+                        Checked = C64.Memory[53281] == colorIndex,
+                        Image = CreateColorImage(ColorManager.FromByte(colorIndex)),
+                        ImageScaling = ToolStripItemImageScaling.SizeToFit,
+                        ImageAlign = ContentAlignment.MiddleCenter
+                    }
+                );
+            }
+
+            // Create text color items
+            mnuTextColor.DropDownItems.Clear();
+            for (int i = 0; i < 16; i++)
+            {
+                // Needed to capture the value of i instead of a reference
+                var colorIndex = (byte)i;
+
+                mnuTextColor.DropDownItems.Add(
+                    new ToolStripMenuItem(
+                        ColorManager.ColorNames[colorIndex],
+                        null,
+                        (s, e) =>
+                        {
+                            C64.Memory[646] = colorIndex;
+                        }
+                    )
+                    {
+                        Checked = C64.Memory[646] == colorIndex,
+                        Image = CreateColorImage(ColorManager.FromByte(colorIndex)),
+                        ImageScaling = ToolStripItemImageScaling.SizeToFit,
+                        ImageAlign = ContentAlignment.MiddleCenter
+                    }
+                );
+            }
         }
 
-        private void mnuImportVICEPaletteFile_Click(object sender, EventArgs e)
+        private Bitmap CreateColorImage(Color color)
+        {
+            var image = new Bitmap(16, 16);
+            using var g = Graphics.FromImage(image);
+            g.Clear(color);
+            g.DrawRectangle(new Pen(Color.Black, 1), 0, 0, image.Width - 1, image.Height - 1);
+            return image;
+        }
+
+        private async void mnuImportVICEPaletteFile_Click(object sender, EventArgs e)
         {
             if (ofdImportVicePaletteFile.ShowDialog() == DialogResult.OK)
             {
-                var fn = ofdImportVicePaletteFile.FileName;
-                var pd = PaletteDefinition.ImportVicePaletteFile(fn);
-                ColorManager.LoadPalette(pd);
-                Settings.Default.CurrentColorPalette = $"{Path.GetFileNameWithoutExtension(fn)}.json";
+                await HandleFileOpen(ofdImportVicePaletteFile.FileName);
             }
         }
 
@@ -766,6 +881,14 @@ namespace ComputerSystem.Commodore64 {
         public bool IsKeyDown(Keys key)
         {
             return _keysDown.Contains(key);
+        }
+
+        private async void mnuOpen_Click(object sender, EventArgs e)
+        {
+            if (ofdOpenFile.ShowDialog() == DialogResult.OK)
+            {
+                await HandleFileOpen(ofdOpenFile.FileName);
+            }
         }
     }
 }
