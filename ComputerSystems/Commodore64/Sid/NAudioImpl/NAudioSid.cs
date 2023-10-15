@@ -13,6 +13,7 @@ namespace Commodore64.Sid.NAudioImpl
     public class NAudioSid : SidBase
     {
         public event EventHandler<double> VolumeMeterUpdate;
+        public event EventHandler<float[]> MeteringUpdate;
 
         private const int DESIRED_LATENCY = 50;
         private WavePlayerType _wavePlayerType = WavePlayerType.DirectSoundOut;
@@ -40,11 +41,16 @@ namespace Commodore64.Sid.NAudioImpl
                 _sgVoice3Filtered.Bypass = value;
             }
         }
-        public double VolumeMeter { get; private set; }
+        public float VolumeMeter { get; private set; }
+
+        private SidAdsrSampleProvider _adsrVoice1;
+        private SidAdsrSampleProvider _adsrVoice2;
+        private SidAdsrSampleProvider _adsrVoice3;
 
         private MixingSampleProvider _mixingSampleProvider;
         private MeteringSampleProvider _meteringSampleProvider;
         private VolumeSampleProvider _volumeSampleProvider;
+
 
         private IWavePlayer _audioOutEvent;
 
@@ -83,9 +89,14 @@ namespace Commodore64.Sid.NAudioImpl
             _sgVoice2 = new SidSignalGenerator();
             _sgVoice3 = new SidSignalGenerator();
 
-            _sgVoice1Filtered = new SidFilter(_sgVoice1);
-            _sgVoice2Filtered = new SidFilter(_sgVoice2);
-            _sgVoice3Filtered = new SidFilter(_sgVoice3);
+            _adsrVoice1 = new SidAdsrSampleProvider(_sgVoice1);
+            _adsrVoice2 = new SidAdsrSampleProvider(_sgVoice2);
+            _adsrVoice3 = new SidAdsrSampleProvider(_sgVoice3);
+
+            _sgVoice1Filtered = new SidFilter(_adsrVoice1);
+            _sgVoice2Filtered = new SidFilter(_adsrVoice2);
+            _sgVoice3Filtered = new SidFilter(_adsrVoice3);
+
 
             _mixingSampleProvider = new MixingSampleProvider(
                 new List<ISampleProvider>() {
@@ -101,6 +112,7 @@ namespace Commodore64.Sid.NAudioImpl
             {
                 VolumeMeter = e.MaxSampleValues.FirstOrDefault();
                 Task.Run(() => VolumeMeterUpdate?.Invoke(this, VolumeMeter));
+                //MeteringUpdate?.Invoke(this, e.MaxSampleValues);
             };
 
             _volumeSampleProvider = new VolumeSampleProvider(_meteringSampleProvider);
@@ -170,47 +182,69 @@ namespace Commodore64.Sid.NAudioImpl
                     if (_sgVoice2.Gain != SidVolume) _sgVoice2.Gain = SidVolume;
                     if (_sgVoice3.Gain != SidVolume) _sgVoice3.Gain = SidVolume;
                     break;
+
+                case SidRegister.VOICE1_CONTROL_REGISTER:
+                    _adsrVoice1.Gate(Voice1.Gate);
+                    break;
+
+                case SidRegister.VOICE2_CONTROL_REGISTER:
+                    _adsrVoice2.Gate(Voice2.Gate);
+                    break;
+
+                case SidRegister.VOICE3_CONTROL_REGISTER:
+                    _adsrVoice3.Gate(Voice3.Gate);
+                    break;
+
+                case SidRegister.VOICE1_SUSTAIN_RELEASE:
+                    _adsrVoice1.AttackSeconds = Voice1.AttackSeconds;
+                    _adsrVoice1.DecaySeconds = Voice1.DecaySeconds;
+                    _adsrVoice1.SustainLevel = Voice1.SustainLevel;
+                    _adsrVoice1.ReleaseSeconds = Voice1.ReleaseSeconds;
+                    break;
+
+                case SidRegister.VOICE2_SUSTAIN_RELEASE:
+                    _adsrVoice2.AttackSeconds = Voice2.AttackSeconds;
+                    _adsrVoice2.DecaySeconds = Voice2.DecaySeconds;
+                    _adsrVoice2.SustainLevel = Voice2.SustainLevel;
+                    _adsrVoice2.ReleaseSeconds = Voice2.ReleaseSeconds;
+                    break;
+
+                case SidRegister.VOICE3_SUSTAIN_RELEASE:
+                    _adsrVoice3.AttackSeconds = Voice3.AttackSeconds;
+                    _adsrVoice3.DecaySeconds = Voice3.DecaySeconds;
+                    _adsrVoice3.SustainLevel = Voice3.SustainLevel;
+                    _adsrVoice3.ReleaseSeconds = Voice3.ReleaseSeconds;
+                    break;
             }
         }
 
         private void UpdateSignalGeneratorFromVoice(SidSignalGenerator sg, Voice v)
         {
-            // Set gain to 0 if voice is disabled or gate is low
-            if (!v.Gate || v.Disabled)
+            ////Set gain to 0 if voice is disabled or gate is low
+            //if (!v.Gate)
+            //{
+            //    //sg.Gain = 0f; // if (sg.Gain != 0) sg.Gain = 0;
+            //}
+            //else 
+            if (v.Disabled)
             {
-                if (sg.Gain != 0) sg.Gain = 0;
+                sg.Gain = 0f; // if (sg.Gain != 0) sg.Gain = 0;
             }
             else
             {
-                if (sg.Gain != SidVolume) sg.Gain = SidVolume;
+                sg.Gain = SidVolume; // if (sg.Gain != SidVolume) sg.Gain = SidVolume;
             }
 
             // Update frequency
-            if (sg.Frequency != v.Frequency) sg.Frequency = v.Frequency;
+            sg.Frequency = v.Frequency;
 
             // Update pulse width
-            if (sg.PulseWidth != v.PulseWidth) sg.PulseWidth = v.PulseWidth;
+            sg.PulseWidth = v.PulseWidth;
 
-            // Update waveform
-            switch (v.WaveForm)
-            {
-                case VoiceWaveForm.Triangle:
-                    if (sg.Type != SidSignalGeneratorType.Triangle) sg.Type = SidSignalGeneratorType.Triangle;
-                    break;
-                case VoiceWaveForm.SawTooth:
-                    if (sg.Type != SidSignalGeneratorType.SawTooth) sg.Type = SidSignalGeneratorType.SawTooth;
-                    break;
-                case VoiceWaveForm.Square:
-                    if (sg.Type != SidSignalGeneratorType.SquarePulseWidth) sg.Type = SidSignalGeneratorType.SquarePulseWidth;
-                    break;
-                case VoiceWaveForm.Noise:
-                    if (sg.Type != SidSignalGeneratorType.White) sg.Type = SidSignalGeneratorType.White;
-                    break;
-                default:
-                    sg.Gain = 0f;
-                    break;
-            }
-
+            sg.WaveformSquareActive = v.WaveformSquareActive;
+            sg.WaveformTriangleActive = v.WaveformTriangleActive;
+            sg.WaveformSawToothActive = v.WaveformSawToothActive;
+            sg.WaveformNoiseActive = v.WaveformNoiseActive;
 
         }
     }

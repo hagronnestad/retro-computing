@@ -27,7 +27,7 @@ namespace Commodore64.Sid
         public int FilterFrequency { get; set; }
         public int FilterResonance { get; set; }
 
-        public double SidVolume { get; set; }
+        public float SidVolume { get; set; }
 
         public SidBase()
         {
@@ -55,9 +55,9 @@ namespace Commodore64.Sid
                 switch (register)
                 {
                     case SidRegister.VOICE1_FREQ_LOW:
-                    //case SidRegister.VOICE1_FREQ_HIGH:
+                        //case SidRegister.VOICE1_FREQ_HIGH:
                         {
-                            double frequency = (4000f / (ushort.MaxValue + 1)) *
+                            float frequency = (4000.0f / (ushort.MaxValue + 1)) *
                                 (_registers[(int)SidRegister.VOICE1_FREQ_HIGH] << 8 |
                                 _registers[(int)SidRegister.VOICE1_FREQ_LOW]);
 
@@ -67,7 +67,7 @@ namespace Commodore64.Sid
                         break;
 
                     case SidRegister.VOICE1_PULSE_WIDTH_LOW:
-                    //case SidRegister.VOICE1_PULSE_WIDTH_HIGH:
+                        //case SidRegister.VOICE1_PULSE_WIDTH_HIGH:
                         {
                             float pulseWidth = (1.0f / 4096) *
                                 ((_registers[(int)SidRegister.VOICE1_PULSE_WIDTH_HIGH] & 0b00001111) << 8 |
@@ -83,32 +83,37 @@ namespace Commodore64.Sid
                         Voice1.Gate = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.VOICE_GATE);
                         Voice1.Synchronization = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.SYNCHRONIZATION);
                         Voice1.RingModulation = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.RING_MODULATION);
-
-                        if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_TRIANGLE))
-                            Voice1.WaveForm = VoiceWaveForm.Triangle;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SAW))
-                            Voice1.WaveForm = VoiceWaveForm.SawTooth;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SQUARE))
-                            Voice1.WaveForm = VoiceWaveForm.Square;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_NOISE))
-                            Voice1.WaveForm = VoiceWaveForm.Noise;
-                        else
-                            Voice1.WaveForm = VoiceWaveForm.None;
+                        Voice1.WaveformSquareActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SQUARE);
+                        Voice1.WaveformTriangleActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_TRIANGLE);
+                        Voice1.WaveformSawToothActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SAW);
+                        Voice1.WaveformNoiseActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_NOISE);
 
                         Task.Run(() => Voice1Changed?.Invoke(this, Voice1));
                         break;
 
                     case SidRegister.VOICE1_ATTACK_DECAY:
+                        {
+                            int attackSecondsIndex = value & 0b00001111;
+                            int decaySecondsIndex = (value >> 4) & 0b00001111;
+                            Voice1.AttackSeconds = Voice.ATTACK_SECONDS_LUT[attackSecondsIndex];
+                            Voice1.DecaySeconds = Voice.DECAY_SECONDS_LUT[decaySecondsIndex];
+                        }
                         break;
 
                     case SidRegister.VOICE1_SUSTAIN_RELEASE:
+                        {
+                            int releaseSecondsIndex = value & 0b00001111;
+                            float sustainLevel = ((value >> 4) & 0b00001111) / 15f;
+                            Voice1.ReleaseSeconds = Voice.RELEASE_SECONDS_LUT[releaseSecondsIndex];
+                            Voice1.SustainLevel = sustainLevel;
+                        }
                         break;
 
 
                     case SidRegister.VOICE2_FREQ_LOW:
-                    //case SidRegister.VOICE2_FREQ_HIGH:
+                        //case SidRegister.VOICE2_FREQ_HIGH:
                         {
-                            double frequency = (4000f / (ushort.MaxValue + 1)) *
+                            float frequency = (4000f / (ushort.MaxValue + 1)) *
                                 (_registers[(int)SidRegister.VOICE2_FREQ_HIGH] << 8 |
                                 _registers[(int)SidRegister.VOICE2_FREQ_LOW]);
 
@@ -118,7 +123,7 @@ namespace Commodore64.Sid
                         break;
 
                     case SidRegister.VOICE2_PULSE_WIDTH_LOW:
-                    //case SidRegister.VOICE2_PULSE_WIDTH_HIGH:
+                        //case SidRegister.VOICE2_PULSE_WIDTH_HIGH:
                         {
                             float pulseWidth = (1.0f / 4096) *
                                 ((_registers[(int)SidRegister.VOICE2_PULSE_WIDTH_HIGH] & 0b00001111) << 8 |
@@ -134,32 +139,37 @@ namespace Commodore64.Sid
                         Voice2.Gate = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.VOICE_GATE);
                         Voice2.Synchronization = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.SYNCHRONIZATION);
                         Voice2.RingModulation = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.RING_MODULATION);
-
-                        if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_TRIANGLE))
-                            Voice2.WaveForm = VoiceWaveForm.Triangle;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SAW))
-                            Voice2.WaveForm = VoiceWaveForm.SawTooth;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SQUARE))
-                            Voice2.WaveForm = VoiceWaveForm.Square;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_NOISE))
-                            Voice2.WaveForm = VoiceWaveForm.Noise;
-                        else
-                            Voice2.WaveForm = VoiceWaveForm.None;
+                        Voice2.WaveformSquareActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SQUARE);
+                        Voice2.WaveformTriangleActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_TRIANGLE);
+                        Voice2.WaveformSawToothActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SAW);
+                        Voice2.WaveformNoiseActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_NOISE);
 
                         Task.Run(() => Voice2Changed?.Invoke(this, Voice2));
                         break;
 
                     case SidRegister.VOICE2_ATTACK_DECAY:
+                        {
+                            int attackSecondsIndex = value & 0b00001111;
+                            int decaySecondsIndex = (value >> 4) & 0b00001111;
+                            Voice2.AttackSeconds = Voice.ATTACK_SECONDS_LUT[attackSecondsIndex];
+                            Voice2.DecaySeconds = Voice.DECAY_SECONDS_LUT[decaySecondsIndex];
+                        }
                         break;
 
                     case SidRegister.VOICE2_SUSTAIN_RELEASE:
+                        {
+                            int releaseSecondsIndex = value & 0b00001111;
+                            float sustainLevel = ((value >> 4) & 0b00001111) / 15f;
+                            Voice2.ReleaseSeconds = Voice.RELEASE_SECONDS_LUT[releaseSecondsIndex];
+                            Voice2.SustainLevel = sustainLevel;
+                        }
                         break;
 
 
                     case SidRegister.VOICE3_FREQ_LOW:
-                    //case SidRegister.VOICE3_FREQ_HIGH:
+                        //case SidRegister.VOICE3_FREQ_HIGH:
                         {
-                            double frequency = (4000f / (ushort.MaxValue + 1)) *
+                            float frequency = (4000f / (ushort.MaxValue + 1)) *
                                 (_registers[(int)SidRegister.VOICE3_FREQ_HIGH] << 8 |
                                 _registers[(int)SidRegister.VOICE3_FREQ_LOW]);
 
@@ -169,7 +179,7 @@ namespace Commodore64.Sid
                         break;
 
                     case SidRegister.VOICE3_PULSE_WIDTH_LOW:
-                    //case SidRegister.VOICE3_PULSE_WIDTH_HIGH:
+                        //case SidRegister.VOICE3_PULSE_WIDTH_HIGH:
                         {
                             float pulseWidth = (1.0f / 4096) *
                                 ((_registers[(int)SidRegister.VOICE3_PULSE_WIDTH_HIGH] & 0b00001111) << 8 |
@@ -185,30 +195,35 @@ namespace Commodore64.Sid
                         Voice3.Gate = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.VOICE_GATE);
                         Voice3.Synchronization = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.SYNCHRONIZATION);
                         Voice3.RingModulation = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.RING_MODULATION);
-
-                        if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_TRIANGLE))
-                            Voice3.WaveForm = VoiceWaveForm.Triangle;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SAW))
-                            Voice3.WaveForm = VoiceWaveForm.SawTooth;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SQUARE))
-                            Voice3.WaveForm = VoiceWaveForm.Square;
-                        else if (value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_NOISE))
-                            Voice3.WaveForm = VoiceWaveForm.Noise;
-                        else
-                            Voice3.WaveForm = VoiceWaveForm.None;
+                        Voice3.WaveformSquareActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SQUARE);
+                        Voice3.WaveformTriangleActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_TRIANGLE);
+                        Voice3.WaveformSawToothActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_SAW);
+                        Voice3.WaveformNoiseActive = value.IsBitSet((BitFlag)SidControlRegisterBitFlags.WAVEFORM_NOISE);
 
                         Task.Run(() => Voice3Changed?.Invoke(this, Voice3));
                         break;
 
                     case SidRegister.VOICE3_ATTACK_DECAY:
+                        {
+                            int attackSecondsIndex = value & 0b00001111;
+                            int decaySecondsIndex = (value >> 4) & 0b00001111;
+                            Voice3.AttackSeconds = Voice.ATTACK_SECONDS_LUT[attackSecondsIndex];
+                            Voice3.DecaySeconds = Voice.DECAY_SECONDS_LUT[decaySecondsIndex];
+                        }
                         break;
 
                     case SidRegister.VOICE3_SUSTAIN_RELEASE:
+                        {
+                            int releaseSecondsIndex = value & 0b00001111;
+                            float sustainLevel = ((value >> 4) & 0b00001111) / 15f;
+                            Voice3.ReleaseSeconds = Voice.RELEASE_SECONDS_LUT[releaseSecondsIndex];
+                            Voice3.SustainLevel = sustainLevel;
+                        }
                         break;
 
 
                     case SidRegister.FILTER_CUT_OFF_FREQ_LOW:
-                    //case SidRegister.FILTER_CUT_OFF_FREQ_HIGH:
+                        //case SidRegister.FILTER_CUT_OFF_FREQ_HIGH:
                         var filterFrequency =
                             ((_registers[(int)SidRegister.FILTER_CUT_OFF_FREQ_HIGH] << 3) |
                             (_registers[(int)SidRegister.FILTER_CUT_OFF_FREQ_LOW] & 0b00000111));
